@@ -22,7 +22,7 @@
 ## 빠른 시작
 
 ```bash
-git clone https://github.com/opensphere-platform/logos-web.git
+git clone https://github.com/polyonplatform/logos-web.git
 cd logos-web
 cp .env.example .env.local
 # .env.local 편집

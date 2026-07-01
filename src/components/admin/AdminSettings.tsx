@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { authHeaders } from "@/lib/admin-client";
+import { adminFetch } from "@/lib/admin-client";
 
 interface AdminUser {
   id: number;
@@ -26,7 +26,7 @@ export function AdminSettings({ currentEmail }: AdminSettingsProps) {
   const [newAdminName, setNewAdminName] = useState("");
 
   async function loadAdmins() {
-    const response = await fetch("/api/admin/users", { headers: authHeaders() });
+    const response = await adminFetch("/api/admin/users");
     if (response.ok) setAdmins(await response.json());
   }
 
@@ -36,9 +36,9 @@ export function AdminSettings({ currentEmail }: AdminSettingsProps) {
 
   async function handleChangePassword(event: FormEvent) {
     event.preventDefault();
-    const response = await fetch("/api/auth/password", {
+    const response = await adminFetch("/api/auth/password", {
       method: "PATCH",
-      headers: { ...authHeaders(), "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ currentPassword, newPassword }),
     });
     const data = await response.json();
@@ -51,9 +51,9 @@ export function AdminSettings({ currentEmail }: AdminSettingsProps) {
 
   async function handleAddAdmin(event: FormEvent) {
     event.preventDefault();
-    const response = await fetch("/api/admin/users", {
+    const response = await adminFetch("/api/admin/users", {
       method: "POST",
-      headers: { ...authHeaders(), "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: newAdminEmail,
         password: newAdminPassword,
@@ -71,10 +71,7 @@ export function AdminSettings({ currentEmail }: AdminSettingsProps) {
   }
 
   async function handleDeactivate(id: number) {
-    await fetch(`/api/admin/users/${id}`, {
-      method: "DELETE",
-      headers: authHeaders(),
-    });
+    await adminFetch(`/api/admin/users/${id}`, { method: "DELETE" });
     await loadAdmins();
   }
 

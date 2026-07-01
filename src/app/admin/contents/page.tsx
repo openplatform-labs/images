@@ -6,7 +6,7 @@ import { CollectionPicker } from "@/components/admin/CollectionPicker";
 import { ExistingLogoManager } from "@/components/admin/ExistingLogoManager";
 import { LogoDropZone, type DroppedFile } from "@/components/admin/LogoDropZone";
 import { UploadResultPanel } from "@/components/admin/UploadResultPanel";
-import { authHeaders } from "@/lib/admin-client";
+import { adminFetch } from "@/lib/admin-client";
 
 interface UploadResult {
   shortname: string;
@@ -106,9 +106,8 @@ export default function ContentsAdminPage() {
     }
 
     try {
-      const response = await fetch("/api/admin/upload", {
+      const response = await adminFetch("/api/admin/upload", {
         method: "POST",
-        headers: authHeaders(),
         body: formData,
       });
 
@@ -139,10 +138,7 @@ export default function ContentsAdminPage() {
 
   async function handleSync() {
     setLoading(true);
-    const response = await fetch("/api/sync", {
-      method: "POST",
-      headers: authHeaders(),
-    });
+    const response = await adminFetch("/api/sync", { method: "POST" });
     const data = await response.json();
     setMessage(data.message ?? data.error);
     setLoading(false);
@@ -151,9 +147,9 @@ export default function ContentsAdminPage() {
 
   async function handleCreateCategory(event: FormEvent) {
     event.preventDefault();
-    await fetch("/api/categories", {
+    await adminFetch("/api/categories", {
       method: "POST",
-      headers: { ...authHeaders(), "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: newCategory }),
     });
     setNewCategory("");
@@ -162,9 +158,9 @@ export default function ContentsAdminPage() {
 
   async function handleCreateTag(event: FormEvent) {
     event.preventDefault();
-    await fetch("/api/tags", {
+    await adminFetch("/api/tags", {
       method: "POST",
-      headers: { ...authHeaders(), "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: newTag }),
     });
     setNewTag("");
@@ -172,18 +168,12 @@ export default function ContentsAdminPage() {
   }
 
   async function handleDeleteCategory(id: number) {
-    await fetch(`/api/categories/${id}`, {
-      method: "DELETE",
-      headers: authHeaders(),
-    });
+    await adminFetch(`/api/categories/${id}`, { method: "DELETE" });
     await loadMeta();
   }
 
   async function handleDeleteTag(id: number) {
-    await fetch(`/api/tags/${id}`, {
-      method: "DELETE",
-      headers: authHeaders(),
-    });
+    await adminFetch(`/api/tags/${id}`, { method: "DELETE" });
     await loadMeta();
   }
 

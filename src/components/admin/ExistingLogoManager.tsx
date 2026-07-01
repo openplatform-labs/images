@@ -8,7 +8,7 @@ import type { Category, LogoCollection, LogoEntry, Tag } from "@/lib/types";
 import { CollectionPicker } from "@/components/admin/CollectionPicker";
 import { CopyButton } from "@/components/CopyButton";
 import { LogoDropZone, type DroppedFile } from "@/components/admin/LogoDropZone";
-import { authHeaders, parseApiResponse } from "@/lib/admin-client";
+import { adminFetch, parseApiResponse } from "@/lib/admin-client";
 
 interface ExistingLogoManagerProps {
   categories: Category[];
@@ -87,16 +87,19 @@ export function ExistingLogoManager({
     setLogo(null);
 
     try {
-      const response = await fetch(
+      const response = await adminFetch(
         `/api/admin/logos/${encodeURIComponent(shortname)}`,
-        { headers: authHeaders() },
       );
       const data = await parseApiResponse<LogoEntry & { error?: string }>(
         response,
       );
 
       if (!response.ok) {
-        setMessage(data.error ?? "로고를 불러오지 못했습니다.");
+        if (response.status === 401) {
+          setMessage("세션이 만료되었습니다. 다시 로그인해 주세요.");
+        } else {
+          setMessage(data.error ?? "로고를 불러오지 못했습니다.");
+        }
         setEditorLoading(false);
         return;
       }
@@ -132,11 +135,11 @@ export function ExistingLogoManager({
     setMessage("");
 
     try {
-      const response = await fetch(
+      const response = await adminFetch(
         `/api/admin/logos/${encodeURIComponent(selectedShortname)}`,
         {
           method: "PATCH",
-          headers: { ...authHeaders(), "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name,
             url: officialUrl,
@@ -198,9 +201,8 @@ export function ExistingLogoManager({
         formData.append("tagIds", String(tagId));
       }
 
-      const response = await fetch("/api/admin/upload", {
+      const response = await adminFetch("/api/admin/upload", {
         method: "POST",
-        headers: authHeaders(),
         body: formData,
       });
 

@@ -5,10 +5,11 @@ import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import {
+  ADMIN_UNAUTHORIZED_EVENT,
   authHeaders,
   clearAdminSession,
-  getAdminToken,
   getStoredAdmin,
+  validateAdminSession,
 } from "@/lib/admin-client";
 
 interface AdminShellProps {
@@ -40,17 +41,37 @@ export function AdminShell({ children }: AdminShellProps) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    void fetch("/api/admin/status")
-      .then((response) => response.json())
-      .then((data) => setStatus(data));
-
-    const token = getAdminToken();
-    const admin = getStoredAdmin();
-    if (token && admin) {
-      setAuthenticated(true);
-      setAdminEmail(admin.email);
+    function handleUnauthorized() {
+      setAuthenticated(false);
+      setAdminEmail("");
     }
-    setReady(true);
+
+    window.addEventListener(ADMIN_UNAUTHORIZED_EVENT, handleUnauthorized);
+    return () => {
+      window.removeEventListener(ADMIN_UNAUTHORIZED_EVENT, handleUnauthorized);
+    };
+  }, []);
+
+  useEffect(() => {
+    async function bootstrap() {
+      try {
+        const statusResponse = await fetch("/api/admin/status");
+        const statusData = await statusResponse.json();
+        setStatus(statusData);
+      } catch {
+        setStatus(null);
+      }
+
+      const admin = await validateAdminSession();
+      if (admin) {
+        setAuthenticated(true);
+        setAdminEmail(admin.email);
+      }
+
+      setReady(true);
+    }
+
+    void bootstrap();
   }, []);
 
   function handleLogout() {

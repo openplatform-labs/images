@@ -54,12 +54,12 @@ export function CollectionTabs({
             href={buildHref(tab.key)}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
               active
-                ? "bg-foreground text-background"
+                ? "bg-accent text-white"
                 : "border border-border bg-surface text-muted hover:text-foreground"
             }`}
           >
             {tab.label}
-            <span className="ml-1.5 opacity-60">{tab.count.toLocaleString()}</span>
+            <span className={`ml-1.5 ${active ? "text-white/80" : "opacity-60"}`}>{tab.count.toLocaleString()}</span>
           </Link>
         );
       })}

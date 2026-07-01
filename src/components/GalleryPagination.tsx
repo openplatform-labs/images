@@ -83,7 +83,7 @@ export function GalleryPagination({
             href={buildPageHref(item, searchParams)}
             className={`rounded-md px-3 py-1.5 text-sm ${
               page === item
-                ? "bg-foreground text-background"
+                ? "bg-accent text-white"
                 : "text-muted hover:text-foreground"
             }`}
           >

@@ -39,7 +39,7 @@ export function GalleryToolbar({
             href={sortHref("name")}
             className={`rounded-md px-2.5 py-1.5 ${
               sort !== "recent"
-                ? "bg-foreground text-background"
+                ? "bg-accent text-white"
                 : "text-muted hover:text-foreground"
             }`}
           >
@@ -49,7 +49,7 @@ export function GalleryToolbar({
             href={sortHref("recent")}
             className={`rounded-md px-2.5 py-1.5 ${
               sort === "recent"
-                ? "bg-foreground text-background"
+                ? "bg-accent text-white"
                 : "text-muted hover:text-foreground"
             }`}
           >

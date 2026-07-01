@@ -30575,19 +30575,6 @@
     ]
   },
   {
-    "name": "ClojureScript",
-    "shortname": "cljs",
-    "url": "https://clojurescript.org/",
-    "collection": "simple",
-    "source": "gilbarbara",
-    "files": [
-      {
-        "filename": "cljs.svg",
-        "variant": "default"
-      }
-    ]
-  },
-  {
     "name": "Clojurescript",
     "shortname": "clojurescript",
     "url": "",
@@ -30600,6 +30587,19 @@
       },
       {
         "filename": "clojurescript.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
+    "name": "ClojureScript",
+    "shortname": "cljs",
+    "url": "https://clojurescript.org/",
+    "collection": "simple",
+    "source": "gilbarbara",
+    "files": [
+      {
+        "filename": "cljs.svg",
         "variant": "default"
       }
     ]
@@ -58749,19 +58749,6 @@
     ]
   },
   {
-    "name": "IoT Edge",
-    "shortname": "azure-iot-edge",
-    "url": "https://azure.microsoft.com/en-us/products/",
-    "collection": "themed",
-    "source": "thesvg",
-    "files": [
-      {
-        "filename": "azure-iot-edge.svg",
-        "variant": "default"
-      }
-    ]
-  },
-  {
     "name": "Iot Edge",
     "shortname": "gcp-iot-edge",
     "url": "https://cloud.google.com/",
@@ -58770,6 +58757,19 @@
     "files": [
       {
         "filename": "gcp-iot-edge.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
+    "name": "IoT Edge",
+    "shortname": "azure-iot-edge",
+    "url": "https://azure.microsoft.com/en-us/products/",
+    "collection": "themed",
+    "source": "thesvg",
+    "files": [
+      {
+        "filename": "azure-iot-edge.svg",
         "variant": "default"
       }
     ]
@@ -104848,6 +104848,19 @@
     ]
   },
   {
+    "name": "Triangles",
+    "shortname": "triangles-brand-kit",
+    "url": "",
+    "collection": "themed",
+    "source": "thesvg",
+    "files": [
+      {
+        "filename": "triangles-2.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Triangles Logo NonTypo",
     "shortname": "triangles-logo-nontypo",
     "url": "",
@@ -104869,19 +104882,6 @@
     "files": [
       {
         "filename": "triangles.svg",
-        "variant": "default"
-      }
-    ]
-  },
-  {
-    "name": "Triangles Logo NonTypo (Brand Kit)",
-    "shortname": "triangles-brand-kit",
-    "url": "",
-    "collection": "themed",
-    "source": "thesvg",
-    "files": [
-      {
-        "filename": "triangles-2.svg",
         "variant": "default"
       }
     ]
@@ -114494,23 +114494,6 @@
     ]
   },
   {
-    "name": "YugabyteDB",
-    "shortname": "yugabyte",
-    "url": "https://www.yugabyte.com/",
-    "collection": "simple",
-    "source": "gilbarbara",
-    "files": [
-      {
-        "filename": "yugabyte-icon.svg",
-        "variant": "icon"
-      },
-      {
-        "filename": "yugabyte.svg",
-        "variant": "default"
-      }
-    ]
-  },
-  {
     "name": "Yugabytedb",
     "shortname": "yugabytedb",
     "url": "",
@@ -114527,6 +114510,23 @@
       },
       {
         "filename": "yugabytedb.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
+    "name": "YugabyteDB",
+    "shortname": "yugabyte",
+    "url": "https://www.yugabyte.com/",
+    "collection": "simple",
+    "source": "gilbarbara",
+    "files": [
+      {
+        "filename": "yugabyte-icon.svg",
+        "variant": "icon"
+      },
+      {
+        "filename": "yugabyte.svg",
         "variant": "default"
       }
     ]

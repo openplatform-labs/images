@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { LogoImage } from "@/components/LogoImage";
 import { LogoPreviewFrame } from "@/components/LogoPreviewFrame";
 import { PreviewThemeSwitcher } from "@/components/PreviewThemeSwitcher";
 
@@ -16,14 +16,7 @@ export function LogoDetailPreview({ imageUrl, name }: LogoDetailPreviewProps) {
         <PreviewThemeSwitcher />
       </div>
       <LogoPreviewFrame large className="rounded-2xl">
-        <Image
-          src={imageUrl}
-          alt={name}
-          width={400}
-          height={240}
-          className="max-h-[220px] w-auto max-w-full object-contain"
-          unoptimized
-        />
+        <LogoImage src={imageUrl} alt={name} size="detail" />
       </LogoPreviewFrame>
     </div>
   );

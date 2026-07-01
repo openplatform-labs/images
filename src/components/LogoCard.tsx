@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { collectionLabels } from "@/lib/collection";
 import { pickGalleryPreviewFile } from "@/lib/logo-files";
 import type { LogoEntry } from "@/lib/types";
+import { LogoImage } from "@/components/LogoImage";
 import { LogoPreviewFrame } from "@/components/LogoPreviewFrame";
 
 interface LogoCardProps {
@@ -25,14 +25,7 @@ export function LogoCard({ logo }: LogoCardProps) {
     >
       <LogoPreviewFrame className="rounded-2xl transition group-hover:ring-2 group-hover:ring-accent/40">
         {preview ? (
-          <Image
-            src={preview.staticallyUrl}
-            alt={logo.name}
-            width={200}
-            height={120}
-            className="max-h-[100px] w-auto max-w-full object-contain md:max-h-[120px]"
-            unoptimized
-          />
+          <LogoImage src={preview.staticallyUrl} alt={logo.name} size="card" />
         ) : (
           <span className="text-sm text-muted">—</span>
         )}

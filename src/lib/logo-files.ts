@@ -67,10 +67,24 @@ export function pickGalleryPreviewFile(
   collection: LogoCollection,
 ): LogoFile | null {
   if (collection === "themed") {
-    return (
-      pickLogoFile(files, shortname, collection, "default") ??
-      pickLogoFile(files, shortname, collection, "mono")
-    );
+    const previewPriority: LogoVariant[] = [
+      "color",
+      "wordmark",
+      "light",
+      "dark",
+      "default",
+      "size64",
+      "size32",
+      "size16",
+      "mono",
+    ];
+
+    for (const variant of previewPriority) {
+      const file = pickLogoFile(files, shortname, collection, variant);
+      if (file) return file;
+    }
+
+    return files[0] ?? null;
   }
 
   return (

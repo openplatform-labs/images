@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { LogoImage } from "@/components/LogoImage";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { collectionLabels } from "@/lib/collection";
 import { pickGalleryPreviewFile } from "@/lib/logo-files";
@@ -265,13 +265,10 @@ export function ExistingLogoManager({
               >
                 <div className="flex h-12 w-16 shrink-0 items-center justify-center rounded-md bg-white">
                   {thumb ? (
-                    <Image
+                    <LogoImage
                       src={thumb.staticallyUrl}
                       alt={item.name}
-                      width={56}
-                      height={32}
-                      className="max-h-8 max-w-14 object-contain"
-                      unoptimized
+                      size="thumb"
                     />
                   ) : (
                     <span className="text-xs text-muted">—</span>
@@ -348,13 +345,10 @@ export function ExistingLogoManager({
 
             {previewFile && (
               <div className="flex justify-center rounded-xl bg-white p-6">
-                <Image
+                <LogoImage
                   src={previewFile.staticallyUrl}
                   alt={name}
-                  width={220}
-                  height={120}
-                  className="max-h-28 w-auto object-contain"
-                  unoptimized
+                  size="card"
                 />
               </div>
             )}

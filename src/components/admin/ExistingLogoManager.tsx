@@ -7,7 +7,7 @@ import { pickGalleryPreviewFile } from "@/lib/logo-files";
 import type { Category, LogoCollection, LogoEntry, Tag } from "@/lib/types";
 import { CopyButton } from "@/components/CopyButton";
 import { LogoDropZone, type DroppedFile } from "@/components/admin/LogoDropZone";
-import { authHeaders } from "@/lib/admin-client";
+import { authHeaders, parseApiResponse } from "@/lib/admin-client";
 
 interface ExistingLogoManagerProps {
   categories: Category[];
@@ -107,31 +107,40 @@ export function ExistingLogoManager({
     setSaving(true);
     setMessage("");
 
-    const response = await fetch(`/api/admin/logos/${selectedShortname}`, {
-      method: "PATCH",
-      headers: { ...authHeaders(), "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        url: officialUrl,
-        categoryIds: selectedCategories,
-        tagIds: selectedTags,
-        syncGithub: githubConfigured,
-      }),
-    });
+    try {
+      const response = await fetch(`/api/admin/logos/${selectedShortname}`, {
+        method: "PATCH",
+        headers: { ...authHeaders(), "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          url: officialUrl,
+          categoryIds: selectedCategories,
+          tagIds: selectedTags,
+          syncGithub: githubConfigured,
+        }),
+      });
 
-    const data = await response.json();
+      const data = await parseApiResponse<{
+        error?: string;
+        message?: string;
+        logo?: LogoEntry;
+      }>(response);
 
-    if (!response.ok) {
-      setMessage(data.error ?? "저장 실패");
+      if (!response.ok) {
+        setMessage(data.error ?? "저장 실패");
+        setSaving(false);
+        return;
+      }
+
+      if (data.logo) setLogo(data.logo);
+      setMessage(data.message ?? "저장되었습니다.");
       setSaving(false);
-      return;
+      onSaved?.();
+      await loadList();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "저장 실패");
+      setSaving(false);
     }
-
-    setLogo(data.logo);
-    setMessage(data.message ?? "저장되었습니다.");
-    setSaving(false);
-    onSaved?.();
-    await loadList();
   }
 
   async function handleAddFiles() {
@@ -145,41 +154,46 @@ export function ExistingLogoManager({
     setUploadingFiles(true);
     setMessage("");
 
-    const formData = new FormData();
-    formData.set("shortname", selectedShortname);
-    formData.set("name", name);
-    formData.set("url", officialUrl);
-    for (const file of extraFiles) {
-      formData.append("files", file.file);
-    }
-    for (const categoryId of selectedCategories) {
-      formData.append("categoryIds", String(categoryId));
-    }
-    for (const tagId of selectedTags) {
-      formData.append("tagIds", String(tagId));
-    }
+    try {
+      const formData = new FormData();
+      formData.set("shortname", selectedShortname);
+      formData.set("name", name);
+      formData.set("url", officialUrl);
+      for (const file of extraFiles) {
+        formData.append("files", file.file);
+      }
+      for (const categoryId of selectedCategories) {
+        formData.append("categoryIds", String(categoryId));
+      }
+      for (const tagId of selectedTags) {
+        formData.append("tagIds", String(tagId));
+      }
 
-    const response = await fetch("/api/admin/upload", {
-      method: "POST",
-      headers: authHeaders(),
-      body: formData,
-    });
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        headers: authHeaders(),
+        body: formData,
+      });
 
-    const data = await response.json();
+      const data = await parseApiResponse<{ error?: string }>(response);
 
-    if (!response.ok) {
-      setMessage(data.error ?? "파일 업로드 실패");
+      if (!response.ok) {
+        setMessage(data.error ?? "파일 업로드 실패");
+        setUploadingFiles(false);
+        return;
+      }
+
+      for (const file of extraFiles) URL.revokeObjectURL(file.previewUrl);
+      setExtraFiles([]);
+      setMessage("SVG 파일이 GitHub에 추가되었습니다.");
       setUploadingFiles(false);
-      return;
+      await loadLogo(selectedShortname);
+      onSaved?.();
+      await loadList();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "파일 업로드 실패");
+      setUploadingFiles(false);
     }
-
-    for (const file of extraFiles) URL.revokeObjectURL(file.previewUrl);
-    setExtraFiles([]);
-    setMessage("SVG 파일이 GitHub에 추가되었습니다.");
-    setUploadingFiles(false);
-    await loadLogo(selectedShortname);
-    onSaved?.();
-    await loadList();
   }
 
   function toggleCategory(id: number) {
@@ -466,7 +480,10 @@ export function ExistingLogoManager({
             {message && (
               <p
                 className={`text-sm ${
-                  message.includes("실패") || message.includes("없")
+                  message.includes("실패") ||
+                  message.includes("없") ||
+                  message.includes("비어") ||
+                  message.includes("해석")
                     ? "text-danger"
                     : "text-accent"
                 }`}

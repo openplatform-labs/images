@@ -1,5 +1,6 @@
+import fs from "fs";
 import { Octokit } from "@octokit/rest";
-import { config } from "./config";
+import { config, getLogosJsonRemoteUrl } from "./config";
 import { normalizeLogosJsonFiles } from "./collection";
 import type { LogosJsonEntry } from "./types";
 
@@ -14,7 +15,29 @@ export function isGitHubConfigured(): boolean {
   return Boolean(config.githubToken);
 }
 
+function getLocalLogosJsonPath(): string | null {
+  if (config.logosJsonPath) return config.logosJsonPath;
+  const defaultPath = `${process.cwd()}/logos.json`;
+  return fs.existsSync(defaultPath) ? defaultPath : null;
+}
+
+function writeLogosJsonLocally(logosJson: LogosJsonEntry[]): void {
+  const targetPath = getLocalLogosJsonPath();
+  if (!targetPath) return;
+  fs.writeFileSync(targetPath, JSON.stringify(logosJson, null, 2) + "\n");
+}
+
+/** GitHub 또는 로컬 logos.json 로드 */
 export async function fetchLogosJsonFromGitHub(): Promise<LogosJsonEntry[]> {
+  const localPath = getLocalLogosJsonPath();
+  if (localPath) {
+    const raw = fs.readFileSync(localPath, "utf-8");
+    if (!raw.trim()) {
+      throw new Error("로컬 logos.json 내용이 비어 있습니다.");
+    }
+    return JSON.parse(raw) as LogosJsonEntry[];
+  }
+
   const octokit = createOctokit();
   const response = await octokit.repos.getContent({
     owner: config.githubOwner,
@@ -27,7 +50,31 @@ export async function fetchLogosJsonFromGitHub(): Promise<LogosJsonEntry[]> {
     throw new Error("logos.json 파일을 찾을 수 없습니다.");
   }
 
-  const content = Buffer.from(response.data.content, "base64").toString("utf-8");
+  let content = "";
+
+  if ("content" in response.data && response.data.content) {
+    content = Buffer.from(response.data.content, "base64").toString("utf-8");
+  }
+
+  // 1MB 이상이면 Contents API content 필드가 비어 있음
+  if (!content.trim()) {
+    const rawResponse = await fetch(getLogosJsonRemoteUrl(), {
+      headers: config.githubToken
+        ? { Authorization: `Bearer ${config.githubToken}` }
+        : undefined,
+    });
+
+    if (!rawResponse.ok) {
+      throw new Error(`logos.json raw 조회 실패: ${rawResponse.status}`);
+    }
+
+    content = await rawResponse.text();
+  }
+
+  if (!content.trim()) {
+    throw new Error("logos.json 내용이 비어 있습니다.");
+  }
+
   return JSON.parse(content) as LogosJsonEntry[];
 }
 
@@ -154,6 +201,8 @@ export async function uploadLogoToGitHub(params: {
     sha: commit.data.sha,
   });
 
+  writeLogosJsonLocally(logosJson);
+
   const finalFiles = mergedFilenames;
 
   return {
@@ -238,6 +287,8 @@ export async function updateLogoMetadataOnGitHub(params: {
     ref: `heads/${githubBranch}`,
     sha: commit.data.sha,
   });
+
+  writeLogosJsonLocally(logosJson);
 
   return { commitSha: commit.data.sha };
 }

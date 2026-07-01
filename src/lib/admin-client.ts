@@ -39,3 +39,19 @@ export function authHeaders(): HeadersInit {
   const token = getAdminToken();
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
+
+/** API 응답 JSON 파싱 (빈 본문 방어) */
+export async function parseApiResponse<T = Record<string, unknown>>(
+  response: Response,
+): Promise<T> {
+  const text = await response.text();
+  if (!text.trim()) {
+    throw new Error(`서버 응답이 비어 있습니다. (HTTP ${response.status})`);
+  }
+
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    throw new Error("서버 응답을 해석하지 못했습니다.");
+  }
+}

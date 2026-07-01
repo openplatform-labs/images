@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* 라이트 사이트 테마 (기본) */
+:root,
+[data-site-theme="light"] {
+  --background: #f6f7f9;
+  --foreground: #14181f;
+  --surface: #ffffff;
+  --surface-elevated: #f0f2f5;
+  --border: #e2e6ec;
+  --accent: #0d9488;
+  --accent-muted: #0f766e;
+  --muted: #6b7280;
+  --danger: #dc2626;
+}
+
+/* 다크 사이트 테마 */
+[data-site-theme="dark"] {
+  --background: #0a0e14;
+  --foreground: #e6edf3;
+  --surface: #121820;
+  --surface-elevated: #1a2230;
+  --border: #2a3544;
+  --accent: #3dd6c3;
+  --accent-muted: #2a9d8f;
+  --muted: #8b9cb3;
+  --danger: #ff6b6b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-muted: var(--muted);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-syne);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.font-display {
+  font-family: var(--font-syne), system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+[data-site-theme="light"] body {
+  background-image: none;
+}
+
+[data-site-theme="dark"] body {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(61, 214, 195, 0.1), transparent);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 로고 미리보기 배경 테마 */
+.logo-preview-light {
+  background: #ffffff;
+}
+
+.logo-preview-dark {
+  background: #111111;
+}
+
+.logo-preview-muted {
+  background: #e2e5ea;
+}
+
+.logo-preview-checker {
+  background-color: #f0f2f5;
+  background-image:
+    linear-gradient(45deg, #d1d5db 25%, transparent 25%),
+    linear-gradient(-45deg, #d1d5db 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #d1d5db 75%),
+    linear-gradient(-45deg, transparent 75%, #d1d5db 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+
+.logo-preview-frame {
+  width: 100%;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.4s ease-out both;
 }

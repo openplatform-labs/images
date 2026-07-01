@@ -23,7 +23,7 @@ const navItems = [
   {
     href: "/admin/contents",
     label: "콘텐츠 관리",
-    description: "로고 · 카테고리 · 태그",
+    description: "로고 · 카테고리 · 태그 · 편집",
   },
   {
     href: "/admin/site",

@@ -144,3 +144,83 @@ export async function uploadLogoToGitHub(params: {
     fileNames: finalFiles,
   };
 }
+
+/** logos.json 항목 메타데이터만 GitHub에 반영 */
+export async function updateLogoMetadataOnGitHub(params: {
+  shortname: string;
+  name: string;
+  url: string;
+}): Promise<{ commitSha: string }> {
+  const octokit = createOctokit();
+  const { shortname, name, url } = params;
+  const { githubOwner, githubRepo, githubBranch } = config;
+
+  const logosJson = await fetchLogosJsonFromGitHub();
+  const existingIndex = logosJson.findIndex(
+    (entry) => entry.shortname === shortname,
+  );
+
+  if (existingIndex < 0) {
+    throw new Error(`logos.json에 '${shortname}' 항목이 없습니다.`);
+  }
+
+  logosJson[existingIndex] = {
+    ...logosJson[existingIndex],
+    name,
+    url,
+  };
+  logosJson.sort((left, right) => left.name.localeCompare(right.name));
+
+  const refResponse = await octokit.git.getRef({
+    owner: githubOwner,
+    repo: githubRepo,
+    ref: `heads/${githubBranch}`,
+  });
+  const parentSha = refResponse.data.object.sha;
+
+  const parentCommit = await octokit.git.getCommit({
+    owner: githubOwner,
+    repo: githubRepo,
+    commit_sha: parentSha,
+  });
+
+  const logosJsonBlob = await octokit.git.createBlob({
+    owner: githubOwner,
+    repo: githubRepo,
+    content: Buffer.from(JSON.stringify(logosJson, null, 2) + "\n").toString(
+      "base64",
+    ),
+    encoding: "base64",
+  });
+
+  const tree = await octokit.git.createTree({
+    owner: githubOwner,
+    repo: githubRepo,
+    base_tree: parentCommit.data.tree.sha,
+    tree: [
+      {
+        path: "logos.json",
+        mode: "100644",
+        type: "blob",
+        sha: logosJsonBlob.data.sha as string,
+      },
+    ],
+  });
+
+  const commit = await octokit.git.createCommit({
+    owner: githubOwner,
+    repo: githubRepo,
+    message: `Update logo metadata: ${name}`,
+    tree: tree.data.sha,
+    parents: [parentSha],
+  });
+
+  await octokit.git.updateRef({
+    owner: githubOwner,
+    repo: githubRepo,
+    ref: `heads/${githubBranch}`,
+    sha: commit.data.sha,
+  });
+
+  return { commitSha: commit.data.sha };
+}

@@ -2,6 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import type { Category, Tag } from "@/lib/types";
+import { ExistingLogoManager } from "@/components/admin/ExistingLogoManager";
 import { LogoDropZone, type DroppedFile } from "@/components/admin/LogoDropZone";
 import { UploadResultPanel } from "@/components/admin/UploadResultPanel";
 import { authHeaders } from "@/lib/admin-client";
@@ -39,6 +40,7 @@ export default function ContentsAdminPage() {
 
   const [newCategory, setNewCategory] = useState("");
   const [newTag, setNewTag] = useState("");
+  const [activeTab, setActiveTab] = useState<"upload" | "manage">("manage");
 
   const loadMeta = useCallback(async () => {
     const [categoryResponse, tagResponse, statusResponse] = await Promise.all([
@@ -203,7 +205,7 @@ export default function ContentsAdminPage() {
         <div>
           <h1 className="font-display text-3xl font-bold">콘텐츠 관리</h1>
           <p className="text-sm text-muted">
-            로고 업로드 · 카테고리 · 태그 · GitHub 동기화
+            로고 업로드 · 기존 로고 편집 · 카테고리 · 태그
           </p>
         </div>
         <button
@@ -222,7 +224,39 @@ export default function ContentsAdminPage() {
         </p>
       )}
 
-      {uploadResult ? (
+      <div className="flex gap-2 rounded-xl border border-border bg-surface p-1">
+        <button
+          type="button"
+          onClick={() => setActiveTab("manage")}
+          className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
+            activeTab === "manage"
+              ? "bg-accent text-background"
+              : "text-muted hover:text-foreground"
+          }`}
+        >
+          기존 로고 관리
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("upload")}
+          className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
+            activeTab === "upload"
+              ? "bg-accent text-background"
+              : "text-muted hover:text-foreground"
+          }`}
+        >
+          새 로고 업로드
+        </button>
+      </div>
+
+      {activeTab === "manage" ? (
+        <ExistingLogoManager
+          categories={categories}
+          tags={tags}
+          githubConfigured={status?.githubConfigured ?? false}
+          onSaved={() => void loadMeta()}
+        />
+      ) : uploadResult ? (
         <UploadResultPanel {...uploadResult} onReset={resetUploadForm} />
       ) : (
         <form onSubmit={handlePublish} className="space-y-6">

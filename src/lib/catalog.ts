@@ -360,6 +360,21 @@ export function updateLogoMetadata(
   updateTransaction();
 }
 
+/** 로고 기본 정보 SQLite 업데이트 */
+export function updateLogoEntry(
+  shortname: string,
+  input: { name: string; url: string },
+): void {
+  const database = getDatabase();
+  database
+    .prepare(
+      `UPDATE logos
+       SET name = ?, url = ?, updated_at = datetime('now')
+       WHERE shortname = ?`,
+    )
+    .run(input.name, input.url || null, shortname);
+}
+
 export function upsertLogoLocally(entry: LogosJsonEntry): void {
   const database = getDatabase();
 

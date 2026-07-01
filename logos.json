@@ -76507,6 +76507,19 @@
     ]
   },
   {
+    "name": "Nvidia Geforce Rtx",
+    "shortname": "nvidia-geforce-rtx",
+    "url": "",
+    "collection": "themed",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "nvidia-geforce-rtx.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "nvm",
     "shortname": "nvm",
     "url": "https://github.com/nvm-sh/nvm",

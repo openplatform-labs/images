@@ -1,7 +1,7 @@
 # OpenSphere Logos Web — 운영·개발 메뉴얼
 
 [svglogos.dev](https://svglogos.dev/) 스타일의 SVG 로고 갤러리 웹앱입니다.  
-로고 원본은 [opensphere-platform/logos](https://github.com/opensphere-platform/logos) GitHub 저장소이며, 이미지는 [Statically CDN](https://statically.io)에서 제공합니다.
+**단일 저장소** [openplatform-labs/images](https://github.com/openplatform-labs/images)에 웹앱·`logos/`·`logos.json`이 함께 있으며, 이미지는 [Statically CDN](https://statically.io)에서 제공합니다.
 
 **프로덕션:** https://images.opl.io.kr
 
@@ -23,7 +23,7 @@
 
 ```bash
 git clone https://github.com/openplatform-labs/images.git
-cd logos-web
+cd images
 cp .env.example .env.local
 # .env.local 편집
 
@@ -44,8 +44,8 @@ npm run dev
 | `ADMIN_EMAIL` | ○ | 최초 관리자 이메일 |
 | `ADMIN_PASSWORD` | ○ | 최초 관리자 비밀번호 |
 | `GITHUB_TOKEN` | △ | GitHub 업로드용 PAT (`repo` 권한). 업로드 기능 사용 시 필수 |
-| `GITHUB_OWNER` | | 기본 `opensphere-platform` |
-| `GITHUB_REPO` | | 기본 `logos` |
+| `GITHUB_OWNER` | | 기본 `openplatform-labs` |
+| `GITHUB_REPO` | | 기본 `images` |
 | `GITHUB_BRANCH` | | 기본 `main` |
 | `STATICALLY_CDN_BASE` | | Statically CDN base URL |
 | `LOGOS_JSON_PATH` | | (선택) 로컬 `logos.json` 경로. 있으면 원격 대신 사용 |
@@ -58,7 +58,7 @@ npm run dev
 로컬 `logos.json` 예시:
 
 ```env
-LOGOS_JSON_PATH=../OpenSphere-logos/OpenSphere-logos-github/logos.json
+LOGOS_JSON_PATH=./logos.json
 ```
 
 ---
@@ -106,7 +106,7 @@ GET /api/resolve?q=react&format=minimal
     "confidence": 1,
     "matchReason": "alias:k8s"
   },
-  "url": "https://cdn.statically.io/gh/opensphere-platform/logos@main/logos/kubernetes.svg",
+  "url": "https://cdn.statically.io/gh/openplatform-labs/images@main/logos/kubernetes.svg",
   "format": "svg",
   "scalable": true,
   "file": {
@@ -175,7 +175,7 @@ GET /i/adobe?variant=icon
 | 용도 | 패턴 |
 |------|------|
 | 갤러리 페이지 | `https://images.opl.io.kr/logo/{shortname}` |
-| CDN 직접 | `https://cdn.statically.io/gh/opensphere-platform/logos@main/logos/{filename}.svg` |
+| CDN 직접 | `https://cdn.statically.io/gh/openplatform-labs/images@main/logos/{filename}.svg` |
 | 단축 | `https://images.opl.io.kr/i/{shortname}` |
 
 ---
@@ -270,35 +270,37 @@ images.opl.io.kr {
 ## 아키텍처
 
 ```
+openplatform-labs/images (GitHub 단일 레포)
+├── logos/           ← SVG 원본 (SoT)
+├── logos.json       ← 로고 인덱스
+├── src/             ← Next.js 웹앱
+└── data/            ← SQLite (서버 런타임, gitignore)
+
 브라우저 / AI 에이전트
         │
         ▼
   images.opl.io.kr (Next.js)
         │
-        ├── SQLite (data/catalog.sqlite) — 메타·카테고리·태그
-        │
-        ├── GitHub API — logos.json / SVG 업로드
-        │
-        └── 응답에 CDN URL 포함
+        ├── SQLite — 검색·카테고리·태그 캐시
+        ├── GitHub API — 같은 레포에 SVG/logos.json 커밋
+        └── CDN URL 응답
                     │
                     ▼
-        cdn.statically.io (실제 SVG 바이트)
+  cdn.statically.io/gh/openplatform-labs/images@main/logos/
 ```
 
+- **단일 레포**: 웹앱과 로고 데이터가 `openplatform-labs/images` 하나에 있음
 - **웹서버**: 페이지·API·검색·관리
 - **CDN**: 로고 이미지 트래픽의 대부분
-- **GitHub**: 로고 원본 저장소 (SoT)
 
 ### 주요 디렉터리
 
 ```
-src/
-  app/api/resolve/     # AI URL 해석
-  app/api/catalog/     # 전체 카탈로그 덤프
-  app/llms.txt/        # AI 가이드
-  lib/resolve.ts       # 검색·매칭 로직
-  lib/aliases.ts       # 별칭 맵
-  lib/logo-files.ts    # variant 메타데이터
+logos/                 # SVG 파일 (1860+)
+logos.json             # 로고 메타 인덱스
+src/app/api/resolve/   # AI URL 해석
+src/app/api/catalog/   # 전체 카탈로그 덤프
+docs/MANUAL.md         # 이 문서
 ```
 
 ---
@@ -316,4 +318,5 @@ src/
 ## 라이선스·출처
 
 로고 SVG 저작권은 각 브랜드 소유입니다.  
-원본 저장소: https://github.com/opensphere-platform/logos
+저장소: https://github.com/openplatform-labs/images  
+초기 로고 컬렉션 출처: [opensphere-platform/logos](https://github.com/opensphere-platform/logos) (fork·이전)

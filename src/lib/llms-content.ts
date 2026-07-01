@@ -40,7 +40,7 @@ SVG files are scalable. Size is controlled in HTML/CSS (width/height), not in th
 ## URL patterns
 
 - Page: ${siteBase}/logo/{shortname}
-- CDN direct: https://cdn.statically.io/gh/opensphere-platform/logos@main/logos/{filename}.svg
+- CDN direct: https://cdn.statically.io/gh/openplatform-labs/images@main/logos/{filename}.svg
 - Shortcut redirect: ${siteBase}/i/{shortname} → default variant CDN URL
 
 ## Aliases
@@ -58,5 +58,5 @@ Common aliases map to shortnames (e.g. k8s → kubernetes, reactjs → react, no
 
 ## Source
 
-GitHub: https://github.com/opensphere-platform/logos
+GitHub: https://github.com/openplatform-labs/images
 `;

@@ -1,5 +1,5 @@
 import { CopyButton } from "./CopyButton";
-import { config } from "@/lib/config";
+import { config, getGithubRepoUrl } from "@/lib/config";
 import type { LogoFile } from "@/lib/types";
 
 interface StaticallyUrlPanelProps {
@@ -12,8 +12,16 @@ export function StaticallyUrlPanel({ files }: StaticallyUrlPanelProps) {
       <div>
         <h2 className="font-display text-lg font-semibold">Statically CDN URL</h2>
         <p className="mt-1 text-sm text-muted">
-          GitHub <code className="text-accent">opensphere-platform/logos</code> 저장소와
-          연동된 CDN 주소입니다.
+          GitHub{" "}
+          <a
+            href={getGithubRepoUrl()}
+            className="text-accent hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {config.githubOwner}/{config.githubRepo}
+          </a>{" "}
+          저장소와 연동된 CDN 주소입니다.
         </p>
       </div>
 

@@ -1,10 +1,10 @@
 export const config = {
-  githubOwner: process.env.GITHUB_OWNER ?? "opensphere-platform",
-  githubRepo: process.env.GITHUB_REPO ?? "logos",
+  githubOwner: process.env.GITHUB_OWNER ?? "openplatform-labs",
+  githubRepo: process.env.GITHUB_REPO ?? "images",
   githubBranch: process.env.GITHUB_BRANCH ?? "main",
   staticallyCdnBase:
     process.env.STATICALLY_CDN_BASE ??
-    "https://cdn.statically.io/gh/opensphere-platform/logos@main",
+    "https://cdn.statically.io/gh/openplatform-labs/images@main",
   logosJsonPath: process.env.LOGOS_JSON_PATH,
   adminEmail: process.env.ADMIN_EMAIL ?? "",
   adminPassword: process.env.ADMIN_PASSWORD ?? "",

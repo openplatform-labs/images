@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans, Syne } from "next/font/google";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { getGithubRepoUrl } from "@/lib/config";
 import "./globals.css";
 
 const syne = Syne({
@@ -19,7 +20,7 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "OpenSphere Logos — SVG Logo Gallery",
   description:
-    "opensphere-platform/logos 저장소 기반 SVG 로고 갤러리. Statically CDN URL 제공.",
+    "openplatform-labs/images 단일 저장소 기반 SVG 로고 갤러리. Statically CDN URL 제공.",
   other: {
     "llms-txt": "/llms.txt",
   },
@@ -39,12 +40,12 @@ export default function RootLayout({
           <footer className="border-t border-border py-6 text-center text-xs text-muted">
             <p>
               <a
-                href="https://github.com/opensphere-platform/logos"
+                href={getGithubRepoUrl()}
                 className="hover:text-accent"
                 target="_blank"
                 rel="noreferrer"
               >
-                opensphere-platform/logos
+                openplatform-labs/images
               </a>
               {" · "}
               <a

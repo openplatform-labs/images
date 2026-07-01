@@ -226,7 +226,7 @@ export function buildCatalogDump(fields?: string): {
   const database = getDatabase();
   const siteBase = getSiteBaseUrl();
   const cdnBase = process.env.STATICALLY_CDN_BASE ??
-    "https://cdn.statically.io/gh/opensphere-platform/logos@main";
+    "https://cdn.statically.io/gh/openplatform-labs/images@main";
 
   const rows = database
     .prepare("SELECT shortname, name, url FROM logos ORDER BY name COLLATE NOCASE")

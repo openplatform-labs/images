@@ -17,6 +17,7 @@ rsync -az --delete \
   --exclude 'data/*.sqlite' \
   --exclude 'data/*.sqlite-*' \
   --exclude '.env*.local' \
+  --exclude '.env.production' \
   "${LOCAL_DIR}/" \
   "${REMOTE_HOST}:${APP_DIR}/"
 

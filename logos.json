@@ -56037,6 +56037,19 @@
     ]
   },
   {
+    "name": "Hwp",
+    "shortname": "hwp",
+    "url": "",
+    "collection": "simple",
+    "source": "gilbarbara",
+    "files": [
+      {
+        "filename": "hwp.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Hybrid Connectivity Hub",
     "shortname": "azure-hybrid-connectivity-hub",
     "url": "https://azure.microsoft.com/en-us/products/",

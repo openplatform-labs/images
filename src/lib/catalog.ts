@@ -418,9 +418,27 @@ export function updateLogoMetadata(
 /** 로고 기본 정보 SQLite 업데이트 */
 export function updateLogoEntry(
   shortname: string,
-  input: { name: string; url: string },
+  input: { name: string; url: string; collection?: LogoCollection; source?: string },
 ): void {
   const database = getDatabase();
+
+  if (input.collection !== undefined) {
+    database
+      .prepare(
+        `UPDATE logos
+         SET name = ?, url = ?, collection = ?, source = ?, updated_at = datetime('now')
+         WHERE shortname = ?`,
+      )
+      .run(
+        input.name,
+        input.url || null,
+        input.collection,
+        input.source ?? null,
+        shortname,
+      );
+    return;
+  }
+
   database
     .prepare(
       `UPDATE logos

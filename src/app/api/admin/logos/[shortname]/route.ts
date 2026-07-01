@@ -9,6 +9,8 @@ import {
   isGitHubConfigured,
   updateLogoMetadataOnGitHub,
 } from "@/lib/github";
+import { normalizeLogosJsonFiles, sourceForCollection } from "@/lib/collection";
+import type { LogoCollection } from "@/lib/types";
 import { isAuthorizedRequest, unauthorizedResponse } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -45,6 +47,7 @@ export async function PATCH(
   const body = (await request.json()) as {
     name?: string;
     url?: string;
+    collection?: LogoCollection;
     categoryIds?: number[];
     tagIds?: number[];
     syncGithub?: boolean;
@@ -52,6 +55,8 @@ export async function PATCH(
 
   const name = body.name?.trim() ?? existing.name;
   const url = body.url?.trim() ?? existing.url ?? "";
+  const collection = body.collection ?? existing.collection;
+  const source = sourceForCollection(collection, existing.source);
   const categoryIds = body.categoryIds ?? existing.categories.map((c) => c.id);
   const tagIds = body.tagIds ?? existing.tags.map((t) => t.id);
   const syncGithub = body.syncGithub !== false;
@@ -75,23 +80,27 @@ export async function PATCH(
         shortname,
         name,
         url,
+        collection,
       });
       commitSha = githubResult.commitSha;
     }
 
-    updateLogoEntry(shortname, { name, url });
+    const normalizedFiles = normalizeLogosJsonFiles(
+      existing.files.map((file) => file.filename),
+      shortname,
+      collection,
+    );
+
+    updateLogoEntry(shortname, { name, url, collection, source });
     updateLogoMetadata(shortname, categoryIds, tagIds);
 
     upsertLogoLocally({
       shortname,
       name,
       url,
-      collection: existing.collection,
-      source: existing.source ?? undefined,
-      files: existing.files.map((file) => ({
-        filename: file.filename,
-        variant: file.role,
-      })),
+      collection,
+      source,
+      files: normalizedFiles,
     });
 
     const updated = getLogoByShortname(shortname);

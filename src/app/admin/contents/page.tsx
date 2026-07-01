@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import type { Category, Tag } from "@/lib/types";
+import type { Category, LogoCollection, Tag } from "@/lib/types";
+import { CollectionPicker } from "@/components/admin/CollectionPicker";
 import { ExistingLogoManager } from "@/components/admin/ExistingLogoManager";
 import { LogoDropZone, type DroppedFile } from "@/components/admin/LogoDropZone";
 import { UploadResultPanel } from "@/components/admin/UploadResultPanel";
@@ -34,6 +35,7 @@ export default function ContentsAdminPage() {
   const [name, setName] = useState("");
   const [shortname, setShortname] = useState("");
   const [officialUrl, setOfficialUrl] = useState("");
+  const [collection, setCollection] = useState<LogoCollection>("simple");
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [uploadResult, setUploadResult] = useState<UploadResult | null>(null);
@@ -63,6 +65,7 @@ export default function ContentsAdminPage() {
     setName("");
     setShortname("");
     setOfficialUrl("");
+    setCollection("simple");
     setSelectedCategories([]);
     setSelectedTags([]);
     setUploadResult(null);
@@ -91,6 +94,7 @@ export default function ContentsAdminPage() {
     formData.set("name", name);
     formData.set("shortname", shortname);
     formData.set("url", officialUrl);
+    formData.set("collection", collection);
     for (const file of droppedFiles) {
       formData.append("files", file.file);
     }
@@ -302,6 +306,14 @@ export default function ContentsAdminPage() {
                 type="url"
                 placeholder="공식 URL"
                 className="rounded-lg border border-border bg-surface-elevated px-3 py-2 md:col-span-2"
+              />
+            </div>
+
+            <div className="mt-4">
+              <CollectionPicker
+                value={collection}
+                onChange={setCollection}
+                disabled={loading}
               />
             </div>
 

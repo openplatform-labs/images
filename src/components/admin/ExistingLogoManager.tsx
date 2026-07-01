@@ -5,6 +5,7 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { collectionLabels } from "@/lib/collection";
 import { pickGalleryPreviewFile } from "@/lib/logo-files";
 import type { Category, LogoCollection, LogoEntry, Tag } from "@/lib/types";
+import { CollectionPicker } from "@/components/admin/CollectionPicker";
 import { CopyButton } from "@/components/CopyButton";
 import { LogoDropZone, type DroppedFile } from "@/components/admin/LogoDropZone";
 import { authHeaders, parseApiResponse } from "@/lib/admin-client";
@@ -32,6 +33,7 @@ export function ExistingLogoManager({
   const [logo, setLogo] = useState<LogoEntry | null>(null);
   const [name, setName] = useState("");
   const [officialUrl, setOfficialUrl] = useState("");
+  const [collection, setCollection] = useState<LogoCollection>("simple");
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [message, setMessage] = useState("");
@@ -86,6 +88,7 @@ export function ExistingLogoManager({
     setLogo(data);
     setName(data.name);
     setOfficialUrl(data.url ?? "");
+    setCollection(data.collection ?? "simple");
     setSelectedCategories(data.categories.map((category: Category) => category.id));
     setSelectedTags(data.tags.map((tag: Tag) => tag.id));
     setSelectedShortname(shortname);
@@ -114,6 +117,7 @@ export function ExistingLogoManager({
         body: JSON.stringify({
           name,
           url: officialUrl,
+          collection,
           categoryIds: selectedCategories,
           tagIds: selectedTags,
           syncGithub: githubConfigured,
@@ -159,6 +163,7 @@ export function ExistingLogoManager({
       formData.set("shortname", selectedShortname);
       formData.set("name", name);
       formData.set("url", officialUrl);
+      formData.set("collection", collection);
       for (const file of extraFiles) {
         formData.append("files", file.file);
       }
@@ -343,7 +348,7 @@ export function ExistingLogoManager({
                 </p>
                 {logo && (
                   <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-muted">
-                    {collectionLabels[logo.collection]}
+                    {collectionLabels[collection]}
                     {logo.source ? ` · ${logo.source}` : ""}
                   </p>
                 )}
@@ -382,6 +387,12 @@ export function ExistingLogoManager({
                 className="rounded-lg border border-border bg-surface-elevated px-3 py-2 text-sm"
               />
             </div>
+
+            <CollectionPicker
+              value={collection}
+              onChange={setCollection}
+              disabled={saving || uploadingFiles}
+            />
 
             <div>
               <p className="mb-2 text-xs font-semibold uppercase text-muted">

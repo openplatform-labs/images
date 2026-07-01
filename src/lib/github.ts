@@ -1,8 +1,8 @@
 import fs from "fs";
 import { Octokit } from "@octokit/rest";
 import { config, getLogosJsonRemoteUrl } from "./config";
-import { normalizeLogosJsonFiles } from "./collection";
-import type { LogosJsonEntry } from "./types";
+import { normalizeLogosJsonFiles, sourceForCollection } from "./collection";
+import type { LogoCollection, LogosJsonEntry } from "./types";
 
 function createOctokit(): Octokit {
   if (!config.githubToken) {
@@ -83,6 +83,7 @@ export async function uploadLogoToGitHub(params: {
   shortname: string;
   name: string;
   url: string;
+  collection?: LogoCollection;
   files: { filename: string; content: string }[];
 }): Promise<{ commitSha: string; fileNames: string[] }> {
   const octokit = createOctokit();
@@ -96,8 +97,9 @@ export async function uploadLogoToGitHub(params: {
 
   const fileNames = files.map((file) => file.filename);
   const existingEntry = existingIndex >= 0 ? logosJson[existingIndex] : null;
-  const collection = existingEntry?.collection ?? "simple";
-  const source = existingEntry?.source ?? "gilbarbara";
+  const collection =
+    params.collection ?? existingEntry?.collection ?? "simple";
+  const source = sourceForCollection(collection, existingEntry?.source);
   const mergedFilenames =
     existingIndex >= 0
       ? Array.from(
@@ -216,6 +218,7 @@ export async function updateLogoMetadataOnGitHub(params: {
   shortname: string;
   name: string;
   url: string;
+  collection?: LogoCollection;
 }): Promise<{ commitSha: string }> {
   const octokit = createOctokit();
   const { shortname, name, url } = params;
@@ -230,10 +233,20 @@ export async function updateLogoMetadataOnGitHub(params: {
     throw new Error(`logos.json에 '${shortname}' 항목이 없습니다.`);
   }
 
+  const existingEntry = logosJson[existingIndex];
+  const collection = params.collection ?? existingEntry.collection ?? "simple";
+  const source = sourceForCollection(collection, existingEntry.source);
+  const filenames = existingEntry.files.map((file) =>
+    typeof file === "string" ? file : file.filename,
+  );
+
   logosJson[existingIndex] = {
-    ...logosJson[existingIndex],
+    ...existingEntry,
     name,
     url,
+    collection,
+    source,
+    files: normalizeLogosJsonFiles(filenames, shortname, collection),
   };
   logosJson.sort((left, right) => left.name.localeCompare(right.name));
 

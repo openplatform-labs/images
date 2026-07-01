@@ -4,6 +4,7 @@ import {
   updateLogoMetadata,
   upsertLogoLocally,
 } from "@/lib/catalog";
+import { parseCollectionInput, sourceForCollection } from "@/lib/collection";
 import { isGitHubConfigured, uploadLogoToGitHub } from "@/lib/github";
 import { buildStaticallyUrl } from "@/lib/statically";
 import { inferLogoMetaFromFilename, normalizeSvgFilename } from "@/lib/filename";
@@ -29,6 +30,7 @@ export async function POST(request: Request) {
   let shortname = String(formData.get("shortname") ?? "").trim();
   let name = String(formData.get("name") ?? "").trim();
   const url = String(formData.get("url") ?? "").trim();
+  const collection = parseCollectionInput(String(formData.get("collection") ?? ""));
   const categoryIds = formData
     .getAll("categoryIds")
     .map((value) => Number(value))
@@ -89,6 +91,7 @@ export async function POST(request: Request) {
       shortname,
       name,
       url,
+      collection,
       files: filePayload.map((file) => ({
         filename: file.filename,
         content: file.content,
@@ -96,13 +99,18 @@ export async function POST(request: Request) {
     });
 
     const existing = getLogoByShortname(shortname);
+    const resolvedCollection = collection ?? existing?.collection ?? "simple";
+    const resolvedSource = sourceForCollection(
+      resolvedCollection,
+      existing?.source,
+    );
 
     upsertLogoLocally({
       shortname,
       name,
       url,
-      collection: existing?.collection ?? "simple",
-      source: existing?.source ?? "gilbarbara",
+      collection: resolvedCollection,
+      source: resolvedSource,
       files: uploadResult.fileNames,
     });
 

@@ -111,3 +111,22 @@ export function parseCollectionParam(
   if (value === "simple" || value === "themed") return value;
   return undefined;
 }
+
+/** 컬렉션 선택값 파싱 (관리자 폼) */
+export function parseCollectionInput(
+  value: string | null | undefined,
+): LogoCollection {
+  return value === "themed" ? "themed" : "simple";
+}
+
+/** 컬렉션에 맞는 source 기본값 */
+export function sourceForCollection(
+  collection: LogoCollection,
+  existingSource?: string | null,
+): string {
+  if (collection === "themed" && existingSource === "thesvg") return "thesvg";
+  if (collection === "simple" && existingSource === "gilbarbara") {
+    return "gilbarbara";
+  }
+  return "custom";
+}

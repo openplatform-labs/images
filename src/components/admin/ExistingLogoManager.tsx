@@ -55,11 +55,21 @@ export function ExistingLogoManager({
     if (query.trim()) params.set("q", query.trim());
     if (collectionFilter) params.set("collection", collectionFilter);
 
-    const response = await fetch(`/api/logos?${params.toString()}`);
-    const data = await response.json();
-    setItems(data.items ?? []);
-    setTotal(data.total ?? 0);
-    setListLoading(false);
+    try {
+      const response = await fetch(`/api/logos?${params.toString()}`);
+      const data = await parseApiResponse<{
+        items?: LogoEntry[];
+        total?: number;
+      }>(response);
+      if (!response.ok) return;
+      setItems(data.items ?? []);
+      setTotal(data.total ?? 0);
+    } catch {
+      setItems([]);
+      setTotal(0);
+    } finally {
+      setListLoading(false);
+    }
   }, [page, query, collectionFilter]);
 
   useEffect(() => {
@@ -70,29 +80,40 @@ export function ExistingLogoManager({
   }, [loadList]);
 
   async function loadLogo(shortname: string) {
+    setSelectedShortname(shortname);
     setEditorLoading(true);
     setMessage("");
     setExtraFiles([]);
+    setLogo(null);
 
-    const response = await fetch(`/api/admin/logos/${shortname}`, {
-      headers: authHeaders(),
-    });
-    const data = await response.json();
+    try {
+      const response = await fetch(
+        `/api/admin/logos/${encodeURIComponent(shortname)}`,
+        { headers: authHeaders() },
+      );
+      const data = await parseApiResponse<LogoEntry & { error?: string }>(
+        response,
+      );
 
-    if (!response.ok) {
-      setMessage(data.error ?? "로고를 불러오지 못했습니다.");
+      if (!response.ok) {
+        setMessage(data.error ?? "로고를 불러오지 못했습니다.");
+        setEditorLoading(false);
+        return;
+      }
+
+      setLogo(data);
+      setName(data.name);
+      setOfficialUrl(data.url ?? "");
+      setCollection(data.collection ?? "simple");
+      setSelectedCategories(data.categories.map((category) => category.id));
+      setSelectedTags(data.tags.map((tag) => tag.id));
       setEditorLoading(false);
-      return;
+    } catch (error) {
+      setMessage(
+        error instanceof Error ? error.message : "로고를 불러오지 못했습니다.",
+      );
+      setEditorLoading(false);
     }
-
-    setLogo(data);
-    setName(data.name);
-    setOfficialUrl(data.url ?? "");
-    setCollection(data.collection ?? "simple");
-    setSelectedCategories(data.categories.map((category: Category) => category.id));
-    setSelectedTags(data.tags.map((tag: Tag) => tag.id));
-    setSelectedShortname(shortname);
-    setEditorLoading(false);
   }
 
   function clearSelection() {
@@ -111,18 +132,21 @@ export function ExistingLogoManager({
     setMessage("");
 
     try {
-      const response = await fetch(`/api/admin/logos/${selectedShortname}`, {
-        method: "PATCH",
-        headers: { ...authHeaders(), "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          url: officialUrl,
-          collection,
-          categoryIds: selectedCategories,
-          tagIds: selectedTags,
-          syncGithub: githubConfigured,
-        }),
-      });
+      const response = await fetch(
+        `/api/admin/logos/${encodeURIComponent(selectedShortname)}`,
+        {
+          method: "PATCH",
+          headers: { ...authHeaders(), "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            url: officialUrl,
+            collection,
+            categoryIds: selectedCategories,
+            tagIds: selectedTags,
+            syncGithub: githubConfigured,
+          }),
+        },
+      );
 
       const data = await parseApiResponse<{
         error?: string;
@@ -256,9 +280,11 @@ export function ExistingLogoManager({
           {total.toLocaleString()}개 · {page}/{totalPages} 페이지
         </p>
 
-        <div className="mt-3 max-h-[520px] space-y-2 overflow-y-auto pr-1">
+        <div className="relative mt-3 max-h-[520px] space-y-2 overflow-y-auto pr-1">
           {listLoading && (
-            <p className="py-8 text-center text-sm text-muted">불러오는 중...</p>
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-start justify-center bg-surface/60 pt-8">
+              <p className="text-sm text-muted">불러오는 중...</p>
+            </div>
           )}
           {!listLoading && items.length === 0 && (
             <p className="py-8 text-center text-sm text-muted">검색 결과 없음</p>
@@ -275,14 +301,14 @@ export function ExistingLogoManager({
               <button
                 key={item.shortname}
                 type="button"
-                onClick={() => loadLogo(item.shortname)}
+                onClick={() => void loadLogo(item.shortname)}
                 className={`flex w-full items-center gap-3 rounded-lg border px-3 py-2 text-left transition ${
                   active
                     ? "border-accent bg-accent/10"
                     : "border-border hover:border-accent/40"
                 }`}
               >
-                <div className="flex h-12 w-16 shrink-0 items-center justify-center rounded-md bg-white">
+                <div className="pointer-events-none flex h-12 w-16 shrink-0 items-center justify-center rounded-md bg-white">
                   {thumb ? (
                     <LogoImage
                       src={thumb.staticallyUrl}
@@ -335,8 +361,22 @@ export function ExistingLogoManager({
             왼쪽에서 로고를 선택하세요.
           </div>
         ) : editorLoading ? (
-          <div className="flex min-h-[320px] items-center justify-center text-sm text-muted">
-            불러오는 중...
+          <div className="flex min-h-[320px] flex-col items-center justify-center gap-2 text-sm text-muted">
+            <p>불러오는 중...</p>
+            <p className="font-mono text-xs">{selectedShortname}</p>
+          </div>
+        ) : !logo ? (
+          <div className="flex min-h-[320px] flex-col items-center justify-center gap-3 px-4 text-center">
+            <p className="text-sm text-danger">
+              {message || "로고를 불러오지 못했습니다."}
+            </p>
+            <button
+              type="button"
+              onClick={clearSelection}
+              className="text-xs text-muted hover:text-foreground"
+            >
+              닫기
+            </button>
           </div>
         ) : (
           <form onSubmit={handleSave} className="space-y-5">

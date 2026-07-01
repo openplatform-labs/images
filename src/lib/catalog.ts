@@ -1,13 +1,19 @@
 import fs from "fs";
 import { config, getLogosJsonRemoteUrl } from "./config";
+import {
+  detectCollection,
+  normalizeLogosJsonFiles,
+} from "./collection";
 import { getDatabase } from "./db";
 import { slugify } from "./slug";
 import { enrichLogoFiles } from "./logo-files";
 import type {
   Category,
+  LogoCollection,
   LogoEntry,
   LogoListResult,
   LogosJsonEntry,
+  LogosJsonFileEntry,
   Tag,
 } from "./types";
 
@@ -40,6 +46,32 @@ async function loadLogosJson(): Promise<LogosJsonEntry[]> {
   return (await response.json()) as LogosJsonEntry[];
 }
 
+function parseLogosJsonEntry(entry: LogosJsonEntry): {
+  shortname: string;
+  name: string;
+  url: string;
+  collection: LogoCollection;
+  source: string | null;
+  files: LogosJsonFileEntry[];
+} {
+  const rawFilenames = entry.files.map((file) =>
+    typeof file === "string" ? file : file.filename,
+  );
+  const collection =
+    entry.collection ?? detectCollection(rawFilenames, entry.shortname, entry.source);
+  const source =
+    entry.source ?? (collection === "themed" ? "thesvg" : "gilbarbara");
+
+  return {
+    shortname: entry.shortname,
+    name: entry.name,
+    url: entry.url ?? "",
+    collection,
+    source,
+    files: normalizeLogosJsonFiles(entry.files, entry.shortname, collection),
+  };
+}
+
 function guessCategorySlugs(shortname: string): string[] {
   const normalized = shortname.toLowerCase();
   const matched: string[] = [];
@@ -62,11 +94,13 @@ export async function syncCatalogFromSource(): Promise<{
   const database = getDatabase();
 
   const upsertLogo = database.prepare(`
-    INSERT INTO logos (shortname, name, url, updated_at)
-    VALUES (@shortname, @name, @url, datetime('now'))
+    INSERT INTO logos (shortname, name, url, collection, source, updated_at)
+    VALUES (@shortname, @name, @url, @collection, @source, datetime('now'))
     ON CONFLICT(shortname) DO UPDATE SET
       name = excluded.name,
       url = excluded.url,
+      collection = excluded.collection,
+      source = excluded.source,
       updated_at = datetime('now')
   `);
 
@@ -74,8 +108,8 @@ export async function syncCatalogFromSource(): Promise<{
     "DELETE FROM logo_files WHERE shortname = ?",
   );
   const insertFile = database.prepare(`
-    INSERT OR IGNORE INTO logo_files (shortname, filename)
-    VALUES (?, ?)
+    INSERT OR REPLACE INTO logo_files (shortname, filename, variant)
+    VALUES (?, ?, ?)
   `);
 
   const categoryRows = database
@@ -91,29 +125,33 @@ export async function syncCatalogFromSource(): Promise<{
 
   const syncTransaction = database.transaction((rows: LogosJsonEntry[]) => {
     for (const entry of rows) {
+      const parsed = parseLogosJsonEntry(entry);
+
       upsertLogo.run({
-        shortname: entry.shortname,
-        name: entry.name,
-        url: entry.url,
+        shortname: parsed.shortname,
+        name: parsed.name,
+        url: parsed.url,
+        collection: parsed.collection,
+        source: parsed.source,
       });
 
-      deleteFiles.run(entry.shortname);
-      for (const filename of entry.files) {
-        insertFile.run(entry.shortname, filename);
+      deleteFiles.run(parsed.shortname);
+      for (const file of parsed.files) {
+        insertFile.run(parsed.shortname, file.filename, file.variant);
       }
 
-      const guessed = guessCategorySlugs(entry.shortname);
+      const guessed = guessCategorySlugs(parsed.shortname);
       const hasCategory = database
         .prepare(
           "SELECT COUNT(*) as count FROM logo_categories WHERE logo_shortname = ?",
         )
-        .get(entry.shortname) as { count: number };
+        .get(parsed.shortname) as { count: number };
 
       if (hasCategory.count === 0 && guessed.length > 0) {
         for (const slug of guessed) {
           const category = categoryRows.find((row) => row.slug === slug);
           if (category) {
-            insertLogoCategory.run(entry.shortname, category.id);
+            insertLogoCategory.run(parsed.shortname, category.id);
             autoTagged += 1;
           }
         }
@@ -131,14 +169,16 @@ function mapLogoRow(
     shortname: string;
     name: string;
     url: string | null;
+    collection: LogoCollection;
+    source: string | null;
   },
   database: ReturnType<typeof getDatabase>,
 ): LogoEntry {
   const files = database
     .prepare(
-      "SELECT filename FROM logo_files WHERE shortname = ? ORDER BY filename",
+      "SELECT filename, variant FROM logo_files WHERE shortname = ? ORDER BY filename",
     )
-    .all(row.shortname) as { filename: string }[];
+    .all(row.shortname) as { filename: string; variant: string }[];
 
   const categories = database
     .prepare(
@@ -164,10 +204,9 @@ function mapLogoRow(
     shortname: row.shortname,
     name: row.name,
     url: row.url,
-    files: enrichLogoFiles(
-      row.shortname,
-      files.map((file) => file.filename),
-    ),
+    collection: row.collection,
+    source: row.source,
+    files: enrichLogoFiles(row.shortname, files, row.collection),
     categories,
     tags,
   };
@@ -177,6 +216,7 @@ export function listLogos(params: {
   query?: string;
   categorySlug?: string;
   tagSlug?: string;
+  collection?: LogoCollection;
   page?: number;
   pageSize?: number;
   sort?: "name" | "recent";
@@ -188,6 +228,11 @@ export function listLogos(params: {
 
   const conditions: string[] = ["1=1"];
   const bindings: (string | number)[] = [];
+
+  if (params.collection) {
+    conditions.push("l.collection = ?");
+    bindings.push(params.collection);
+  }
 
   if (params.query) {
     conditions.push("(l.name LIKE ? OR l.shortname LIKE ?)");
@@ -225,7 +270,7 @@ export function listLogos(params: {
 
   const rows = database
     .prepare(
-      `SELECT DISTINCT l.shortname, l.name, l.url
+      `SELECT DISTINCT l.shortname, l.name, l.url, l.collection, l.source
        FROM logos l
        WHERE ${whereClause}
        ORDER BY ${orderBy}
@@ -235,6 +280,8 @@ export function listLogos(params: {
     shortname: string;
     name: string;
     url: string | null;
+    collection: LogoCollection;
+    source: string | null;
   }[];
 
   return {
@@ -248,9 +295,17 @@ export function listLogos(params: {
 export function getLogoByShortname(shortname: string): LogoEntry | null {
   const database = getDatabase();
   const row = database
-    .prepare("SELECT shortname, name, url FROM logos WHERE shortname = ?")
+    .prepare(
+      "SELECT shortname, name, url, collection, source FROM logos WHERE shortname = ?",
+    )
     .get(shortname) as
-    | { shortname: string; name: string; url: string | null }
+    | {
+        shortname: string;
+        name: string;
+        url: string | null;
+        collection: LogoCollection;
+        source: string | null;
+      }
     | undefined;
 
   if (!row) return null;
@@ -377,23 +432,41 @@ export function updateLogoEntry(
 
 export function upsertLogoLocally(entry: LogosJsonEntry): void {
   const database = getDatabase();
+  const parsed = parseLogosJsonEntry(entry);
 
   database
     .prepare(
-      `INSERT INTO logos (shortname, name, url, updated_at)
-       VALUES (@shortname, @name, @url, datetime('now'))
+      `INSERT INTO logos (shortname, name, url, collection, source, updated_at)
+       VALUES (@shortname, @name, @url, @collection, @source, datetime('now'))
        ON CONFLICT(shortname) DO UPDATE SET
          name = excluded.name,
          url = excluded.url,
+         collection = excluded.collection,
+         source = excluded.source,
          updated_at = datetime('now')`,
     )
-    .run(entry);
+    .run(parsed);
 
-  for (const filename of entry.files) {
+  for (const file of parsed.files) {
     database
       .prepare(
-        "INSERT OR IGNORE INTO logo_files (shortname, filename) VALUES (?, ?)",
+        `INSERT OR REPLACE INTO logo_files (shortname, filename, variant)
+         VALUES (?, ?, ?)`,
       )
-      .run(entry.shortname, filename);
+      .run(parsed.shortname, file.filename, file.variant);
   }
+}
+
+export function getCollectionCounts(): Record<LogoCollection, number> {
+  const database = getDatabase();
+  const rows = database
+    .prepare(
+      `SELECT collection, COUNT(*) as count FROM logos GROUP BY collection`,
+    )
+    .all() as { collection: LogoCollection; count: number }[];
+
+  return {
+    simple: rows.find((row) => row.collection === "simple")?.count ?? 0,
+    themed: rows.find((row) => row.collection === "themed")?.count ?? 0,
+  };
 }

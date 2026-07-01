@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import type { Category, LogoEntry, Tag } from "@/lib/types";
+import { collectionLabels } from "@/lib/collection";
+import { pickGalleryPreviewFile } from "@/lib/logo-files";
+import type { Category, LogoCollection, LogoEntry, Tag } from "@/lib/types";
 import { CopyButton } from "@/components/CopyButton";
 import { LogoDropZone, type DroppedFile } from "@/components/admin/LogoDropZone";
 import { authHeaders } from "@/lib/admin-client";
@@ -21,6 +23,7 @@ export function ExistingLogoManager({
   onSaved,
 }: ExistingLogoManagerProps) {
   const [query, setQuery] = useState("");
+  const [collectionFilter, setCollectionFilter] = useState<LogoCollection | "">("");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [items, setItems] = useState<LogoEntry[]>([]);
@@ -48,13 +51,14 @@ export function ExistingLogoManager({
       sort: "name",
     });
     if (query.trim()) params.set("q", query.trim());
+    if (collectionFilter) params.set("collection", collectionFilter);
 
     const response = await fetch(`/api/logos?${params.toString()}`);
     const data = await response.json();
     setItems(data.items ?? []);
     setTotal(data.total ?? 0);
     setListLoading(false);
-  }, [page, query]);
+  }, [page, query, collectionFilter]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -194,8 +198,9 @@ export function ExistingLogoManager({
     );
   }
 
-  const previewFile =
-    logo?.files.find((file) => file.role !== "icon") ?? logo?.files[0];
+  const previewFile = logo
+    ? pickGalleryPreviewFile(logo.files, logo.shortname, logo.collection)
+    : null;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
@@ -215,6 +220,19 @@ export function ExistingLogoManager({
           className="mt-4 w-full rounded-lg border border-border bg-surface-elevated px-3 py-2 text-sm"
         />
 
+        <select
+          value={collectionFilter}
+          onChange={(event) => {
+            setCollectionFilter(event.target.value as LogoCollection | "");
+            setPage(1);
+          }}
+          className="mt-3 w-full rounded-lg border border-border bg-surface-elevated px-3 py-2 text-sm"
+        >
+          <option value="">전체 컬렉션</option>
+          <option value="simple">{collectionLabels.simple}</option>
+          <option value="themed">{collectionLabels.themed}</option>
+        </select>
+
         <p className="mt-3 text-xs text-muted">
           {total.toLocaleString()}개 · {page}/{totalPages} 페이지
         </p>
@@ -227,8 +245,11 @@ export function ExistingLogoManager({
             <p className="py-8 text-center text-sm text-muted">검색 결과 없음</p>
           )}
           {items.map((item) => {
-            const thumb =
-              item.files.find((file) => file.role !== "icon") ?? item.files[0];
+            const thumb = pickGalleryPreviewFile(
+              item.files,
+              item.shortname,
+              item.collection,
+            );
             const active = selectedShortname === item.shortname;
 
             return (
@@ -260,6 +281,9 @@ export function ExistingLogoManager({
                   <p className="truncate text-sm font-medium">{item.name}</p>
                   <p className="truncate font-mono text-xs text-muted">
                     {item.shortname}
+                  </p>
+                  <p className="truncate text-[10px] uppercase tracking-wide text-muted">
+                    {collectionLabels[item.collection]}
                   </p>
                 </div>
               </button>
@@ -306,6 +330,12 @@ export function ExistingLogoManager({
                 <p className="mt-1 font-mono text-xs text-muted">
                   {selectedShortname}
                 </p>
+                {logo && (
+                  <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-muted">
+                    {collectionLabels[logo.collection]}
+                    {logo.source ? ` · ${logo.source}` : ""}
+                  </p>
+                )}
               </div>
               <button
                 type="button"

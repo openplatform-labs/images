@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/rest";
 import { config } from "./config";
+import { normalizeLogosJsonFiles } from "./collection";
 import type { LogosJsonEntry } from "./types";
 
 function createOctokit(): Octokit {
@@ -47,13 +48,32 @@ export async function uploadLogoToGitHub(params: {
   );
 
   const fileNames = files.map((file) => file.filename);
-  const newEntry: LogosJsonEntry = { name, shortname, url, files: fileNames };
+  const existingEntry = existingIndex >= 0 ? logosJson[existingIndex] : null;
+  const collection = existingEntry?.collection ?? "simple";
+  const source = existingEntry?.source ?? "gilbarbara";
+  const mergedFilenames =
+    existingIndex >= 0
+      ? Array.from(
+          new Set([
+            ...existingEntry!.files.map((file) =>
+              typeof file === "string" ? file : file.filename,
+            ),
+            ...fileNames,
+          ]),
+        )
+      : fileNames;
+
+  const newEntry: LogosJsonEntry = {
+    name,
+    shortname,
+    url,
+    collection,
+    source,
+    files: normalizeLogosJsonFiles(mergedFilenames, shortname, collection),
+  };
 
   if (existingIndex >= 0) {
-    const mergedFiles = Array.from(
-      new Set([...logosJson[existingIndex].files, ...fileNames]),
-    );
-    logosJson[existingIndex] = { ...newEntry, files: mergedFiles };
+    logosJson[existingIndex] = newEntry;
   } else {
     logosJson.push(newEntry);
   }
@@ -134,10 +154,7 @@ export async function uploadLogoToGitHub(params: {
     sha: commit.data.sha,
   });
 
-  const finalFiles =
-    existingIndex >= 0
-      ? Array.from(new Set([...logosJson[existingIndex].files]))
-      : fileNames;
+  const finalFiles = mergedFilenames;
 
   return {
     commitSha: commit.data.sha,

@@ -1,15 +1,18 @@
-import Link from "next/link";
 import { LogoCard } from "@/components/LogoCard";
+import { CollectionTabs } from "@/components/CollectionTabs";
 import { FilterPanel } from "@/components/FilterPanel";
+import { GalleryPagination } from "@/components/GalleryPagination";
 import { GalleryToolbar } from "@/components/GalleryToolbar";
 import { listCategories, listTags } from "@/lib/catalog";
-import { getHomePageData } from "@/lib/server-catalog";
+import { getCollectionCountsForHome, getHomePageData } from "@/lib/server-catalog";
+import type { LogoCollection } from "@/lib/types";
 
 interface HomePageProps {
   searchParams: Promise<{
     q?: string;
     category?: string;
     tag?: string;
+    collection?: string;
     page?: string;
     sort?: string;
   }>;
@@ -17,10 +20,16 @@ interface HomePageProps {
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;
-  const [result, categories, tags] = await Promise.all([
+  const activeCollection =
+    params.collection === "simple" || params.collection === "themed"
+      ? (params.collection as LogoCollection)
+      : undefined;
+
+  const [result, categories, tags, collectionCounts] = await Promise.all([
     getHomePageData(params),
     Promise.resolve(listCategories()),
     Promise.resolve(listTags()),
+    Promise.resolve(getCollectionCountsForHome()),
   ]);
 
   const totalPages = Math.max(1, Math.ceil(result.total / result.pageSize));
@@ -44,10 +53,17 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           tags={tags}
           activeCategory={params.category}
           activeTag={params.tag}
+          activeCollection={activeCollection}
           query={params.q}
         />
 
         <div>
+          <CollectionTabs
+            activeCollection={activeCollection}
+            counts={collectionCounts}
+            searchParams={params}
+          />
+
           <GalleryToolbar
             total={result.total}
             page={result.page}
@@ -66,34 +82,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <div className="py-20 text-center text-muted">No logos found.</div>
           )}
 
-          {totalPages > 1 && (
-            <div className="mt-10 flex justify-center gap-2">
-              {Array.from({ length: Math.min(totalPages, 7) }, (_, index) => {
-                const pageNumber = index + 1;
-                const search = new URLSearchParams();
-                for (const [key, value] of Object.entries({
-                  ...params,
-                  page: String(pageNumber),
-                })) {
-                  if (value) search.set(key, value);
-                }
-
-                return (
-                  <Link
-                    key={pageNumber}
-                    href={`/?${search.toString()}`}
-                    className={`rounded-md px-3 py-1.5 text-sm ${
-                      result.page === pageNumber
-                        ? "bg-foreground text-background"
-                        : "text-muted hover:text-foreground"
-                    }`}
-                  >
-                    {pageNumber}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+          <GalleryPagination
+            page={result.page}
+            totalPages={totalPages}
+            searchParams={params}
+          />
         </div>
       </div>
     </div>

@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LogoDetailPreview } from "@/components/LogoDetailPreview";
 import { StaticallyUrlPanel } from "@/components/StaticallyUrlPanel";
+import { collectionLabels } from "@/lib/collection";
 import { getLogoByShortname } from "@/lib/catalog";
+import { pickGalleryPreviewFile } from "@/lib/logo-files";
 import { ensureCatalogSynced } from "@/lib/server-catalog";
 
 interface LogoDetailPageProps {
@@ -16,8 +18,11 @@ export default async function LogoDetailPage({ params }: LogoDetailPageProps) {
 
   if (!logo) notFound();
 
-  const primaryFile =
-    logo.files.find((file) => !file.filename.includes("-icon")) ?? logo.files[0];
+  const primaryFile = pickGalleryPreviewFile(
+    logo.files,
+    logo.shortname,
+    logo.collection,
+  );
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:px-6">
@@ -34,6 +39,10 @@ export default async function LogoDetailPage({ params }: LogoDetailPageProps) {
         <div className="text-center">
           <h1 className="font-display text-2xl font-bold md:text-3xl">{logo.name}</h1>
           <p className="mt-1 font-mono text-sm text-muted">{logo.shortname}</p>
+          <p className="mt-1 text-xs font-medium uppercase tracking-wide text-muted">
+            {collectionLabels[logo.collection]}
+            {logo.source ? ` · ${logo.source}` : ""}
+          </p>
           {logo.url && (
             <a
               href={logo.url}

@@ -86,7 +86,12 @@ export async function PATCH(
       shortname,
       name,
       url,
-      files: existing.files.map((file) => file.filename),
+      collection: existing.collection,
+      source: existing.source ?? undefined,
+      files: existing.files.map((file) => ({
+        filename: file.filename,
+        variant: file.role,
+      })),
     });
 
     const updated = getLogoByShortname(shortname);

@@ -21,6 +21,8 @@ function initializeSchema(databaseInstance: Database.Database): void {
       shortname TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       url TEXT,
+      collection TEXT NOT NULL DEFAULT 'simple',
+      source TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
@@ -29,6 +31,7 @@ function initializeSchema(databaseInstance: Database.Database): void {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       shortname TEXT NOT NULL,
       filename TEXT NOT NULL,
+      variant TEXT NOT NULL DEFAULT 'default',
       UNIQUE(shortname, filename),
       FOREIGN KEY (shortname) REFERENCES logos(shortname) ON DELETE CASCADE
     );
@@ -103,6 +106,38 @@ function initializeSchema(databaseInstance: Database.Database): void {
 
   seedDefaultCategories(databaseInstance);
   seedDefaultAdmin(databaseInstance);
+  migrateSchema(databaseInstance);
+}
+
+function migrateSchema(databaseInstance: Database.Database): void {
+  const logoColumns = databaseInstance
+    .prepare("PRAGMA table_info(logos)")
+    .all() as { name: string }[];
+  const logoColumnNames = new Set(logoColumns.map((column) => column.name));
+
+  if (!logoColumnNames.has("collection")) {
+    databaseInstance.exec(
+      "ALTER TABLE logos ADD COLUMN collection TEXT NOT NULL DEFAULT 'simple'",
+    );
+  }
+  if (!logoColumnNames.has("source")) {
+    databaseInstance.exec("ALTER TABLE logos ADD COLUMN source TEXT");
+  }
+
+  const fileColumns = databaseInstance
+    .prepare("PRAGMA table_info(logo_files)")
+    .all() as { name: string }[];
+  const fileColumnNames = new Set(fileColumns.map((column) => column.name));
+
+  if (!fileColumnNames.has("variant")) {
+    databaseInstance.exec(
+      "ALTER TABLE logo_files ADD COLUMN variant TEXT NOT NULL DEFAULT 'default'",
+    );
+  }
+
+  databaseInstance.exec(
+    "CREATE INDEX IF NOT EXISTS idx_logos_collection ON logos(collection)",
+  );
 }
 
 function seedDefaultCategories(databaseInstance: Database.Database): void {

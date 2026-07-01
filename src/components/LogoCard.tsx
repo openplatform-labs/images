@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { collectionLabels } from "@/lib/collection";
+import { pickGalleryPreviewFile } from "@/lib/logo-files";
 import type { LogoEntry } from "@/lib/types";
 import { LogoPreviewFrame } from "@/components/LogoPreviewFrame";
 
@@ -10,8 +12,11 @@ interface LogoCardProps {
 }
 
 export function LogoCard({ logo }: LogoCardProps) {
-  const preview =
-    logo.files.find((file) => !file.filename.includes("-icon")) ?? logo.files[0];
+  const preview = pickGalleryPreviewFile(
+    logo.files,
+    logo.shortname,
+    logo.collection,
+  );
 
   return (
     <Link
@@ -35,6 +40,11 @@ export function LogoCard({ logo }: LogoCardProps) {
       <p className="mt-2 truncate text-center text-sm font-medium text-foreground/90">
         {logo.name}
       </p>
+      {logo.collection === "themed" && (
+        <p className="mt-0.5 text-center text-[10px] font-medium uppercase tracking-wide text-muted">
+          {collectionLabels.themed}
+        </p>
+      )}
     </Link>
   );
 }

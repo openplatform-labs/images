@@ -2,7 +2,7 @@ import { getDatabase } from "./db";
 import { normalizeSearchQuery, resolveAlias } from "./aliases";
 import { enrichLogoFiles, pickLogoFile } from "./logo-files";
 import { getLogoByShortname } from "./catalog";
-import type { LogoVariant } from "./types";
+import type { LogoCollection, LogoVariant } from "./types";
 
 export interface ResolveCandidate {
   shortname: string;
@@ -47,7 +47,11 @@ function getSiteBaseUrl(): string {
 }
 
 /** 관련도 점수로 로고 검색 */
-export function searchLogosWithScore(query: string, limit = 8): ScoredRow[] {
+export function searchLogosWithScore(
+  query: string,
+  limit = 8,
+  collection?: LogoCollection,
+): ScoredRow[] {
   const database = getDatabase();
   const normalized = normalizeSearchQuery(query);
 
@@ -144,6 +148,13 @@ export function searchLogosWithScore(query: string, limit = 8): ScoredRow[] {
   }
 
   return [...scores.values()]
+    .filter((row) => {
+      if (!collection) return true;
+      const logoRow = database
+        .prepare("SELECT collection FROM logos WHERE shortname = ?")
+        .get(row.shortname) as { collection: LogoCollection } | undefined;
+      return logoRow?.collection === collection;
+    })
     .sort((left, right) => right.score - left.score)
     .slice(0, limit);
 }
@@ -152,9 +163,10 @@ export function searchLogosWithScore(query: string, limit = 8): ScoredRow[] {
 export function resolveLogoQuery(
   query: string,
   variant: LogoVariant = "default",
+  collection?: LogoCollection,
 ): ResolveResult {
   const siteBase = getSiteBaseUrl();
-  const candidates = searchLogosWithScore(query, 8).map((row) => ({
+  const candidates = searchLogosWithScore(query, 8, collection).map((row) => ({
     shortname: row.shortname,
     name: row.name,
     confidence: Math.round(row.score * 100) / 100,
@@ -194,7 +206,7 @@ export function resolveLogoQuery(
   }
 
   const files = logo.files;
-  const picked = pickLogoFile(files, logo.shortname, variant);
+  const picked = pickLogoFile(files, logo.shortname, logo.collection, variant);
   const fallbackUsed = picked !== null && picked.role !== variant;
 
   return {
@@ -229,8 +241,16 @@ export function buildCatalogDump(fields?: string): {
     "https://cdn.statically.io/gh/openplatform-labs/images@main";
 
   const rows = database
-    .prepare("SELECT shortname, name, url FROM logos ORDER BY name COLLATE NOCASE")
-    .all() as { shortname: string; name: string; url: string | null }[];
+    .prepare(
+      "SELECT shortname, name, url, collection, source FROM logos ORDER BY name COLLATE NOCASE",
+    )
+    .all() as {
+    shortname: string;
+    name: string;
+    url: string | null;
+    collection: LogoCollection;
+    source: string | null;
+  }[];
 
   const fieldSet = fields
     ? new Set(fields.split(",").map((field) => field.trim()))
@@ -239,21 +259,28 @@ export function buildCatalogDump(fields?: string): {
   const logos = rows.map((row) => {
     const fileRows = database
       .prepare(
-        "SELECT filename FROM logo_files WHERE shortname = ? ORDER BY filename",
+        "SELECT filename, variant FROM logo_files WHERE shortname = ? ORDER BY filename",
       )
-      .all(row.shortname) as { filename: string }[];
+      .all(row.shortname) as { filename: string; variant: string }[];
 
-    const files = enrichLogoFiles(
+    const files = enrichLogoFiles(row.shortname, fileRows, row.collection);
+
+    const defaultFile = pickLogoFile(
+      files,
       row.shortname,
-      fileRows.map((file) => file.filename),
+      row.collection,
+      "default",
     );
-
-    const defaultFile = pickLogoFile(files, row.shortname, "default");
-    const iconFile = pickLogoFile(files, row.shortname, "icon");
+    const iconFile =
+      row.collection === "themed"
+        ? pickLogoFile(files, row.shortname, row.collection, "mono")
+        : pickLogoFile(files, row.shortname, row.collection, "icon");
 
     const full: Record<string, unknown> = {
       shortname: row.shortname,
       name: row.name,
+      collection: row.collection,
+      source: row.source,
       officialUrl: row.url,
       pageUrl: `${siteBase}/logo/${row.shortname}`,
       url: defaultFile?.staticallyUrl ?? null,

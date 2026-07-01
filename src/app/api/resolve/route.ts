@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { resolveLogoQuery } from "@/lib/resolve";
+import { parseCollectionParam, parseVariantParam } from "@/lib/collection";
 import { ensureCatalogSynced } from "@/lib/server-catalog";
-import type { LogoVariant } from "@/lib/types";
 
 export const runtime = "nodejs";
 
@@ -10,11 +10,6 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "GET, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
 };
-
-function parseVariant(value: string | null): LogoVariant {
-  if (value === "icon" || value === "wordmark") return value;
-  return "default";
-}
 
 export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: corsHeaders });
@@ -25,20 +20,21 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q") ?? searchParams.get("query") ?? "";
-  const variant = parseVariant(searchParams.get("variant"));
+  const variant = parseVariantParam(searchParams.get("variant"));
+  const collection = parseCollectionParam(searchParams.get("collection"));
   const format = searchParams.get("format") ?? "json";
 
   if (!query.trim()) {
     return NextResponse.json(
       {
         error: "Missing query parameter: q",
-        example: "/api/resolve?q=react&variant=default&format=json",
+        example: "/api/resolve?q=react&variant=default&collection=simple&format=json",
       },
       { status: 400, headers: corsHeaders },
     );
   }
 
-  const result = resolveLogoQuery(query, variant);
+  const result = resolveLogoQuery(query, variant, collection);
 
   if (format === "minimal") {
     if (!result.url) {

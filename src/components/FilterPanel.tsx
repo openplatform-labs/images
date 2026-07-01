@@ -1,11 +1,12 @@
 import Link from "next/link";
-import type { Category, Tag } from "@/lib/types";
+import type { Category, LogoCollection, Tag } from "@/lib/types";
 
 interface FilterPanelProps {
   categories: Category[];
   tags: Tag[];
   activeCategory?: string;
   activeTag?: string;
+  activeCollection?: LogoCollection;
   query?: string;
 }
 
@@ -14,6 +15,7 @@ export function FilterPanel({
   tags,
   activeCategory,
   activeTag,
+  activeCollection,
   query,
 }: FilterPanelProps) {
   function buildHref(params: Record<string, string | undefined>) {
@@ -22,6 +24,7 @@ export function FilterPanel({
       q: query,
       category: activeCategory,
       tag: activeTag,
+      collection: activeCollection,
       ...params,
     };
 
@@ -48,6 +51,9 @@ export function FilterPanel({
             <input type="hidden" name="category" value={activeCategory} />
           )}
           {activeTag && <input type="hidden" name="tag" value={activeTag} />}
+          {activeCollection && (
+            <input type="hidden" name="collection" value={activeCollection} />
+          )}
           <button
             type="submit"
             className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-background"

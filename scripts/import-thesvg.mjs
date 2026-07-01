@@ -15,11 +15,36 @@ const thesvgPublic = path.join(thesvgRoot, "public");
 const logosDir = path.join(projectRoot, "logos");
 const logosJsonPath = path.join(projectRoot, "logos.json");
 
-/** variant → 파일명 규칙 */
+/** variant → 파일명 규칙 (themed 컬렉션) */
 function variantFilename(slug, variant) {
   if (variant === "default") return `${slug}.svg`;
   if (variant === "mono") return `${slug}-icon.svg`;
   return `${slug}-${variant}.svg`;
+}
+
+function normalizeFiles(filenames, shortname) {
+  return filenames.map((filename) => ({
+    filename,
+    variant: inferVariant(filename, shortname, "themed"),
+  }));
+}
+
+function inferVariant(filename, shortname, collection) {
+  const lower = filename.toLowerCase();
+  const base = `${shortname}.svg`;
+  if (lower === base) return "default";
+  if (lower.endsWith("-color.svg")) return "color";
+  if (lower.endsWith("-light.svg")) return "light";
+  if (lower.endsWith("-dark.svg")) return "dark";
+  if (lower.endsWith("-wordmarklight.svg")) return "wordmarkLight";
+  if (lower.endsWith("-wordmarkdark.svg")) return "wordmarkDark";
+  if (lower.endsWith("-wordmark.svg")) return "wordmark";
+  if (lower.endsWith("-icon.svg") || lower.endsWith("-mono.svg")) return "mono";
+  if (lower.endsWith("-16.svg")) return "size16";
+  if (lower.endsWith("-32.svg")) return "size32";
+  if (lower.endsWith("-64.svg")) return "size64";
+  if (lower.endsWith("-line.svg")) return "line";
+  return "default";
 }
 
 function loadExistingLogos() {
@@ -72,7 +97,13 @@ function main() {
     const existing = catalog.get(slug);
 
     if (existing) {
-      existing.files = [...new Set([...existing.files, ...uniqueFiles])].sort();
+      const existingFilenames = existing.files.map((file) =>
+        typeof file === "string" ? file : file.filename,
+      );
+      const merged = [...new Set([...existingFilenames, ...uniqueFiles])].sort();
+      existing.files = normalizeFiles(merged, slug);
+      existing.collection = "themed";
+      existing.source = "thesvg";
       if (!existing.url && icon.url) existing.url = icon.url;
       merged += 1;
     } else {
@@ -80,7 +111,9 @@ function main() {
         name: icon.title ?? slug,
         shortname: slug,
         url: icon.url ?? "",
-        files: uniqueFiles,
+        collection: "themed",
+        source: "thesvg",
+        files: normalizeFiles(uniqueFiles, slug),
       });
       added += 1;
     }

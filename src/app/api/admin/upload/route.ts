@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import {
+  getLogoByShortname,
   updateLogoMetadata,
   upsertLogoLocally,
 } from "@/lib/catalog";
@@ -94,10 +95,14 @@ export async function POST(request: Request) {
       })),
     });
 
+    const existing = getLogoByShortname(shortname);
+
     upsertLogoLocally({
       shortname,
       name,
       url,
+      collection: existing?.collection ?? "simple",
+      source: existing?.source ?? "gilbarbara",
       files: uploadResult.fileNames,
     });
 

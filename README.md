@@ -3,7 +3,8 @@
 [svglogos.dev](https://svglogos.dev/) 스타일의 SVG 로고 갤러리 웹앱입니다.
 
 **프로덕션:** https://images.opl.io.kr  
-**저장소:** https://github.com/openplatform-labs/images (웹앱 + 로고 데이터 단일 레포)  
+**앱 저장소 (Azure DevOps):** https://dev.azure.com/OpenPlatform-labs/open-images/_git/open-images  
+**GitHub (로고 CDN):** https://github.com/openplatform-labs/images  
 **상세 메뉴얼:** [docs/MANUAL.md](docs/MANUAL.md)
 
 - `logos/` · `logos.json` — SVG 로고 원본 (같은 레포)
@@ -30,8 +31,8 @@ curl "https://images.opl.io.kr/api/resolve?q=react&format=minimal"
 ## 시작하기
 
 ```bash
-git clone https://github.com/openplatform-labs/images.git
-cd images
+git clone https://dev.azure.com/OpenPlatform-labs/open-images/_git/open-images
+cd open-images
 cp .env.example .env.local
 # .env.local 편집
 

@@ -1,7 +1,9 @@
 # OpenSphere Logos Web — 운영·개발 메뉴얼
 
 [svglogos.dev](https://svglogos.dev/) 스타일의 SVG 로고 갤러리 웹앱입니다.  
-**단일 저장소** [openplatform-labs/images](https://github.com/openplatform-labs/images)에 웹앱·`logos/`·`logos.json`이 함께 있으며, 이미지는 [Statically CDN](https://statically.io)에서 제공합니다.
+**단일 저장소 구조** — Azure DevOps `open-images`에 웹앱·`logos/`·`logos.json`이 함께 있으며, 이미지는 [Statically CDN](https://statically.io)에서 제공합니다.
+
+**앱 저장소:** https://dev.azure.com/OpenPlatform-labs/open-images/_git/open-images
 
 **프로덕션:** https://images.opl.io.kr
 
@@ -22,8 +24,8 @@
 ## 빠른 시작
 
 ```bash
-git clone https://github.com/openplatform-labs/images.git
-cd images
+git clone https://dev.azure.com/OpenPlatform-labs/open-images/_git/open-images
+cd open-images
 cp .env.example .env.local
 # .env.local 편집
 

@@ -3,6 +3,7 @@
 [svglogos.dev](https://svglogos.dev/) 스타일의 SVG 로고 갤러리 웹앱입니다.
 
 **프로덕션:** https://images.opl.io.kr  
+**저장소:** https://github.com/openplatform-labs/images  
 **상세 메뉴얼:** [docs/MANUAL.md](docs/MANUAL.md)
 
 - [opensphere-platform/logos](https://github.com/opensphere-platform/logos) GitHub 저장소 연동

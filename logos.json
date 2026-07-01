@@ -56040,8 +56040,8 @@
     "name": "Hwp",
     "shortname": "hwp",
     "url": "",
-    "collection": "simple",
-    "source": "gilbarbara",
+    "collection": "themed",
+    "source": "custom",
     "files": [
       {
         "filename": "hwp.svg",

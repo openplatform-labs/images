@@ -78527,6 +78527,19 @@
     ]
   },
   {
+    "name": "OpenTelemetry-non-typo",
+    "shortname": "opentelemetry-non-typo",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "opentelemetry-non-typo.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "OpenText",
     "shortname": "opentext",
     "url": "https://www.opentext.com",

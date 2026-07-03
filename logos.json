@@ -29008,6 +29008,19 @@
     ]
   },
   {
+    "name": "Cert Manager",
+    "shortname": "cert-manager",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "cert-manager.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Certbot",
     "shortname": "certbot",
     "url": "https://certbot.eff.org/",

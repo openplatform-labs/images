@@ -35226,6 +35226,19 @@
     ]
   },
   {
+    "name": "Crossplane Non Typo",
+    "shortname": "crossplane-non-typo",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "crossplane-non-typo.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Crowdin",
     "shortname": "crowdin",
     "url": "https://support.crowdin.com/using-logo/",

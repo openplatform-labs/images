@@ -108205,9 +108205,9 @@
   {
     "name": "Velero",
     "shortname": "velero",
-    "url": "https://velero.io",
-    "collection": "themed",
-    "source": "thesvg",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
     "files": [
       {
         "filename": "velero.svg",

@@ -144,6 +144,18 @@ function allocateUniqueFilename(filename, logosDirectory) {
   return `${stem}-${index}${extension}`;
 }
 
+function findExistingDeviconImport(iconName, catalog) {
+  for (const entry of catalog.values()) {
+    if (
+      entry.source === "devicon" &&
+      entry.url === `https://techicons.dev/icons/${iconName}`
+    ) {
+      return entry.shortname;
+    }
+  }
+  return null;
+}
+
 /** import 대상 shortname (기존 항목과 겹치면 숫자 접미사) */
 function resolveImportShortname(iconName, altnames, catalog) {
   const alias = SHORTNAME_ALIASES[iconName];
@@ -236,9 +248,16 @@ function main() {
   let skipped = 0;
   let added = 0;
   let renamed = 0;
+  let alreadyImported = 0;
 
   for (const icon of deviconIcons) {
     if (iconFilter.length > 0 && !iconFilter.includes(icon.name)) continue;
+
+    const existingDevicon = findExistingDeviconImport(icon.name, catalog);
+    if (existingDevicon) {
+      alreadyImported += 1;
+      continue;
+    }
 
     const iconDir = path.join(deviconRoot, "icons", icon.name);
     if (!fs.existsSync(iconDir)) continue;
@@ -313,6 +332,7 @@ function main() {
 
   console.log("devicon(techicons.dev) import 완료");
   console.log(`  신규 항목: ${added}`);
+  console.log(`  이미 반영됨: ${alreadyImported}`);
   console.log(`  SVG 복사: ${copied} (기존 파일 유지: ${skipped}, 파일명 변경: ${renamed})`);
   console.log(`  총 catalog: ${output.length}`);
   console.log(

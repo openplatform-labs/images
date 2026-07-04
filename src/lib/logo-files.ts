@@ -96,7 +96,12 @@ export function pickGalleryPreviewFile(
 
     for (const variant of previewPriority) {
       const file = pickLogoFile(files, shortname, collection, variant);
-      if (file) return file;
+      if (!file) continue;
+      // color 등 없는 variant는 pickLogoFile이 files[0]으로 떨어지므로 role로 검증
+      if (file.role === variant) return file;
+      if (variant === "default" && file.filename === `${shortname}.svg`) {
+        return file;
+      }
     }
 
     return files[0] ?? null;

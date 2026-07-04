@@ -43,6 +43,7 @@ export function detectCollection(
 ): LogoCollection {
   if (source === "thesvg") return "themed";
   if (source === "gilbarbara") return "simple";
+  if (source === "devicon") return "simple";
 
   const hasThemedFile = filenames.some(
     (filename) =>
@@ -128,5 +129,6 @@ export function sourceForCollection(
   if (collection === "simple" && existingSource === "gilbarbara") {
     return "gilbarbara";
   }
+  if (existingSource === "devicon") return "devicon";
   return "custom";
 }

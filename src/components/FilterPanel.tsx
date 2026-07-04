@@ -51,9 +51,6 @@ export function FilterPanel({
             <input type="hidden" name="category" value={activeCategory} />
           )}
           {activeTag && <input type="hidden" name="tag" value={activeTag} />}
-          {activeCollection && (
-            <input type="hidden" name="collection" value={activeCollection} />
-          )}
           <button
             type="submit"
             className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-background"

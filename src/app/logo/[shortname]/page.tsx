@@ -22,6 +22,7 @@ export default async function LogoDetailPage({ params }: LogoDetailPageProps) {
     logo.files,
     logo.shortname,
     logo.collection,
+    logo.source,
   );
 
   return (

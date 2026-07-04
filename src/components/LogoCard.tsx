@@ -16,6 +16,7 @@ export function LogoCard({ logo }: LogoCardProps) {
     logo.files,
     logo.shortname,
     logo.collection,
+    logo.source,
   );
 
   return (

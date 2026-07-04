@@ -65,19 +65,34 @@ export function pickGalleryPreviewFile(
   files: LogoFile[],
   shortname: string,
   collection: LogoCollection,
+  source?: string | null,
 ): LogoFile | null {
   if (collection === "themed") {
-    const previewPriority: LogoVariant[] = [
-      "color",
-      "wordmark",
-      "light",
-      "dark",
-      "default",
-      "size64",
-      "size32",
-      "size16",
-      "mono",
-    ];
+    // techicons(devicon)는 심볼(default)을 먼저 보여줌
+    const previewPriority: LogoVariant[] =
+      source === "devicon"
+        ? [
+            "color",
+            "default",
+            "wordmark",
+            "light",
+            "dark",
+            "size64",
+            "size32",
+            "size16",
+            "mono",
+          ]
+        : [
+            "color",
+            "wordmark",
+            "light",
+            "dark",
+            "default",
+            "size64",
+            "size32",
+            "size16",
+            "mono",
+          ];
 
     for (const variant of previewPriority) {
       const file = pickLogoFile(files, shortname, collection, variant);

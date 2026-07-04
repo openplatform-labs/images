@@ -78386,9 +78386,9 @@
     ]
   },
   {
-    "name": "OpenSearch",
+    "name": "Opensearch",
     "shortname": "opensearch",
-    "url": "https://opensearch.org/",
+    "url": "",
     "collection": "simple",
     "source": "gilbarbara",
     "files": [

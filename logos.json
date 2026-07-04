@@ -29402,6 +29402,31 @@
     ]
   },
   {
+    "name": "Centos (2)",
+    "shortname": "centos-2",
+    "url": "https://techicons.dev/icons/centos",
+    "collection": "themed",
+    "source": "devicon",
+    "files": [
+      {
+        "filename": "centos-2-icon.svg",
+        "variant": "icon"
+      },
+      {
+        "filename": "centos-2-wordmark-icon.svg",
+        "variant": "mono"
+      },
+      {
+        "filename": "centos-2-wordmark.svg",
+        "variant": "wordmark"
+      },
+      {
+        "filename": "centos-2.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Central Service Instance For SAP",
     "shortname": "azure-central-service-instance-for-sap",
     "url": "https://azure.microsoft.com/en-us/products/",

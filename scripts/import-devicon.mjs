@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 /**
  * Devicon(techicons.dev) → logos/ + logos.json 보강
- * 사용: node scripts/import-devicon.mjs [/path/to/devicon-clone]
+ * 사용: node scripts/import-devicon.mjs [/path/to/devicon-clone] [icon-name...]
  */
 import fs from "fs";
 import path from "path";
 import { execFileSync } from "child_process";
 
 const projectRoot = path.resolve(import.meta.dirname, "..");
-const deviconRoot = process.argv[2]
+const deviconRoot = process.argv[2]?.startsWith("/") || process.argv[2]?.startsWith(".")
   ? path.resolve(process.argv[2])
   : path.join("/tmp", "devicon-import");
+const iconFilter = process.argv
+  .slice(2)
+  .filter((argument) => !argument.startsWith("/") && !argument.startsWith("."));
 const logosDir = path.join(projectRoot, "logos");
 const logosJsonPath = path.join(projectRoot, "logos.json");
 
@@ -116,28 +119,44 @@ function normalizeToken(value) {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-function resolveShortname(deviconName, altnames, catalog) {
-  if (catalog.has(deviconName)) return deviconName;
+function allocateUniqueShortname(baseShortname, catalog) {
+  if (!catalog.has(baseShortname)) return baseShortname;
 
-  const alias = SHORTNAME_ALIASES[deviconName];
-  if (alias && catalog.has(alias)) return alias;
+  let index = 2;
+  while (catalog.has(`${baseShortname}-${index}`)) {
+    index += 1;
+  }
+  return `${baseShortname}-${index}`;
+}
 
-  for (const altname of altnames ?? []) {
-    const slug = slugifyAltname(altname);
-    if (catalog.has(slug)) return slug;
+function allocateUniqueFilename(filename, logosDirectory) {
+  const targetPath = path.join(logosDirectory, filename);
+  if (!fs.existsSync(targetPath)) return filename;
 
-    const compact = normalizeToken(altname);
-    for (const shortname of catalog.keys()) {
-      if (normalizeToken(shortname) === compact) return shortname;
-    }
+  const extension = path.extname(filename);
+  const stem = filename.slice(0, -extension.length);
+  let index = 2;
+
+  while (fs.existsSync(path.join(logosDirectory, `${stem}-${index}${extension}`))) {
+    index += 1;
   }
 
-  const normalized = normalizeToken(deviconName);
-  for (const shortname of catalog.keys()) {
-    if (normalizeToken(shortname) === normalized) return shortname;
+  return `${stem}-${index}${extension}`;
+}
+
+/** import 대상 shortname (기존 항목과 겹치면 숫자 접미사) */
+function resolveImportShortname(iconName, altnames, catalog) {
+  const alias = SHORTNAME_ALIASES[iconName];
+  const aliasTaken = alias ? catalog.has(alias) : false;
+  const nameTaken = catalog.has(iconName);
+
+  if (!nameTaken && !aliasTaken) {
+    if (alias && !catalog.has(alias)) return alias;
+    return iconName;
   }
 
-  return deviconName;
+  const baseShortname = nameTaken ? iconName : alias;
+  return allocateUniqueShortname(baseShortname, catalog);
 }
 
 function mapDeviconFile(shortname, deviconName, deviconFile) {
@@ -216,13 +235,15 @@ function main() {
   let copied = 0;
   let skipped = 0;
   let added = 0;
-  let enriched = 0;
+  let renamed = 0;
 
   for (const icon of deviconIcons) {
+    if (iconFilter.length > 0 && !iconFilter.includes(icon.name)) continue;
+
     const iconDir = path.join(deviconRoot, "icons", icon.name);
     if (!fs.existsSync(iconDir)) continue;
 
-    const shortname = resolveShortname(icon.name, icon.altnames, catalog);
+    const shortname = resolveImportShortname(icon.name, icon.altnames, catalog);
     const deviconFiles = fs
       .readdirSync(iconDir)
       .filter((filename) => filename.endsWith(".svg"));
@@ -231,20 +252,9 @@ function main() {
       mapDeviconFile(shortname, icon.name, filename),
     );
 
-    const existing = catalog.get(shortname);
-    const existingFilenames = new Set(
-      (existing?.files ?? []).map((file) =>
-        typeof file === "string" ? file : file.filename,
-      ),
-    );
+    const copiedFiles = [];
 
-    const filesToAdd = mappedFiles.filter(
-      (file) => !existingFilenames.has(file.filename),
-    );
-
-    if (filesToAdd.length === 0) continue;
-
-    for (const mapped of filesToAdd) {
+    for (const mapped of mappedFiles) {
       const sourceFile = deviconFiles.find((filename) => {
         const mappedCandidate = mapDeviconFile(shortname, icon.name, filename);
         return mappedCandidate.filename === mapped.filename;
@@ -253,7 +263,10 @@ function main() {
       if (!sourceFile) continue;
 
       const sourcePath = path.join(iconDir, sourceFile);
-      const targetPath = path.join(logosDir, mapped.filename);
+      const targetFilename = allocateUniqueFilename(mapped.filename, logosDir);
+      const targetPath = path.join(logosDir, targetFilename);
+
+      if (targetFilename !== mapped.filename) renamed += 1;
 
       if (!fs.existsSync(targetPath)) {
         fs.copyFileSync(sourcePath, targetPath);
@@ -261,62 +274,35 @@ function main() {
       } else {
         skipped += 1;
       }
-    }
 
-    if (existing) {
-      const mergedFilenames = [
-        ...existingFilenames,
-        ...filesToAdd.map((file) => file.filename),
-      ];
-      const collection = resolveCollection(existing, mergedFilenames);
-
-      existing.files = mergedFilenames
-        .sort()
-        .map((filename) => {
-          const fromDevicon = filesToAdd.find(
-            (file) => file.filename === filename,
-          );
-          const previous = existing.files.find((file) =>
-            typeof file === "string"
-              ? file === filename
-              : file.filename === filename,
-          );
-
-          return {
-            filename,
-            variant:
-              fromDevicon?.variant ??
-              (typeof previous === "string"
-                ? undefined
-                : previous?.variant) ??
-              mapDeviconFile(shortname, icon.name, `${icon.name}.svg`).variant,
-          };
-        });
-
-      existing.collection = collection;
-      enriched += 1;
-    } else {
-      const filenames = filesToAdd.map((file) => file.filename);
-      const collection = resolveCollection(
-        { shortname, source: "devicon" },
-        filenames,
-      );
-
-      catalog.set(shortname, {
-        name: formatDisplayName(icon.name, icon.altnames),
-        shortname,
-        url: `https://techicons.dev/icons/${icon.name}`,
-        collection,
-        source: "devicon",
-        files: filesToAdd
-          .sort((left, right) => left.filename.localeCompare(right.filename))
-          .map((file) => ({
-            filename: file.filename,
-            variant: file.variant,
-          })),
+      copiedFiles.push({
+        filename: targetFilename,
+        variant: mapped.variant,
       });
-      added += 1;
     }
+
+    if (copiedFiles.length === 0) continue;
+
+    const filenames = copiedFiles.map((file) => file.filename);
+    const collection = resolveCollection(
+      { shortname, source: "devicon" },
+      filenames,
+    );
+
+    catalog.set(shortname, {
+      name:
+        shortname.includes("-") && /-\d+$/.test(shortname)
+          ? `${formatDisplayName(icon.name, icon.altnames)} (${shortname.match(/-(\d+)$/)?.[1] ?? "2"})`
+          : formatDisplayName(icon.name, icon.altnames),
+      shortname,
+      url: `https://techicons.dev/icons/${icon.name}`,
+      collection,
+      source: "devicon",
+      files: copiedFiles.sort((left, right) =>
+        left.filename.localeCompare(right.filename),
+      ),
+    });
+    added += 1;
   }
 
   const output = [...catalog.values()].sort((left, right) =>
@@ -327,8 +313,7 @@ function main() {
 
   console.log("devicon(techicons.dev) import 완료");
   console.log(`  신규 항목: ${added}`);
-  console.log(`  기존 보강: ${enriched}`);
-  console.log(`  SVG 복사: ${copied} (기존 파일 유지: ${skipped})`);
+  console.log(`  SVG 복사: ${copied} (기존 파일 유지: ${skipped}, 파일명 변경: ${renamed})`);
   console.log(`  총 catalog: ${output.length}`);
   console.log(
     `  logos/ 파일 수: ${fs.readdirSync(logosDir).filter((file) => file.endsWith(".svg")).length}`,

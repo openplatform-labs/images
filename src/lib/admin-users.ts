@@ -169,9 +169,9 @@ export function createSession(adminId: number): string {
   database
     .prepare(
       `INSERT INTO admin_sessions (token, admin_id, expires_at)
-       VALUES (?, ?, datetime('now', '+' || ? || ' days'))`,
+       VALUES (?, ?, datetime('now', '+' || ? || ' hours'))`,
     )
-    .run(token, adminId, config.sessionDays);
+    .run(token, adminId, config.sessionHours);
 
   return token;
 }

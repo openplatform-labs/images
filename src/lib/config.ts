@@ -16,7 +16,7 @@ export const config = {
     pass: process.env.SMTP_PASS ?? "",
     from: process.env.SMTP_FROM ?? process.env.SMTP_USER ?? "",
   },
-  sessionDays: Number(process.env.SESSION_DAYS ?? "7"),
+  sessionHours: Number(process.env.SESSION_HOURS ?? "1"),
   otpExpireMinutes: Number(process.env.OTP_EXPIRE_MINUTES ?? "10"),
   siteBaseUrl:
     process.env.SITE_BASE_URL?.replace(/\/$/, "") ?? "https://images.opl.io.kr",

@@ -92149,6 +92149,19 @@
     ]
   },
   {
+    "name": "Samba Server",
+    "shortname": "samba-server",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "samba-server.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "SambaNova",
     "shortname": "sambanova",
     "url": "https://sambanova.ai",

@@ -98058,6 +98058,19 @@
     ]
   },
   {
+    "name": "Stalwart",
+    "shortname": "stalwart",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "stalwart.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Standard Chartered",
     "shortname": "standard-chartered",
     "url": "https://www.sc.com",

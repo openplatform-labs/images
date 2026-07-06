@@ -76670,8 +76670,8 @@
   {
     "name": "Mattermost",
     "shortname": "mattermost",
-    "url": "http://www.mattermost.org/",
-    "collection": "themed",
+    "url": "",
+    "collection": "simple",
     "source": "gilbarbara",
     "files": [
       {
@@ -76680,7 +76680,7 @@
       },
       {
         "filename": "mattermost-wordmark.svg",
-        "variant": "wordmark"
+        "variant": "default"
       },
       {
         "filename": "mattermost.svg",

@@ -73351,6 +73351,19 @@
     ]
   },
   {
+    "name": "Litlellm",
+    "shortname": "litlellm",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "litlellm.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Litmus",
     "shortname": "litmus",
     "url": "http://litmus.com/",

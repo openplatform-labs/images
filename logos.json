@@ -87231,6 +87231,19 @@
     ]
   },
   {
+    "name": "Opa",
+    "shortname": "opa",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "opa.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Opel",
     "shortname": "opel",
     "url": "https://www.stellantis.com/en/brands/opel",

@@ -73351,19 +73351,6 @@
     ]
   },
   {
-    "name": "Litlellm",
-    "shortname": "litlellm",
-    "url": "",
-    "collection": "simple",
-    "source": "custom",
-    "files": [
-      {
-        "filename": "litlellm.svg",
-        "variant": "default"
-      }
-    ]
-  },
-  {
     "name": "Litmus",
     "shortname": "litmus",
     "url": "http://litmus.com/",
@@ -76683,8 +76670,8 @@
   {
     "name": "Mattermost",
     "shortname": "mattermost",
-    "url": "",
-    "collection": "simple",
+    "url": "http://www.mattermost.org/",
+    "collection": "themed",
     "source": "gilbarbara",
     "files": [
       {
@@ -76693,7 +76680,7 @@
       },
       {
         "filename": "mattermost-wordmark.svg",
-        "variant": "default"
+        "variant": "wordmark"
       },
       {
         "filename": "mattermost.svg",
@@ -87239,19 +87226,6 @@
       },
       {
         "filename": "onstar.svg",
-        "variant": "default"
-      }
-    ]
-  },
-  {
-    "name": "Opa",
-    "shortname": "opa",
-    "url": "",
-    "collection": "simple",
-    "source": "custom",
-    "files": [
-      {
-        "filename": "opa.svg",
         "variant": "default"
       }
     ]
@@ -124900,6 +124874,19 @@
     "files": [
       {
         "filename": "gcp-vmware-engine.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
+    "name": "Vmware Esxi",
+    "shortname": "vmware-esxi",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "vmware-esxi.svg",
         "variant": "default"
       }
     ]

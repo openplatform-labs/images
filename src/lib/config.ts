@@ -19,7 +19,27 @@ export const config = {
   sessionHours: Number(process.env.SESSION_HOURS ?? "1"),
   otpExpireMinutes: Number(process.env.OTP_EXPIRE_MINUTES ?? "10"),
   siteBaseUrl:
-    process.env.SITE_BASE_URL?.replace(/\/$/, "") ?? "https://images.opl.io.kr",
+    process.env.SITE_BASE_URL?.replace(/\/$/, "") ?? "https://logos.opl.io.kr",
+  okta: {
+    clientId: process.env.OKTA_CLIENT_ID ?? "",
+    clientSecret: process.env.OKTA_CLIENT_SECRET ?? "",
+    authorizeUrl:
+      process.env.OKTA_AUTHORIZE_URL ??
+      "https://integrator-1653288.okta.com/oauth2/default/v1/authorize",
+    tokenUrl:
+      process.env.OKTA_TOKEN_URL ??
+      "https://integrator-1653288.okta.com/oauth2/default/v1/token",
+    userinfoUrl:
+      process.env.OKTA_USERINFO_URL ??
+      "https://integrator-1653288.okta.com/oauth2/default/v1/userinfo",
+    jwksUrl:
+      process.env.OKTA_JWKS_URL ??
+      "https://integrator-1653288.okta.com/oauth2/default/v1/keys",
+    logoutUrl:
+      process.env.OKTA_LOGOUT_URL ??
+      "https://integrator-1653288.okta.com/oauth2/default/v1/logout",
+    scopes: process.env.OKTA_SCOPES ?? "openid profile email",
+  },
 };
 
 export function getLogosJsonRemoteUrl(): string {

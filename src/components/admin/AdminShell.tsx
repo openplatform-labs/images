@@ -9,8 +9,10 @@ import {
   authHeaders,
   clearAdminSession,
   getStoredAdmin,
+  saveAdminSession,
   validateAdminSession,
 } from "@/lib/admin-client";
+import { describeOktaAuthError } from "@/lib/okta-auth-messages";
 
 interface AdminShellProps {
   children: ReactNode;
@@ -18,6 +20,7 @@ interface AdminShellProps {
 
 interface AdminStatus {
   smtpConfigured: boolean;
+  oktaConfigured: boolean;
 }
 
 const navItems = [
@@ -39,6 +42,7 @@ export function AdminShell({ children }: AdminShellProps) {
   const [adminEmail, setAdminEmail] = useState("");
   const [status, setStatus] = useState<AdminStatus | null>(null);
   const [ready, setReady] = useState(false);
+  const [authMessage, setAuthMessage] = useState("");
 
   useEffect(() => {
     function handleUnauthorized() {
@@ -60,6 +64,42 @@ export function AdminShell({ children }: AdminShellProps) {
         setStatus(statusData);
       } catch {
         setStatus(null);
+      }
+
+      const parameters = new URLSearchParams(window.location.search);
+      const exchangeCode = parameters.get("oauth_exchange");
+      const authError = parameters.get("auth_error");
+
+      if (authError) {
+        setAuthMessage(
+          describeOktaAuthError(authError, parameters.get("detail")),
+        );
+        window.history.replaceState({}, "", "/admin");
+      }
+
+      if (exchangeCode) {
+        try {
+          const exchangeResponse = await fetch("/api/auth/okta/exchange", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code: exchangeCode }),
+          });
+          const exchangeData = await exchangeResponse.json();
+          window.history.replaceState({}, "", "/admin");
+
+          if (exchangeResponse.ok && exchangeData.token && exchangeData.admin) {
+            saveAdminSession(exchangeData.token, exchangeData.admin);
+            setAuthenticated(true);
+            setAdminEmail(exchangeData.admin.email);
+            setReady(true);
+            return;
+          }
+
+          setAuthMessage(exchangeData.error ?? "Okta 세션 교환에 실패했습니다.");
+        } catch {
+          window.history.replaceState({}, "", "/admin");
+          setAuthMessage("Okta 세션 교환 중 오류가 발생했습니다.");
+        }
       }
 
       const admin = await validateAdminSession();
@@ -103,6 +143,8 @@ export function AdminShell({ children }: AdminShellProps) {
       <AdminLogin
         onSuccess={handleLoginSuccess}
         smtpConfigured={status?.smtpConfigured ?? false}
+        oktaConfigured={status?.oktaConfigured ?? false}
+        initialMessage={authMessage}
       />
     );
   }

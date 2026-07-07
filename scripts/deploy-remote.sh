@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-# cc2-dns1(images.opl.io.kr) 원격 배포 스크립트
+# cc2-dns1(logos.opl.io.kr) 원격 배포 스크립트
 set -euo pipefail
 
 REMOTE_HOST="${REMOTE_HOST:-cc2-dns1}"
 APP_DIR="/var/www/images.opl.io.kr"
 APP_PORT="${APP_PORT:-3100}"
 SERVICE_NAME="opensphere-logos"
-DOMAIN="images.opl.io.kr"
+DOMAIN="logos.opl.io.kr"
+LEGACY_DOMAINS="logo.opl.io.kr images.opl.io.kr"
 LOCAL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 echo "==> 소스 동기화: ${LOCAL_DIR} -> ${REMOTE_HOST}:${APP_DIR}"
@@ -29,10 +30,11 @@ APP_DIR="${APP_DIR}"
 APP_PORT="${APP_PORT}"
 SERVICE_NAME="${SERVICE_NAME}"
 DOMAIN="${DOMAIN}"
+LEGACY_DOMAINS="${LEGACY_DOMAINS}"
 
 # E2.Micro 메모리 부족 방지용 swap
 if [ ! -f /swapfile ]; then
-  sudo fallocate -l 2G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=2048
+  sudo fallocate -l 2G /swapfile || sudo dd /dev/zero of=/swapfile bs=1M count=2048
   sudo chmod 600 /swapfile
   sudo mkswap /swapfile
   sudo swapon /swapfile
@@ -77,7 +79,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable \${SERVICE_NAME}
 sudo systemctl restart \${SERVICE_NAME}
 
-# Caddy 리버스 프록시
+# Caddy 리버스 프록시 (기본 도메인 + 구 도메인 리다이렉트)
 if ! grep -q "\${DOMAIN}" /etc/caddy/Caddyfile; then
   sudo tee -a /etc/caddy/Caddyfile >/dev/null <<CADDY
 
@@ -85,8 +87,20 @@ if ! grep -q "\${DOMAIN}" /etc/caddy/Caddyfile; then
     reverse_proxy localhost:\${APP_PORT}
 }
 CADDY
-  sudo systemctl reload caddy
 fi
+
+for legacy_domain in \${LEGACY_DOMAINS}; do
+  if ! grep -Fq "\${legacy_domain} {" /etc/caddy/Caddyfile; then
+    sudo tee -a /etc/caddy/Caddyfile >/dev/null <<CADDY
+
+\${legacy_domain} {
+    redir https://\${DOMAIN}{uri} permanent
+}
+CADDY
+  fi
+done
+
+sudo systemctl reload caddy
 
 sleep 2
 curl -fsS "http://127.0.0.1:\${APP_PORT}/" >/dev/null

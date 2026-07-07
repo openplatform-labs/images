@@ -1,5 +1,5 @@
 const siteBaseUrl =
-  process.env.SITE_BASE_URL?.replace(/\/$/, "") ?? "https://images.opl.io.kr";
+  process.env.SITE_BASE_URL?.replace(/\/$/, "") ?? "https://logos.opl.io.kr";
 
 export function getOpenApiSpec() {
   return {

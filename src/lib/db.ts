@@ -102,6 +102,13 @@ function initializeSchema(databaseInstance: Database.Database): void {
 
     CREATE INDEX IF NOT EXISTS idx_auth_codes_email ON auth_codes(email);
     CREATE INDEX IF NOT EXISTS idx_admin_sessions_admin ON admin_sessions(admin_id);
+
+    CREATE TABLE IF NOT EXISTS oauth_exchanges (
+      code TEXT PRIMARY KEY,
+      session_token TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
 
   seedDefaultCategories(databaseInstance);
@@ -138,6 +145,15 @@ function migrateSchema(databaseInstance: Database.Database): void {
   databaseInstance.exec(
     "CREATE INDEX IF NOT EXISTS idx_logos_collection ON logos(collection)",
   );
+
+  databaseInstance.exec(`
+    CREATE TABLE IF NOT EXISTS oauth_exchanges (
+      code TEXT PRIMARY KEY,
+      session_token TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    )
+  `);
 }
 
 function seedDefaultCategories(databaseInstance: Database.Database): void {

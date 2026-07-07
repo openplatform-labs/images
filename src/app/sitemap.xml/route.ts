@@ -5,7 +5,7 @@ import { ensureCatalogSynced } from "@/lib/server-catalog";
 export const runtime = "nodejs";
 
 const siteBase =
-  process.env.SITE_BASE_URL?.replace(/\/$/, "") ?? "https://images.opl.io.kr";
+  process.env.SITE_BASE_URL?.replace(/\/$/, "") ?? "https://logos.opl.io.kr";
 
 export async function GET() {
   await ensureCatalogSynced();

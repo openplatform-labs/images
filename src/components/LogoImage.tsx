@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-type LogoImageSize = "card" | "detail" | "thumb";
+type LogoImageSize = "card" | "detail" | "thumb" | "variant";
 
 interface LogoImageProps {
   src: string;
@@ -13,6 +13,7 @@ const sizeClasses: Record<LogoImageSize, string> = {
   card: "h-[100px] w-auto max-w-full object-contain md:h-[120px]",
   detail: "h-[220px] w-auto max-w-full object-contain",
   thumb: "pointer-events-none h-8 w-auto max-w-14 object-contain",
+  variant: "h-[72px] w-auto max-w-full object-contain",
 };
 
 export function LogoImage({ src, alt, size = "card" }: LogoImageProps) {

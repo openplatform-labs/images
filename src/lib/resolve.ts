@@ -42,7 +42,7 @@ interface ScoredRow {
 function getSiteBaseUrl(): string {
   return (
     process.env.SITE_BASE_URL?.replace(/\/$/, "") ??
-    "https://images.opl.io.kr"
+    "https://logos.opl.io.kr"
   );
 }
 

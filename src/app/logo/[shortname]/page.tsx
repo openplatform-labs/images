@@ -44,16 +44,6 @@ export default async function LogoDetailPage({ params }: LogoDetailPageProps) {
             {collectionLabels[logo.collection]}
             {logo.source ? ` · ${logo.source}` : ""}
           </p>
-          {logo.url && (
-            <a
-              href={logo.url}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 inline-block text-sm text-accent hover:underline"
-            >
-              Official site →
-            </a>
-          )}
         </div>
 
         {(logo.categories.length > 0 || logo.tags.length > 0) && (
@@ -79,7 +69,7 @@ export default async function LogoDetailPage({ params }: LogoDetailPageProps) {
           </div>
         )}
 
-        <StaticallyUrlPanel files={logo.files} />
+        <StaticallyUrlPanel files={logo.files} logoName={logo.name} />
       </div>
     </div>
   );

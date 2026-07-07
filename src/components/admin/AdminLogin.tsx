@@ -8,9 +8,16 @@ type LoginMode = "password" | "otp" | "forgot";
 interface AdminLoginProps {
   onSuccess: () => void;
   smtpConfigured: boolean;
+  oktaConfigured: boolean;
+  initialMessage?: string;
 }
 
-export function AdminLogin({ onSuccess, smtpConfigured }: AdminLoginProps) {
+export function AdminLogin({
+  onSuccess,
+  smtpConfigured,
+  oktaConfigured,
+  initialMessage = "",
+}: AdminLoginProps) {
   const [mode, setMode] = useState<LoginMode>("password");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +26,7 @@ export function AdminLogin({ onSuccess, smtpConfigured }: AdminLoginProps) {
   const [resetCode, setResetCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [resetSent, setResetSent] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(initialMessage);
   const [loading, setLoading] = useState(false);
 
   function switchMode(next: LoginMode) {
@@ -156,6 +163,22 @@ export function AdminLogin({ onSuccess, smtpConfigured }: AdminLoginProps) {
         <h1 className="font-display text-2xl font-bold">
           {mode === "forgot" ? "비밀번호 재설정" : "관리자 로그인"}
         </h1>
+
+        {oktaConfigured && mode !== "forgot" && (
+          <div className="space-y-3">
+            <a
+              href="/api/auth/okta/login"
+              className="flex w-full items-center justify-center rounded-lg border border-border bg-surface-elevated py-2.5 text-sm font-semibold transition hover:border-accent hover:text-accent"
+            >
+              Okta로 로그인
+            </a>
+            <div className="flex items-center gap-3 text-xs text-muted">
+              <span className="h-px flex-1 bg-border" />
+              또는
+              <span className="h-px flex-1 bg-border" />
+            </div>
+          </div>
+        )}
 
         {mode === "forgot" ? (
           <div className="space-y-4">

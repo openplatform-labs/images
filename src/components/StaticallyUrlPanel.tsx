@@ -1,12 +1,14 @@
 import { CopyButton } from "./CopyButton";
+import { CopyableLogoPreview } from "./CopyableLogoPreview";
 import { config, getGithubRepoUrl } from "@/lib/config";
 import type { LogoFile } from "@/lib/types";
 
 interface StaticallyUrlPanelProps {
   files: LogoFile[];
+  logoName: string;
 }
 
-export function StaticallyUrlPanel({ files }: StaticallyUrlPanelProps) {
+export function StaticallyUrlPanel({ files, logoName }: StaticallyUrlPanelProps) {
   return (
     <section className="space-y-4 rounded-xl border border-border bg-surface p-5">
       <div>
@@ -21,32 +23,35 @@ export function StaticallyUrlPanel({ files }: StaticallyUrlPanelProps) {
           >
             {config.githubOwner}/{config.githubRepo}
           </a>{" "}
-          저장소와 연동된 CDN 주소입니다.
+          저장소와 연동된 CDN 주소입니다. 미리보기로 원하는 파일을 고른 뒤 URL을 복사하세요.
         </p>
-      </div>
-
-      <div className="rounded-lg border border-border bg-surface-elevated p-3">
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted">
-          CDN Base
-        </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <code className="break-all text-sm text-accent">
-            {config.staticallyCdnBase}/logos/
-          </code>
-          <CopyButton value={`${config.staticallyCdnBase}/logos/`} />
-        </div>
       </div>
 
       <div className="space-y-3">
         {files.map((file) => (
           <div
             key={file.filename}
-            className="rounded-lg border border-border bg-surface-elevated p-3"
+            className="flex flex-col gap-3 rounded-lg border border-border bg-surface-elevated p-3 sm:flex-row sm:items-center"
           >
-            <p className="mb-2 font-mono text-xs text-muted">{file.filename}</p>
-            <div className="flex flex-wrap items-center gap-2">
-              <code className="break-all text-sm">{file.staticallyUrl}</code>
-              <CopyButton value={file.staticallyUrl} />
+            <div className="w-full shrink-0 sm:w-36">
+              <CopyableLogoPreview
+                src={file.staticallyUrl}
+                alt={`${logoName} ${file.role}`}
+                copyValue={file.staticallyUrl}
+              />
+            </div>
+
+            <div className="min-w-0 flex-1 space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-mono text-xs text-foreground">{file.filename}</p>
+                <span className="rounded-full bg-surface px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted">
+                  {file.role}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <code className="break-all text-sm">{file.staticallyUrl}</code>
+                <CopyButton value={file.staticallyUrl} />
+              </div>
             </div>
           </div>
         ))}

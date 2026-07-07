@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isGitHubConfigured } from "@/lib/github";
 import { config, isSmtpConfigured } from "@/lib/config";
 import { verifySmtpConnection } from "@/lib/email";
+import { isOktaConfigured } from "@/lib/okta";
 
 export const runtime = "nodejs";
 
@@ -13,6 +14,7 @@ export async function GET() {
     githubConfigured: isGitHubConfigured(),
     smtpConfigured,
     smtpVerified,
+    oktaConfigured: isOktaConfigured(),
     repository: `${config.githubOwner}/${config.githubRepo}`,
     branch: config.githubBranch,
     staticallyCdnBase: `${config.staticallyCdnBase}/logos/`,

@@ -5,7 +5,7 @@
 
 **앱 저장소:** https://dev.azure.com/OpenPlatform-labs/open-images/_git/open-images
 
-**프로덕션:** https://images.opl.io.kr
+**프로덕션:** https://logos.opl.io.kr
 
 ---
 
@@ -51,7 +51,11 @@ npm run dev
 | `GITHUB_BRANCH` | | 기본 `main` |
 | `STATICALLY_CDN_BASE` | | Statically CDN base URL |
 | `LOGOS_JSON_PATH` | | (선택) 로컬 `logos.json` 경로. 있으면 원격 대신 사용 |
-| `SITE_BASE_URL` | | 공개 사이트 URL. 기본 `https://images.opl.io.kr` |
+| `SITE_BASE_URL` | | 공개 사이트 URL. 기본 `https://logos.opl.io.kr` |
+| `OKTA_CLIENT_ID` | △ | Okta OIDC 앱 Client ID. SSO 사용 시 |
+| `OKTA_CLIENT_SECRET` | △ | Okta OIDC 앱 Client Secret |
+| `OKTA_*_URL` | | (선택) discovery 미지원 시 개별 엔드포인트 override |
+| `OKTA_SCOPES` | | 기본 `openid profile email` |
 | `SMTP_HOST` | △ | Gmail 등 SMTP. OTP·비밀번호 찾기 사용 시 |
 | `SMTP_USER` | △ | SMTP 계정 |
 | `SMTP_PASS` | △ | SMTP 앱 비밀번호 |
@@ -115,7 +119,7 @@ GET /api/resolve?q=react&format=minimal
     "filename": "kubernetes.svg",
     "role": "default"
   },
-  "pageUrl": "https://images.opl.io.kr/logo/kubernetes",
+  "pageUrl": "https://logos.opl.io.kr/logo/kubernetes",
   "candidates": []
 }
 ```
@@ -124,10 +128,10 @@ GET /api/resolve?q=react&format=minimal
 
 ```bash
 # URL만 필요할 때
-curl "https://images.opl.io.kr/api/resolve?q=docker&format=minimal"
+curl "https://logos.opl.io.kr/api/resolve?q=docker&format=minimal"
 
 # 아이콘 variant
-curl "https://images.opl.io.kr/api/resolve?q=adobe&variant=icon"
+curl "https://logos.opl.io.kr/api/resolve?q=adobe&variant=icon"
 ```
 
 ### 별칭(alias)
@@ -176,9 +180,9 @@ GET /i/adobe?variant=icon
 
 | 용도 | 패턴 |
 |------|------|
-| 갤러리 페이지 | `https://images.opl.io.kr/logo/{shortname}` |
+| 갤러리 페이지 | `https://logos.opl.io.kr/logo/{shortname}` |
 | CDN 직접 | `https://cdn.statically.io/gh/openplatform-labs/images@main/logos/{filename}.svg` |
-| 단축 | `https://images.opl.io.kr/i/{shortname}` |
+| 단축 | `https://logos.opl.io.kr/i/{shortname}` |
 
 ---
 
@@ -209,9 +213,26 @@ URL: `/admin` (헤더 버튼 없음, 직접 접속)
 
 ### 인증
 
+- **Okta SSO** (`OKTA_CLIENT_ID`·`OKTA_CLIENT_SECRET` 설정 시) — Authorization Code + PKCE
 - 이메일 + 비밀번호
 - 이메일 OTP (SMTP 설정 필요)
 - 비밀번호 찾기: 로그인 화면에서 OTP → 새 비밀번호 설정
+
+Okta 로그인은 **사전 등록된 관리자 이메일**과 Okta `email` 클레임이 일치할 때만 허용됩니다.
+
+Okta 앱 설정:
+
+| 항목 | 값 |
+|------|-----|
+| Sign-in redirect URI | `https://logos.opl.io.kr/api/auth/okta/callback` |
+| Sign-out redirect URI | `https://logos.opl.io.kr/admin` (선택) |
+| Grant type | Authorization Code + PKCE |
+
+기본 엔드포인트 (integrator-1653288, `default` authorization server):
+
+- Authorize: `https://integrator-1653288.okta.com/oauth2/default/v1/authorize`
+- Token: `.../v1/token`
+- UserInfo: `.../v1/userinfo`
 
 ### GitHub 업로드 흐름
 
@@ -233,7 +254,7 @@ URL: `/admin` (헤더 버튼 없음, 직접 접속)
 | 프로세스 | `opensphere-logos` (systemd) |
 | 내부 포트 | `3100` |
 | 리버스 프록시 | Caddy → HTTPS |
-| 도메인 | `images.opl.io.kr` |
+| 도메인 | `logos.opl.io.kr` |
 
 ### 재배포
 
@@ -262,8 +283,16 @@ ssh cc2-dns1 "cd /var/www/images.opl.io.kr && npm run build && sudo systemctl re
 ### Caddy 설정 예
 
 ```caddy
-images.opl.io.kr {
+logos.opl.io.kr {
     reverse_proxy localhost:3100
+}
+
+logo.opl.io.kr {
+    redir https://logos.opl.io.kr{uri} permanent
+}
+
+images.opl.io.kr {
+    redir https://logos.opl.io.kr{uri} permanent
 }
 ```
 
@@ -281,7 +310,7 @@ openplatform-labs/images (GitHub 단일 레포)
 브라우저 / AI 에이전트
         │
         ▼
-  images.opl.io.kr (Next.js)
+  logos.opl.io.kr (Next.js)
         │
         ├── SQLite — 검색·카테고리·태그 캐시
         ├── GitHub API — 같은 레포에 SVG/logos.json 커밋

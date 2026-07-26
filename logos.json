@@ -70365,6 +70365,19 @@
     ]
   },
   {
+    "name": "Kubernetes API",
+    "shortname": "kubernetes-api",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "kubernetes-api.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Kubernetes Fleet Manager",
     "shortname": "azure-kubernetes-fleet-manager",
     "url": "https://azure.microsoft.com/en-us/products/",

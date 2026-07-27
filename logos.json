@@ -26147,6 +26147,19 @@
     ]
   },
   {
+    "name": "Beszel Light",
+    "shortname": "beszel-light",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "beszel-light.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Bet365",
     "shortname": "bet365",
     "url": "https://www.bet365.com",
@@ -70360,19 +70373,6 @@
       },
       {
         "filename": "kubernetes-2.svg",
-        "variant": "default"
-      }
-    ]
-  },
-  {
-    "name": "Kubernetes API",
-    "shortname": "kubernetes-api",
-    "url": "",
-    "collection": "simple",
-    "source": "custom",
-    "files": [
-      {
-        "filename": "kubernetes-api.svg",
         "variant": "default"
       }
     ]

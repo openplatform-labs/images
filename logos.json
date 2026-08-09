@@ -26147,19 +26147,6 @@
     ]
   },
   {
-    "name": "Beszel Light",
-    "shortname": "beszel-light",
-    "url": "",
-    "collection": "simple",
-    "source": "custom",
-    "files": [
-      {
-        "filename": "beszel-light.svg",
-        "variant": "default"
-      }
-    ]
-  },
-  {
     "name": "Bet365",
     "shortname": "bet365",
     "url": "https://www.bet365.com",
@@ -98851,6 +98838,19 @@
     "files": [
       {
         "filename": "r-lang.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
+    "name": "R2D2",
+    "shortname": "r2d2",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "r2d2.svg",
         "variant": "default"
       }
     ]

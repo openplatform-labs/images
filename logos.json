@@ -98856,6 +98856,19 @@
     ]
   },
   {
+    "name": "R2D2",
+    "shortname": "r2d2",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "r2d2.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "R3",
     "shortname": "r3",
     "url": "https://www.r3.com",

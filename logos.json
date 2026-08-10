@@ -13555,6 +13555,19 @@
     ]
   },
   {
+    "name": "Astromech Droid",
+    "shortname": "astromech-droid",
+    "url": "",
+    "collection": "simple",
+    "source": "custom",
+    "files": [
+      {
+        "filename": "astromech-droid.svg",
+        "variant": "default"
+      }
+    ]
+  },
+  {
     "name": "Astronomer",
     "shortname": "astronomer",
     "url": "https://www.astronomer.io/",
@@ -98838,19 +98851,6 @@
     "files": [
       {
         "filename": "r-lang.svg",
-        "variant": "default"
-      }
-    ]
-  },
-  {
-    "name": "R2D2",
-    "shortname": "r2d2",
-    "url": "",
-    "collection": "simple",
-    "source": "custom",
-    "files": [
-      {
-        "filename": "r2d2.svg",
         "variant": "default"
       }
     ]

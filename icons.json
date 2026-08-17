@@ -25900,6 +25900,476 @@
     ]
   },
   {
+    "name": "App",
+    "shortname": "core-16-app",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/app.svg"
+    ]
+  },
+  {
+    "name": "Arrow Left",
+    "shortname": "core-16-arrow-left",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/arrow-left.svg"
+    ]
+  },
+  {
+    "name": "Arrow Right",
+    "shortname": "core-16-arrow-right",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/arrow-right.svg"
+    ]
+  },
+  {
+    "name": "Arrow Up",
+    "shortname": "core-16-arrow-up",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/arrow-up.svg"
+    ]
+  },
+  {
+    "name": "Assistant",
+    "shortname": "core-16-assistant",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/assistant.svg"
+    ]
+  },
+  {
+    "name": "Beaker",
+    "shortname": "core-16-beaker",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/beaker.svg"
+    ]
+  },
+  {
+    "name": "Binary",
+    "shortname": "core-16-binary",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/binary.svg"
+    ]
+  },
+  {
+    "name": "Book",
+    "shortname": "core-16-book",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/book.svg"
+    ]
+  },
+  {
+    "name": "Brackets Curly",
+    "shortname": "core-16-brackets-curly",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/brackets-curly.svg"
+    ]
+  },
+  {
+    "name": "Brackets Square",
+    "shortname": "core-16-brackets-square",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/brackets-square.svg"
+    ]
+  },
+  {
+    "name": "Calendar",
+    "shortname": "core-16-calendar",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/calendar.svg"
+    ]
+  },
+  {
+    "name": "Calendar Clock",
+    "shortname": "core-16-calendar-clock",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/calendar-clock.svg"
+    ]
+  },
+  {
+    "name": "Catalog",
+    "shortname": "core-16-catalog",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/catalog.svg"
+    ]
+  },
+  {
+    "name": "Catalog Gear",
+    "shortname": "core-16-catalog-gear",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/catalog-gear.svg"
+    ]
+  },
+  {
+    "name": "Catalog Home",
+    "shortname": "core-16-catalog-home",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/catalog-home.svg"
+    ]
+  },
+  {
+    "name": "Catalog Off",
+    "shortname": "core-16-catalog-off",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/catalog-off.svg"
+    ]
+  },
+  {
+    "name": "Catalog Shared",
+    "shortname": "core-16-catalog-shared",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/catalog-shared.svg"
+    ]
+  },
+  {
+    "name": "Catalog User Home",
+    "shortname": "core-16-catalog-user-home",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/catalog-user-home.svg"
+    ]
+  },
+  {
+    "name": "Cells Square",
+    "shortname": "core-16-cells-square",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/cells-square.svg"
+    ]
+  },
+  {
+    "name": "Chart Line",
+    "shortname": "core-16-chart-line",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/chart-line.svg"
+    ]
+  },
+  {
+    "name": "Check",
+    "shortname": "core-16-check",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/check.svg"
+    ]
+  },
+  {
+    "name": "Check Circle",
+    "shortname": "core-16-check-circle",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/check-circle.svg"
+    ]
+  },
+  {
+    "name": "Check Circle Fill",
+    "shortname": "core-16-check-circle-fill",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/check-circle-fill.svg"
+    ]
+  },
+  {
+    "name": "Checklist",
+    "shortname": "core-16-checklist",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/checklist.svg"
+    ]
+  },
+  {
+    "name": "Chevron Down",
+    "shortname": "core-16-chevron-down",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/chevron-down.svg"
+    ]
+  },
+  {
+    "name": "Chevron Left",
+    "shortname": "core-16-chevron-left",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/chevron-left.svg"
+    ]
+  },
+  {
+    "name": "Chevron Right",
+    "shortname": "core-16-chevron-right",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/chevron-right.svg"
+    ]
+  },
+  {
+    "name": "Chevron Up",
+    "shortname": "core-16-chevron-up",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/chevron-up.svg"
+    ]
+  },
+  {
+    "name": "Clock",
+    "shortname": "core-16-clock",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/clock.svg"
+    ]
+  },
+  {
+    "name": "Close",
+    "shortname": "core-16-close",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/close.svg"
+    ]
+  },
+  {
+    "name": "Close Small",
+    "shortname": "core-16-close-small",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/close-small.svg"
+    ]
+  },
+  {
+    "name": "Cloud",
+    "shortname": "core-16-cloud",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/cloud.svg"
+    ]
+  },
+  {
+    "name": "Cloud Database",
+    "shortname": "core-16-cloud-database",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/cloud-database.svg"
+    ]
+  },
+  {
+    "name": "Cloud Key",
+    "shortname": "core-16-cloud-key",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/cloud-key.svg"
+    ]
+  },
+  {
+    "name": "Cloud Model",
+    "shortname": "core-16-cloud-model",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/cloud-model.svg"
+    ]
+  },
+  {
+    "name": "Compass",
+    "shortname": "core-16-compass",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/compass.svg"
+    ]
+  },
+  {
+    "name": "Connect",
+    "shortname": "core-16-connect",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/connect.svg"
+    ]
+  },
+  {
+    "name": "Copy",
+    "shortname": "core-16-copy",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/copy.svg"
+    ]
+  },
+  {
+    "name": "Cursor",
+    "shortname": "core-16-cursor",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/cursor.svg"
+    ]
+  },
+  {
+    "name": "Custom App",
+    "shortname": "core-16-custom-app",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/custom-app.svg"
+    ]
+  },
+  {
+    "name": "Danger",
+    "shortname": "core-16-danger",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/danger.svg"
+    ]
+  },
+  {
+    "name": "Danger Fill",
+    "shortname": "core-16-danger-fill",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/danger-fill.svg"
+    ]
+  },
+  {
+    "name": "Dashboard",
+    "shortname": "core-16-dashboard",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/dashboard.svg"
+    ]
+  },
+  {
+    "name": "Data",
+    "shortname": "core-16-data",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/data.svg"
+    ]
+  },
+  {
+    "name": "Database",
+    "shortname": "core-16-database",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/database.svg"
+    ]
+  },
+  {
+    "name": "Decimal",
+    "shortname": "core-16-decimal",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/decimal.svg"
+    ]
+  },
+  {
+    "name": "Domains",
+    "shortname": "core-16-domains",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/domains.svg"
+    ]
+  },
+  {
     "name": "Download",
     "shortname": "core-16-download",
     "url": "https://github.com/opensphere-platform/icon-system-template",
@@ -25907,6 +26377,66 @@
     "source": "core-16",
     "files": [
       "core-16/download.svg"
+    ]
+  },
+  {
+    "name": "Face Frown",
+    "shortname": "core-16-face-frown",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/face-frown.svg"
+    ]
+  },
+  {
+    "name": "Face Neutral",
+    "shortname": "core-16-face-neutral",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/face-neutral.svg"
+    ]
+  },
+  {
+    "name": "Face Smile",
+    "shortname": "core-16-face-smile",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/face-smile.svg"
+    ]
+  },
+  {
+    "name": "File",
+    "shortname": "core-16-file",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/file.svg"
+    ]
+  },
+  {
+    "name": "File Cube",
+    "shortname": "core-16-file-cube",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/file-cube.svg"
+    ]
+  },
+  {
+    "name": "File Document",
+    "shortname": "core-16-file-document",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/file-document.svg"
     ]
   },
   {
@@ -25920,6 +26450,296 @@
     ]
   },
   {
+    "name": "Folder",
+    "shortname": "core-16-folder",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/folder.svg"
+    ]
+  },
+  {
+    "name": "Folder Branch",
+    "shortname": "core-16-folder-branch",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/folder-branch.svg"
+    ]
+  },
+  {
+    "name": "Folder Cloud",
+    "shortname": "core-16-folder-cloud",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/folder-cloud.svg"
+    ]
+  },
+  {
+    "name": "Folder Open Cube",
+    "shortname": "core-16-folder-open-cube",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/folder-open-cube.svg"
+    ]
+  },
+  {
+    "name": "Function",
+    "shortname": "core-16-function",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/function.svg"
+    ]
+  },
+  {
+    "name": "Gear",
+    "shortname": "core-16-gear",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/gear.svg"
+    ]
+  },
+  {
+    "name": "Genie Code",
+    "shortname": "core-16-genie-code",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/genie-code.svg"
+    ]
+  },
+  {
+    "name": "Gift",
+    "shortname": "core-16-gift",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/gift.svg"
+    ]
+  },
+  {
+    "name": "Globe",
+    "shortname": "core-16-globe",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/globe.svg"
+    ]
+  },
+  {
+    "name": "Grid",
+    "shortname": "core-16-grid",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/grid.svg"
+    ]
+  },
+  {
+    "name": "Grid Dash",
+    "shortname": "core-16-grid-dash",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/grid-dash.svg"
+    ]
+  },
+  {
+    "name": "History",
+    "shortname": "core-16-history",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/history.svg"
+    ]
+  },
+  {
+    "name": "Home",
+    "shortname": "core-16-home",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/home.svg"
+    ]
+  },
+  {
+    "name": "Image",
+    "shortname": "core-16-image",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/image.svg"
+    ]
+  },
+  {
+    "name": "Info Book",
+    "shortname": "core-16-info-book",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/info-book.svg"
+    ]
+  },
+  {
+    "name": "Info Fill",
+    "shortname": "core-16-info-fill",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/info-fill.svg"
+    ]
+  },
+  {
+    "name": "Info Small",
+    "shortname": "core-16-info-small",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/info-small.svg"
+    ]
+  },
+  {
+    "name": "Key",
+    "shortname": "core-16-key",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/key.svg"
+    ]
+  },
+  {
+    "name": "Lakeflow Designer",
+    "shortname": "core-16-lakeflow-designer",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/lakeflow-designer.svg"
+    ]
+  },
+  {
+    "name": "Layer",
+    "shortname": "core-16-layer",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/layer.svg"
+    ]
+  },
+  {
+    "name": "Layer Graph",
+    "shortname": "core-16-layer-graph",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/layer-graph.svg"
+    ]
+  },
+  {
+    "name": "Letters",
+    "shortname": "core-16-letters",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/letters.svg"
+    ]
+  },
+  {
+    "name": "Lightbulb",
+    "shortname": "core-16-lightbulb",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/lightbulb.svg"
+    ]
+  },
+  {
+    "name": "Lightning",
+    "shortname": "core-16-lightning",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/lightning.svg"
+    ]
+  },
+  {
+    "name": "Link",
+    "shortname": "core-16-link",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/link.svg"
+    ]
+  },
+  {
+    "name": "List",
+    "shortname": "core-16-list",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/list.svg"
+    ]
+  },
+  {
+    "name": "Loading",
+    "shortname": "core-16-loading",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/loading.svg"
+    ]
+  },
+  {
+    "name": "Lock",
+    "shortname": "core-16-lock",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/lock.svg"
+    ]
+  },
+  {
+    "name": "Lock Share",
+    "shortname": "core-16-lock-share",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/lock-share.svg"
+    ]
+  },
+  {
     "name": "Mail",
     "shortname": "core-16-mail",
     "url": "https://github.com/opensphere-platform/icon-system-template",
@@ -25927,6 +26747,16 @@
     "source": "core-16",
     "files": [
       "core-16/mail.svg"
+    ]
+  },
+  {
+    "name": "Megaphone",
+    "shortname": "core-16-megaphone",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/megaphone.svg"
     ]
   },
   {
@@ -25950,6 +26780,16 @@
     ]
   },
   {
+    "name": "Models",
+    "shortname": "core-16-models",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/models.svg"
+    ]
+  },
+  {
     "name": "More Horizontal",
     "shortname": "core-16-more-horizontal",
     "url": "https://github.com/opensphere-platform/icon-system-template",
@@ -25970,6 +26810,66 @@
     ]
   },
   {
+    "name": "New Window",
+    "shortname": "core-16-new-window",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/new-window.svg"
+    ]
+  },
+  {
+    "name": "Notebook",
+    "shortname": "core-16-notebook",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/notebook.svg"
+    ]
+  },
+  {
+    "name": "Notification",
+    "shortname": "core-16-notification",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/notification.svg"
+    ]
+  },
+  {
+    "name": "Numbers",
+    "shortname": "core-16-numbers",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/numbers.svg"
+    ]
+  },
+  {
+    "name": "Office",
+    "shortname": "core-16-office",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/office.svg"
+    ]
+  },
+  {
+    "name": "Pencil",
+    "shortname": "core-16-pencil",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/pencil.svg"
+    ]
+  },
+  {
     "name": "Phone",
     "shortname": "core-16-phone",
     "url": "https://github.com/opensphere-platform/icon-system-template",
@@ -25980,6 +26880,76 @@
     ]
   },
   {
+    "name": "Pipeline",
+    "shortname": "core-16-pipeline",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/pipeline.svg"
+    ]
+  },
+  {
+    "name": "Pipeline Code",
+    "shortname": "core-16-pipeline-code",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/pipeline-code.svg"
+    ]
+  },
+  {
+    "name": "Plug",
+    "shortname": "core-16-plug",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/plug.svg"
+    ]
+  },
+  {
+    "name": "Plus",
+    "shortname": "core-16-plus",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/plus.svg"
+    ]
+  },
+  {
+    "name": "Query",
+    "shortname": "core-16-query",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/query.svg"
+    ]
+  },
+  {
+    "name": "Query Editor",
+    "shortname": "core-16-query-editor",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/query-editor.svg"
+    ]
+  },
+  {
+    "name": "Question Mark",
+    "shortname": "core-16-question-mark",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/question-mark.svg"
+    ]
+  },
+  {
     "name": "Refresh",
     "shortname": "core-16-refresh",
     "url": "https://github.com/opensphere-platform/icon-system-template",
@@ -25987,6 +26957,446 @@
     "source": "core-16",
     "files": [
       "core-16/refresh.svg"
+    ]
+  },
+  {
+    "name": "Rocket",
+    "shortname": "core-16-rocket",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/rocket.svg"
+    ]
+  },
+  {
+    "name": "School",
+    "shortname": "core-16-school",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/school.svg"
+    ]
+  },
+  {
+    "name": "Search",
+    "shortname": "core-16-search",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/search.svg"
+    ]
+  },
+  {
+    "name": "Search Data",
+    "shortname": "core-16-search-data",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/search-data.svg"
+    ]
+  },
+  {
+    "name": "Send",
+    "shortname": "core-16-send",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/send.svg"
+    ]
+  },
+  {
+    "name": "Shield",
+    "shortname": "core-16-shield",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/shield.svg"
+    ]
+  },
+  {
+    "name": "Sidebar Collapse",
+    "shortname": "core-16-sidebar-collapse",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/sidebar-collapse.svg"
+    ]
+  },
+  {
+    "name": "Sidebar Expand",
+    "shortname": "core-16-sidebar-expand",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/sidebar-expand.svg"
+    ]
+  },
+  {
+    "name": "Sparkle",
+    "shortname": "core-16-sparkle",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/sparkle.svg"
+    ]
+  },
+  {
+    "name": "Sparkle Double",
+    "shortname": "core-16-sparkle-double",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/sparkle-double.svg"
+    ]
+  },
+  {
+    "name": "Sparkle Double Fill",
+    "shortname": "core-16-sparkle-double-fill",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/sparkle-double-fill.svg"
+    ]
+  },
+  {
+    "name": "Sparkle Fill",
+    "shortname": "core-16-sparkle-fill",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/sparkle-fill.svg"
+    ]
+  },
+  {
+    "name": "Sparkle Rectangle",
+    "shortname": "core-16-sparkle-rectangle",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/sparkle-rectangle.svg"
+    ]
+  },
+  {
+    "name": "Speech Bubble",
+    "shortname": "core-16-speech-bubble",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/speech-bubble.svg"
+    ]
+  },
+  {
+    "name": "Speech Bubble Star",
+    "shortname": "core-16-speech-bubble-star",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/speech-bubble-star.svg"
+    ]
+  },
+  {
+    "name": "Star",
+    "shortname": "core-16-star",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/star.svg"
+    ]
+  },
+  {
+    "name": "Star Fill",
+    "shortname": "core-16-star-fill",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/star-fill.svg"
+    ]
+  },
+  {
+    "name": "Stored Procedure",
+    "shortname": "core-16-stored-procedure",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/stored-procedure.svg"
+    ]
+  },
+  {
+    "name": "Storefront",
+    "shortname": "core-16-storefront",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/storefront.svg"
+    ]
+  },
+  {
+    "name": "Table",
+    "shortname": "core-16-table",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/table.svg"
+    ]
+  },
+  {
+    "name": "Table Glasses",
+    "shortname": "core-16-table-glasses",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/table-glasses.svg"
+    ]
+  },
+  {
+    "name": "Table Globe",
+    "shortname": "core-16-table-globe",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/table-globe.svg"
+    ]
+  },
+  {
+    "name": "Table Lightning",
+    "shortname": "core-16-table-lightning",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/table-lightning.svg"
+    ]
+  },
+  {
+    "name": "Table Measure",
+    "shortname": "core-16-table-measure",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/table-measure.svg"
+    ]
+  },
+  {
+    "name": "Table Stream",
+    "shortname": "core-16-table-stream",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/table-stream.svg"
+    ]
+  },
+  {
+    "name": "Table Vector",
+    "shortname": "core-16-table-vector",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/table-vector.svg"
+    ]
+  },
+  {
+    "name": "Tag",
+    "shortname": "core-16-tag",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/tag.svg"
+    ]
+  },
+  {
+    "name": "Terminal",
+    "shortname": "core-16-terminal",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/terminal.svg"
+    ]
+  },
+  {
+    "name": "Thumbs Down",
+    "shortname": "core-16-thumbs-down",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/thumbs-down.svg"
+    ]
+  },
+  {
+    "name": "Thumbs Up",
+    "shortname": "core-16-thumbs-up",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/thumbs-up.svg"
+    ]
+  },
+  {
+    "name": "Trash",
+    "shortname": "core-16-trash",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/trash.svg"
+    ]
+  },
+  {
+    "name": "Tree",
+    "shortname": "core-16-tree",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/tree.svg"
+    ]
+  },
+  {
+    "name": "Upload",
+    "shortname": "core-16-upload",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/upload.svg"
+    ]
+  },
+  {
+    "name": "User",
+    "shortname": "core-16-user",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/user.svg"
+    ]
+  },
+  {
+    "name": "User Group",
+    "shortname": "core-16-user-group",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/user-group.svg"
+    ]
+  },
+  {
+    "name": "User Sparkle",
+    "shortname": "core-16-user-sparkle",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/user-sparkle.svg"
+    ]
+  },
+  {
+    "name": "Visible",
+    "shortname": "core-16-visible",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/visible.svg"
+    ]
+  },
+  {
+    "name": "Visible Off",
+    "shortname": "core-16-visible-off",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/visible-off.svg"
+    ]
+  },
+  {
+    "name": "Warning",
+    "shortname": "core-16-warning",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/warning.svg"
+    ]
+  },
+  {
+    "name": "Warning Fill",
+    "shortname": "core-16-warning-fill",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/warning-fill.svg"
+    ]
+  },
+  {
+    "name": "Workflows",
+    "shortname": "core-16-workflows",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/workflows.svg"
+    ]
+  },
+  {
+    "name": "Workspaces",
+    "shortname": "core-16-workspaces",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/workspaces.svg"
+    ]
+  },
+  {
+    "name": "Wrench",
+    "shortname": "core-16-wrench",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/wrench.svg"
+    ]
+  },
+  {
+    "name": "X Circle Fill",
+    "shortname": "core-16-x-circle-fill",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "core-16",
+    "files": [
+      "core-16/x-circle-fill.svg"
     ]
   }
 ]

@@ -25901,92 +25901,92 @@
   },
   {
     "name": "Download",
-    "shortname": "icon-system-download",
+    "shortname": "core-16-download",
     "url": "https://github.com/opensphere-platform/icon-system-template",
     "collection": "simple",
-    "source": "icon-system",
+    "source": "core-16",
     "files": [
-      "icon-system/download.svg"
+      "core-16/download.svg"
     ]
   },
   {
     "name": "Filter",
-    "shortname": "icon-system-filter",
+    "shortname": "core-16-filter",
     "url": "https://github.com/opensphere-platform/icon-system-template",
     "collection": "simple",
-    "source": "icon-system",
+    "source": "core-16",
     "files": [
-      "icon-system/filter.svg"
+      "core-16/filter.svg"
     ]
   },
   {
     "name": "Mail",
-    "shortname": "icon-system-mail",
+    "shortname": "core-16-mail",
     "url": "https://github.com/opensphere-platform/icon-system-template",
     "collection": "simple",
-    "source": "icon-system",
+    "source": "core-16",
     "files": [
-      "icon-system/mail.svg"
+      "core-16/mail.svg"
     ]
   },
   {
     "name": "Menu",
-    "shortname": "icon-system-menu",
+    "shortname": "core-16-menu",
     "url": "https://github.com/opensphere-platform/icon-system-template",
     "collection": "simple",
-    "source": "icon-system",
+    "source": "core-16",
     "files": [
-      "icon-system/menu.svg"
+      "core-16/menu.svg"
     ]
   },
   {
     "name": "Message",
-    "shortname": "icon-system-message",
+    "shortname": "core-16-message",
     "url": "https://github.com/opensphere-platform/icon-system-template",
     "collection": "simple",
-    "source": "icon-system",
+    "source": "core-16",
     "files": [
-      "icon-system/message.svg"
+      "core-16/message.svg"
     ]
   },
   {
     "name": "More Horizontal",
-    "shortname": "icon-system-more-horizontal",
+    "shortname": "core-16-more-horizontal",
     "url": "https://github.com/opensphere-platform/icon-system-template",
     "collection": "simple",
-    "source": "icon-system",
+    "source": "core-16",
     "files": [
-      "icon-system/more-horizontal.svg"
+      "core-16/more-horizontal.svg"
     ]
   },
   {
     "name": "More Vertical",
-    "shortname": "icon-system-more-vertical",
+    "shortname": "core-16-more-vertical",
     "url": "https://github.com/opensphere-platform/icon-system-template",
     "collection": "simple",
-    "source": "icon-system",
+    "source": "core-16",
     "files": [
-      "icon-system/more-vertical.svg"
+      "core-16/more-vertical.svg"
     ]
   },
   {
     "name": "Phone",
-    "shortname": "icon-system-phone",
+    "shortname": "core-16-phone",
     "url": "https://github.com/opensphere-platform/icon-system-template",
     "collection": "simple",
-    "source": "icon-system",
+    "source": "core-16",
     "files": [
-      "icon-system/phone.svg"
+      "core-16/phone.svg"
     ]
   },
   {
     "name": "Refresh",
-    "shortname": "icon-system-refresh",
+    "shortname": "core-16-refresh",
     "url": "https://github.com/opensphere-platform/icon-system-template",
     "collection": "simple",
-    "source": "icon-system",
+    "source": "core-16",
     "files": [
-      "icon-system/refresh.svg"
+      "core-16/refresh.svg"
     ]
   }
 ]

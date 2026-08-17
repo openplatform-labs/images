@@ -20,6 +20,56 @@
     ]
   },
   {
+    "name": "AI",
+    "shortname": "carbon-ai",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/ai.svg"
+    ]
+  },
+  {
+    "name": "AI Enabled EDT",
+    "shortname": "carbon-ai-enabled-edt",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/ai-enabled-edt.svg"
+    ]
+  },
+  {
+    "name": "AI Enabled PDLC",
+    "shortname": "carbon-ai-enabled-pdlc",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/ai-enabled-pdlc.svg"
+    ]
+  },
+  {
+    "name": "API 1",
+    "shortname": "carbon-api-1",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/api-1.svg"
+    ]
+  },
+  {
+    "name": "ASM",
+    "shortname": "carbon-asm",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/asm.svg"
+    ]
+  },
+  {
     "name": "Accept Action Usage",
     "shortname": "carbon-accept-action-usage",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -290,16 +340,6 @@
     ]
   },
   {
-    "name": "AI",
-    "shortname": "carbon-ai",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/ai.svg"
-    ]
-  },
-  {
     "name": "Ai Agent Invocation",
     "shortname": "carbon-ai-agent-invocation",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -317,26 +357,6 @@
     "source": "carbon",
     "files": [
       "carbon/ai-business-impact-assessment.svg"
-    ]
-  },
-  {
-    "name": "AI Enabled EDT",
-    "shortname": "carbon-ai-enabled-edt",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/ai-enabled-edt.svg"
-    ]
-  },
-  {
-    "name": "AI Enabled PDLC",
-    "shortname": "carbon-ai-enabled-pdlc",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/ai-enabled-pdlc.svg"
     ]
   },
   {
@@ -757,16 +777,6 @@
     "source": "carbon",
     "files": [
       "carbon/api.svg"
-    ]
-  },
-  {
-    "name": "API 1",
-    "shortname": "carbon-api-1",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/api-1.svg"
     ]
   },
   {
@@ -1220,16 +1230,6 @@
     ]
   },
   {
-    "name": "ASM",
-    "shortname": "carbon-asm",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/asm.svg"
-    ]
-  },
-  {
     "name": "Assembly",
     "shortname": "carbon-assembly",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -1437,6 +1437,106 @@
     "source": "carbon",
     "files": [
       "carbon/awake.svg"
+    ]
+  },
+  {
+    "name": "BPMN Compensation Fill",
+    "shortname": "carbon-bpmn-compensation-fill",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-compensation-fill.svg"
+    ]
+  },
+  {
+    "name": "BPMN Compensation Outline",
+    "shortname": "carbon-bpmn-compensation-outline",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-compensation-outline.svg"
+    ]
+  },
+  {
+    "name": "BPMN Conditional Fill",
+    "shortname": "carbon-bpmn-conditional-fill",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-conditional-fill.svg"
+    ]
+  },
+  {
+    "name": "BPMN Conditional Outline",
+    "shortname": "carbon-bpmn-conditional-outline",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-conditional-outline.svg"
+    ]
+  },
+  {
+    "name": "BPMN Error Fill",
+    "shortname": "carbon-bpmn-error-fill",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-error-fill.svg"
+    ]
+  },
+  {
+    "name": "BPMN Error Outline",
+    "shortname": "carbon-bpmn-error-outline",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-error-outline.svg"
+    ]
+  },
+  {
+    "name": "BPMN Escalation Fill",
+    "shortname": "carbon-bpmn-escalation-fill",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-escalation-fill.svg"
+    ]
+  },
+  {
+    "name": "BPMN Escalation Outline",
+    "shortname": "carbon-bpmn-escalation-outline",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-escalation-outline.svg"
+    ]
+  },
+  {
+    "name": "BPMN Link Fill",
+    "shortname": "carbon-bpmn-link-fill",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-link-fill.svg"
+    ]
+  },
+  {
+    "name": "BPMN Link Outline",
+    "shortname": "carbon-bpmn-link-outline",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/bpmn-link-outline.svg"
     ]
   },
   {
@@ -2100,106 +2200,6 @@
     ]
   },
   {
-    "name": "BPMN Compensation Fill",
-    "shortname": "carbon-bpmn-compensation-fill",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-compensation-fill.svg"
-    ]
-  },
-  {
-    "name": "BPMN Compensation Outline",
-    "shortname": "carbon-bpmn-compensation-outline",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-compensation-outline.svg"
-    ]
-  },
-  {
-    "name": "BPMN Conditional Fill",
-    "shortname": "carbon-bpmn-conditional-fill",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-conditional-fill.svg"
-    ]
-  },
-  {
-    "name": "BPMN Conditional Outline",
-    "shortname": "carbon-bpmn-conditional-outline",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-conditional-outline.svg"
-    ]
-  },
-  {
-    "name": "BPMN Error Fill",
-    "shortname": "carbon-bpmn-error-fill",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-error-fill.svg"
-    ]
-  },
-  {
-    "name": "BPMN Error Outline",
-    "shortname": "carbon-bpmn-error-outline",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-error-outline.svg"
-    ]
-  },
-  {
-    "name": "BPMN Escalation Fill",
-    "shortname": "carbon-bpmn-escalation-fill",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-escalation-fill.svg"
-    ]
-  },
-  {
-    "name": "BPMN Escalation Outline",
-    "shortname": "carbon-bpmn-escalation-outline",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-escalation-outline.svg"
-    ]
-  },
-  {
-    "name": "BPMN Link Fill",
-    "shortname": "carbon-bpmn-link-fill",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-link-fill.svg"
-    ]
-  },
-  {
-    "name": "BPMN Link Outline",
-    "shortname": "carbon-bpmn-link-outline",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/bpmn-link-outline.svg"
-    ]
-  },
-  {
     "name": "Brainstorm",
     "shortname": "carbon-brainstorm",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -2440,6 +2440,56 @@
     ]
   },
   {
+    "name": "CAD",
+    "shortname": "carbon-cad",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/cad.svg"
+    ]
+  },
+  {
+    "name": "CBL",
+    "shortname": "carbon-cbl",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/cbl.svg"
+    ]
+  },
+  {
+    "name": "CDA",
+    "shortname": "carbon-cda",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/cda.svg"
+    ]
+  },
+  {
+    "name": "CPlusPlus",
+    "shortname": "carbon-cplusplus",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/cplusplus.svg"
+    ]
+  },
+  {
+    "name": "CSV",
+    "shortname": "carbon-csv",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/csv.svg"
+    ]
+  },
+  {
     "name": "Cabin Care",
     "shortname": "carbon-cabin-care",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -2467,16 +2517,6 @@
     "source": "carbon",
     "files": [
       "carbon/cabin-care-alt.svg"
-    ]
-  },
-  {
-    "name": "CAD",
-    "shortname": "carbon-cad",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/cad.svg"
     ]
   },
   {
@@ -2937,26 +2977,6 @@
     "source": "carbon",
     "files": [
       "carbon/category-new-each.svg"
-    ]
-  },
-  {
-    "name": "CBL",
-    "shortname": "carbon-cbl",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/cbl.svg"
-    ]
-  },
-  {
-    "name": "CDA",
-    "shortname": "carbon-cda",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/cda.svg"
     ]
   },
   {
@@ -5440,16 +5460,6 @@
     ]
   },
   {
-    "name": "CPlusPlus",
-    "shortname": "carbon-cplusplus",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/cplusplus.svg"
-    ]
-  },
-  {
     "name": "Create Link",
     "shortname": "carbon-create-link",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -5537,16 +5547,6 @@
     "source": "carbon",
     "files": [
       "carbon/crowd-report-filled.svg"
-    ]
-  },
-  {
-    "name": "CSV",
-    "shortname": "carbon-csv",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/csv.svg"
     ]
   },
   {
@@ -5777,6 +5777,26 @@
     "source": "carbon",
     "files": [
       "carbon/cyclist.svg"
+    ]
+  },
+  {
+    "name": "DOC",
+    "shortname": "carbon-doc",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/doc.svg"
+    ]
+  },
+  {
+    "name": "DVR",
+    "shortname": "carbon-dvr",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/dvr.svg"
     ]
   },
   {
@@ -7250,16 +7270,6 @@
     ]
   },
   {
-    "name": "DOC",
-    "shortname": "carbon-doc",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/doc.svg"
-    ]
-  },
-  {
     "name": "Document",
     "shortname": "carbon-document",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -7877,16 +7887,6 @@
     "source": "carbon",
     "files": [
       "carbon/drought.svg"
-    ]
-  },
-  {
-    "name": "DVR",
-    "shortname": "carbon-dvr",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/dvr.svg"
     ]
   },
   {
@@ -9580,6 +9580,16 @@
     ]
   },
   {
+    "name": "GIF",
+    "shortname": "carbon-gif",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/gif.svg"
+    ]
+  },
+  {
     "name": "Game Console",
     "shortname": "carbon-game-console",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -9830,16 +9840,6 @@
     ]
   },
   {
-    "name": "GIF",
-    "shortname": "carbon-gif",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/gif.svg"
-    ]
-  },
-  {
     "name": "Gift",
     "shortname": "carbon-gift",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -10060,6 +10060,66 @@
     ]
   },
   {
+    "name": "HD",
+    "shortname": "carbon-hd",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/hd.svg"
+    ]
+  },
+  {
+    "name": "HD Filled",
+    "shortname": "carbon-hd-filled",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/hd-filled.svg"
+    ]
+  },
+  {
+    "name": "HDR",
+    "shortname": "carbon-hdr",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/hdr.svg"
+    ]
+  },
+  {
+    "name": "HTML",
+    "shortname": "carbon-html",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/html.svg"
+    ]
+  },
+  {
+    "name": "HTML Reference",
+    "shortname": "carbon-html-reference",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/html-reference.svg"
+    ]
+  },
+  {
+    "name": "HTTP",
+    "shortname": "carbon-http",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/http.svg"
+    ]
+  },
+  {
     "name": "Hail",
     "shortname": "carbon-hail",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -10117,36 +10177,6 @@
     "source": "carbon",
     "files": [
       "carbon/haze-night.svg"
-    ]
-  },
-  {
-    "name": "HD",
-    "shortname": "carbon-hd",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/hd.svg"
-    ]
-  },
-  {
-    "name": "HD Filled",
-    "shortname": "carbon-hd-filled",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/hd-filled.svg"
-    ]
-  },
-  {
-    "name": "HDR",
-    "shortname": "carbon-hdr",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/hdr.svg"
     ]
   },
   {
@@ -10420,36 +10450,6 @@
     ]
   },
   {
-    "name": "HTML",
-    "shortname": "carbon-html",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/html.svg"
-    ]
-  },
-  {
-    "name": "HTML Reference",
-    "shortname": "carbon-html-reference",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/html-reference.svg"
-    ]
-  },
-  {
-    "name": "HTTP",
-    "shortname": "carbon-http",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/http.svg"
-    ]
-  },
-  {
     "name": "Humidity",
     "shortname": "carbon-humidity",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -10497,6 +10497,46 @@
     "source": "carbon",
     "files": [
       "carbon/hybrid-networking-alt.svg"
+    ]
+  },
+  {
+    "name": "IP",
+    "shortname": "carbon-ip",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/ip.svg"
+    ]
+  },
+  {
+    "name": "ISO",
+    "shortname": "carbon-iso",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/iso.svg"
+    ]
+  },
+  {
+    "name": "ISO Filled",
+    "shortname": "carbon-iso-filled",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/iso-filled.svg"
+    ]
+  },
+  {
+    "name": "ISO Outline",
+    "shortname": "carbon-iso-outline",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/iso-outline.svg"
     ]
   },
   {
@@ -10790,16 +10830,6 @@
     ]
   },
   {
-    "name": "Ibm Cloud Hpc",
-    "shortname": "carbon-ibm-cloud-hpc",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/ibm-cloud-hpc.svg"
-    ]
-  },
-  {
     "name": "Ibm Cloud HSM",
     "shortname": "carbon-ibm-cloud-hsm",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -10807,6 +10837,16 @@
     "source": "carbon",
     "files": [
       "carbon/ibm-cloud-hsm.svg"
+    ]
+  },
+  {
+    "name": "Ibm Cloud Hpc",
+    "shortname": "carbon-ibm-cloud-hpc",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/ibm-cloud-hpc.svg"
     ]
   },
   {
@@ -13090,46 +13130,6 @@
     ]
   },
   {
-    "name": "IP",
-    "shortname": "carbon-ip",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/ip.svg"
-    ]
-  },
-  {
-    "name": "ISO",
-    "shortname": "carbon-iso",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/iso.svg"
-    ]
-  },
-  {
-    "name": "ISO Filled",
-    "shortname": "carbon-iso-filled",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/iso-filled.svg"
-    ]
-  },
-  {
-    "name": "ISO Outline",
-    "shortname": "carbon-iso-outline",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/iso-outline.svg"
-    ]
-  },
-  {
     "name": "Item Definition",
     "shortname": "carbon-item-definition",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -13167,6 +13167,36 @@
     "source": "carbon",
     "files": [
       "carbon/jcl.svg"
+    ]
+  },
+  {
+    "name": "JPG",
+    "shortname": "carbon-jpg",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/jpg.svg"
+    ]
+  },
+  {
+    "name": "JSON",
+    "shortname": "carbon-json",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/json.svg"
+    ]
+  },
+  {
+    "name": "JSON Reference",
+    "shortname": "carbon-json-reference",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/json-reference.svg"
     ]
   },
   {
@@ -13280,16 +13310,6 @@
     ]
   },
   {
-    "name": "JPG",
-    "shortname": "carbon-jpg",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/jpg.svg"
-    ]
-  },
-  {
     "name": "Js Error",
     "shortname": "carbon-js-error",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -13297,26 +13317,6 @@
     "source": "carbon",
     "files": [
       "carbon/js-error.svg"
-    ]
-  },
-  {
-    "name": "JSON",
-    "shortname": "carbon-json",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/json.svg"
-    ]
-  },
-  {
-    "name": "JSON Reference",
-    "shortname": "carbon-json-reference",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/json-reference.svg"
     ]
   },
   {
@@ -13330,16 +13330,6 @@
     ]
   },
   {
-    "name": "Keep Dry",
-    "shortname": "carbon-keep-dry",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/keep-dry.svg"
-    ]
-  },
-  {
     "name": "KEY",
     "shortname": "carbon-key",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -13347,6 +13337,16 @@
     "source": "carbon",
     "files": [
       "carbon/key.svg"
+    ]
+  },
+  {
+    "name": "Keep Dry",
+    "shortname": "carbon-keep-dry",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/keep-dry.svg"
     ]
   },
   {
@@ -14890,6 +14890,56 @@
     ]
   },
   {
+    "name": "MOV",
+    "shortname": "carbon-mov",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/mov.svg"
+    ]
+  },
+  {
+    "name": "MP3",
+    "shortname": "carbon-mp3",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/mp3.svg"
+    ]
+  },
+  {
+    "name": "MP4",
+    "shortname": "carbon-mp4",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/mp4.svg"
+    ]
+  },
+  {
+    "name": "MPEG",
+    "shortname": "carbon-mpeg",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/mpeg.svg"
+    ]
+  },
+  {
+    "name": "MPG2",
+    "shortname": "carbon-mpg2",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/mpg2.svg"
+    ]
+  },
+  {
     "name": "Mac Command",
     "shortname": "carbon-mac-command",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -15770,16 +15820,6 @@
     ]
   },
   {
-    "name": "MOV",
-    "shortname": "carbon-mov",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/mov.svg"
-    ]
-  },
-  {
     "name": "Move",
     "shortname": "carbon-move",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -15797,46 +15837,6 @@
     "source": "carbon",
     "files": [
       "carbon/movement.svg"
-    ]
-  },
-  {
-    "name": "MP3",
-    "shortname": "carbon-mp3",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/mp3.svg"
-    ]
-  },
-  {
-    "name": "MP4",
-    "shortname": "carbon-mp4",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/mp4.svg"
-    ]
-  },
-  {
-    "name": "MPEG",
-    "shortname": "carbon-mpeg",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/mpeg.svg"
-    ]
-  },
-  {
-    "name": "MPG2",
-    "shortname": "carbon-mpg2",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/mpg2.svg"
     ]
   },
   {
@@ -16890,6 +16890,56 @@
     ]
   },
   {
+    "name": "PDF",
+    "shortname": "carbon-pdf",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/pdf.svg"
+    ]
+  },
+  {
+    "name": "PDF Reference",
+    "shortname": "carbon-pdf-reference",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/pdf-reference.svg"
+    ]
+  },
+  {
+    "name": "PLI",
+    "shortname": "carbon-pli",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/pli.svg"
+    ]
+  },
+  {
+    "name": "PNG",
+    "shortname": "carbon-png",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/png.svg"
+    ]
+  },
+  {
+    "name": "PPT",
+    "shortname": "carbon-ppt",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/ppt.svg"
+    ]
+  },
+  {
     "name": "Package",
     "shortname": "carbon-package",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -17317,26 +17367,6 @@
     "source": "carbon",
     "files": [
       "carbon/pcn-z-node.svg"
-    ]
-  },
-  {
-    "name": "PDF",
-    "shortname": "carbon-pdf",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/pdf.svg"
-    ]
-  },
-  {
-    "name": "PDF Reference",
-    "shortname": "carbon-pdf-reference",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/pdf-reference.svg"
     ]
   },
   {
@@ -17940,16 +17970,6 @@
     ]
   },
   {
-    "name": "PLI",
-    "shortname": "carbon-pli",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/pli.svg"
-    ]
-  },
-  {
     "name": "Plug",
     "shortname": "carbon-plug",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -17967,16 +17987,6 @@
     "source": "carbon",
     "files": [
       "carbon/plug-filled.svg"
-    ]
-  },
-  {
-    "name": "PNG",
-    "shortname": "carbon-png",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/png.svg"
     ]
   },
   {
@@ -18137,16 +18147,6 @@
     "source": "carbon",
     "files": [
       "carbon/power-virtual-server-disaster-recovery-automation.svg"
-    ]
-  },
-  {
-    "name": "PPT",
-    "shortname": "carbon-ppt",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/ppt.svg"
     ]
   },
   {
@@ -18570,6 +18570,36 @@
     ]
   },
   {
+    "name": "RAG",
+    "shortname": "carbon-rag",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/rag.svg"
+    ]
+  },
+  {
+    "name": "RAW",
+    "shortname": "carbon-raw",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/raw.svg"
+    ]
+  },
+  {
+    "name": "REXX",
+    "shortname": "carbon-rexx",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/rexx.svg"
+    ]
+  },
+  {
     "name": "Radar",
     "shortname": "carbon-radar",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -18650,16 +18680,6 @@
     ]
   },
   {
-    "name": "RAG",
-    "shortname": "carbon-rag",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/rag.svg"
-    ]
-  },
-  {
     "name": "Rain",
     "shortname": "carbon-rain",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -18717,16 +18737,6 @@
     "source": "carbon",
     "files": [
       "carbon/rain-scattered-night.svg"
-    ]
-  },
-  {
-    "name": "RAW",
-    "shortname": "carbon-raw",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/raw.svg"
     ]
   },
   {
@@ -19250,16 +19260,6 @@
     ]
   },
   {
-    "name": "REXX",
-    "shortname": "carbon-rexx",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/rexx.svg"
-    ]
-  },
-  {
     "name": "Right Panel Close",
     "shortname": "carbon-right-panel-close",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -19670,6 +19670,56 @@
     ]
   },
   {
+    "name": "SAP",
+    "shortname": "carbon-sap",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/sap.svg"
+    ]
+  },
+  {
+    "name": "SDK",
+    "shortname": "carbon-sdk",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/sdk.svg"
+    ]
+  },
+  {
+    "name": "SLM",
+    "shortname": "carbon-slm",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/slm.svg"
+    ]
+  },
+  {
+    "name": "SQL",
+    "shortname": "carbon-sql",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/sql.svg"
+    ]
+  },
+  {
+    "name": "SVG",
+    "shortname": "carbon-svg",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/svg.svg"
+    ]
+  },
+  {
     "name": "Sailboat Coastal",
     "shortname": "carbon-sailboat-coastal",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -19717,16 +19767,6 @@
     "source": "carbon",
     "files": [
       "carbon/sankey-diagram-alt.svg"
-    ]
-  },
-  {
-    "name": "SAP",
-    "shortname": "carbon-sap",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/sap.svg"
     ]
   },
   {
@@ -19987,16 +20027,6 @@
     "source": "carbon",
     "files": [
       "carbon/script-reference.svg"
-    ]
-  },
-  {
-    "name": "SDK",
-    "shortname": "carbon-sdk",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/sdk.svg"
     ]
   },
   {
@@ -20840,16 +20870,6 @@
     ]
   },
   {
-    "name": "SLM",
-    "shortname": "carbon-slm",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/slm.svg"
-    ]
-  },
-  {
     "name": "Smell",
     "shortname": "carbon-smell",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -21207,16 +21227,6 @@
     "source": "carbon",
     "files": [
       "carbon/spyre-accelerator.svg"
-    ]
-  },
-  {
-    "name": "SQL",
-    "shortname": "carbon-sql",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/sql.svg"
     ]
   },
   {
@@ -21760,16 +21770,6 @@
     ]
   },
   {
-    "name": "SVG",
-    "shortname": "carbon-svg",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/svg.svg"
-    ]
-  },
-  {
     "name": "Swim",
     "shortname": "carbon-swim",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -21877,6 +21877,46 @@
     "source": "carbon",
     "files": [
       "carbon/sysplex-distributor.svg"
+    ]
+  },
+  {
+    "name": "TIF",
+    "shortname": "carbon-tif",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/tif.svg"
+    ]
+  },
+  {
+    "name": "TSV",
+    "shortname": "carbon-tsv",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/tsv.svg"
+    ]
+  },
+  {
+    "name": "TXT",
+    "shortname": "carbon-txt",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/txt.svg"
+    ]
+  },
+  {
+    "name": "TXT Reference",
+    "shortname": "carbon-txt-reference",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/txt-reference.svg"
     ]
   },
   {
@@ -22980,16 +23020,6 @@
     ]
   },
   {
-    "name": "TIF",
-    "shortname": "carbon-tif",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/tif.svg"
-    ]
-  },
-  {
     "name": "Tilde",
     "shortname": "carbon-tilde",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -23730,16 +23760,6 @@
     ]
   },
   {
-    "name": "TSV",
-    "shortname": "carbon-tsv",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/tsv.svg"
-    ]
-  },
-  {
     "name": "Tuning",
     "shortname": "carbon-tuning",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -23770,26 +23790,6 @@
     ]
   },
   {
-    "name": "TXT",
-    "shortname": "carbon-txt",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/txt.svg"
-    ]
-  },
-  {
-    "name": "TXT Reference",
-    "shortname": "carbon-txt-reference",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/txt-reference.svg"
-    ]
-  },
-  {
     "name": "Type Pattern",
     "shortname": "carbon-type-pattern",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -23807,6 +23807,26 @@
     "source": "carbon",
     "files": [
       "carbon/types.svg"
+    ]
+  },
+  {
+    "name": "URL",
+    "shortname": "carbon-url",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/url.svg"
+    ]
+  },
+  {
+    "name": "USB",
+    "shortname": "carbon-usb",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/usb.svg"
     ]
   },
   {
@@ -24000,16 +24020,6 @@
     ]
   },
   {
-    "name": "URL",
-    "shortname": "carbon-url",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/url.svg"
-    ]
-  },
-  {
     "name": "Usage Included Use Case",
     "shortname": "carbon-usage-included-use-case",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -24017,16 +24027,6 @@
     "source": "carbon",
     "files": [
       "carbon/usage-included-use-case.svg"
-    ]
-  },
-  {
-    "name": "USB",
-    "shortname": "carbon-usb",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/usb.svg"
     ]
   },
   {
@@ -24407,6 +24407,16 @@
     "source": "carbon",
     "files": [
       "carbon/uv-index-filled.svg"
+    ]
+  },
+  {
+    "name": "VPN",
+    "shortname": "carbon-vpn",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/vpn.svg"
     ]
   },
   {
@@ -24990,16 +25000,6 @@
     ]
   },
   {
-    "name": "VPN",
-    "shortname": "carbon-vpn",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/vpn.svg"
-    ]
-  },
-  {
     "name": "Vpn Connection",
     "shortname": "carbon-vpn-connection",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -25017,6 +25017,16 @@
     "source": "carbon",
     "files": [
       "carbon/vpn-policy.svg"
+    ]
+  },
+  {
+    "name": "WMV",
+    "shortname": "carbon-wmv",
+    "url": "https://carbondesignsystem.com/elements/icons/library/",
+    "collection": "simple",
+    "source": "carbon",
+    "files": [
+      "carbon/wmv.svg"
     ]
   },
   {
@@ -25610,16 +25620,6 @@
     ]
   },
   {
-    "name": "WMV",
-    "shortname": "carbon-wmv",
-    "url": "https://carbondesignsystem.com/elements/icons/library/",
-    "collection": "simple",
-    "source": "carbon",
-    "files": [
-      "carbon/wmv.svg"
-    ]
-  },
-  {
     "name": "Word Cloud",
     "shortname": "carbon-word-cloud",
     "url": "https://carbondesignsystem.com/elements/icons/library/",
@@ -25897,6 +25897,96 @@
     "source": "carbon",
     "files": [
       "carbon/zos-sysplex.svg"
+    ]
+  },
+  {
+    "name": "Download",
+    "shortname": "icon-system-download",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "icon-system",
+    "files": [
+      "icon-system/download.svg"
+    ]
+  },
+  {
+    "name": "Filter",
+    "shortname": "icon-system-filter",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "icon-system",
+    "files": [
+      "icon-system/filter.svg"
+    ]
+  },
+  {
+    "name": "Mail",
+    "shortname": "icon-system-mail",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "icon-system",
+    "files": [
+      "icon-system/mail.svg"
+    ]
+  },
+  {
+    "name": "Menu",
+    "shortname": "icon-system-menu",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "icon-system",
+    "files": [
+      "icon-system/menu.svg"
+    ]
+  },
+  {
+    "name": "Message",
+    "shortname": "icon-system-message",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "icon-system",
+    "files": [
+      "icon-system/message.svg"
+    ]
+  },
+  {
+    "name": "More Horizontal",
+    "shortname": "icon-system-more-horizontal",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "icon-system",
+    "files": [
+      "icon-system/more-horizontal.svg"
+    ]
+  },
+  {
+    "name": "More Vertical",
+    "shortname": "icon-system-more-vertical",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "icon-system",
+    "files": [
+      "icon-system/more-vertical.svg"
+    ]
+  },
+  {
+    "name": "Phone",
+    "shortname": "icon-system-phone",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "icon-system",
+    "files": [
+      "icon-system/phone.svg"
+    ]
+  },
+  {
+    "name": "Refresh",
+    "shortname": "icon-system-refresh",
+    "url": "https://github.com/opensphere-platform/icon-system-template",
+    "collection": "simple",
+    "source": "icon-system",
+    "files": [
+      "icon-system/refresh.svg"
     ]
   }
 ]

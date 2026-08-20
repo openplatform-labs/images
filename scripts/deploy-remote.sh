@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# cc2-dns1(logos.opl.io.kr) 원격 배포 스크립트
+# oci-cc2-node2 (CMARS-OCI-CC2-DNS) — logos.opl.io.kr + images.opl.io.kr 동일 앱 배포
 set -euo pipefail
 
-REMOTE_HOST="${REMOTE_HOST:-cc2-dns1}"
+REMOTE_HOST="${REMOTE_HOST:-oci-cc2-node2}"
 APP_DIR="/var/www/images.opl.io.kr"
 APP_PORT="${APP_PORT:-3100}"
 SERVICE_NAME="opensphere-logos"
-DOMAIN="logos.opl.io.kr"
-LEGACY_DOMAINS="logo.opl.io.kr images.opl.io.kr"
+PRIMARY_DOMAIN="logos.opl.io.kr"
+IMAGES_DOMAIN="images.opl.io.kr"
+LEGACY_DOMAINS="logo.opl.io.kr"
 LOCAL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 echo "==> 소스 동기화: ${LOCAL_DIR} -> ${REMOTE_HOST}:${APP_DIR}"
@@ -19,6 +20,16 @@ rsync -az --delete \
   --exclude 'data/*.sqlite-*' \
   --exclude '.env*.local' \
   --exclude '.env.production' \
+  --exclude 'images/*.jpg' \
+  --exclude 'images/*.jpeg' \
+  --exclude 'images/*.png' \
+  --exclude 'images/*.webp' \
+  --exclude 'images/*.gif' \
+  --exclude 'logos/*.svg' \
+  --exclude 'icons/**/*.svg' \
+  --exclude 'pictograms/**/*.svg' \
+  --exclude 'illust/*.svg' \
+  --exclude 'avatars/*.svg' \
   "${LOCAL_DIR}/" \
   "${REMOTE_HOST}:${APP_DIR}/"
 
@@ -29,12 +40,12 @@ set -euo pipefail
 APP_DIR="${APP_DIR}"
 APP_PORT="${APP_PORT}"
 SERVICE_NAME="${SERVICE_NAME}"
-DOMAIN="${DOMAIN}"
+PRIMARY_DOMAIN="${PRIMARY_DOMAIN}"
+IMAGES_DOMAIN="${IMAGES_DOMAIN}"
 LEGACY_DOMAINS="${LEGACY_DOMAINS}"
 
-# E2.Micro 메모리 부족 방지용 swap
 if [ ! -f /swapfile ]; then
-  sudo fallocate -l 2G /swapfile || sudo dd /dev/zero of=/swapfile bs=1M count=2048
+  sudo fallocate -l 2G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=2048
   sudo chmod 600 /swapfile
   sudo mkswap /swapfile
   sudo swapon /swapfile
@@ -79,30 +90,79 @@ sudo systemctl daemon-reload
 sudo systemctl enable \${SERVICE_NAME}
 sudo systemctl restart \${SERVICE_NAME}
 
-# Caddy 리버스 프록시 (기본 도메인 + 구 도메인 리다이렉트)
-if ! grep -q "\${DOMAIN}" /etc/caddy/Caddyfile; then
-  sudo tee -a /etc/caddy/Caddyfile >/dev/null <<CADDY
+# Caddy: logos + images 동일 프록시, logo.* 만 리다이렉트
+sudo cp /etc/caddy/Caddyfile /etc/caddy/Caddyfile.bak.\$(date +%Y%m%d%H%M%S) || true
+sudo python3 <<'PY'
+from pathlib import Path
 
-\${DOMAIN} {
-    reverse_proxy localhost:\${APP_PORT}
+path = Path("/etc/caddy/Caddyfile")
+text = path.read_text() if path.exists() else ""
+
+# 기존 opl.io.kr 관련 블록 제거 후 재작성
+lines = text.splitlines()
+filtered = []
+skip = False
+for line in lines:
+    stripped = line.strip()
+    if stripped.endswith(".opl.io.kr {") and any(
+        name in stripped
+        for name in (
+            "logos.",
+            "logo.",
+            "images.",
+            "illust.",
+            "icons.",
+            "avatars.",
+            "pictograms.",
+        )
+    ):
+        skip = True
+        continue
+    if skip:
+        if stripped == "}":
+            skip = False
+        continue
+    filtered.append(line)
+
+blocks = """
+logos.opl.io.kr {
+    reverse_proxy localhost:3100
 }
-CADDY
-fi
 
-for legacy_domain in \${LEGACY_DOMAINS}; do
-  if ! grep -Fq "\${legacy_domain} {" /etc/caddy/Caddyfile; then
-    sudo tee -a /etc/caddy/Caddyfile >/dev/null <<CADDY
-
-\${legacy_domain} {
-    redir https://\${DOMAIN}{uri} permanent
+images.opl.io.kr {
+    reverse_proxy localhost:3100
 }
-CADDY
-  fi
-done
 
+illust.opl.io.kr {
+    reverse_proxy localhost:3100
+}
+
+icons.opl.io.kr {
+    reverse_proxy localhost:3100
+}
+
+avatars.opl.io.kr {
+    reverse_proxy localhost:3100
+}
+
+pictograms.opl.io.kr {
+    reverse_proxy localhost:3100
+}
+
+logo.opl.io.kr {
+    redir https://logos.opl.io.kr{uri} permanent
+}
+""".strip()
+
+new_text = "\n".join(filtered).rstrip() + "\n\n" + blocks + "\n"
+path.write_text(new_text)
+print("Caddyfile updated for logos + images channels")
+PY
+
+sudo caddy validate --config /etc/caddy/Caddyfile
 sudo systemctl reload caddy
 
-sleep 2
+sleep 3
 curl -fsS "http://127.0.0.1:\${APP_PORT}/" >/dev/null
-echo "배포 완료: https://\${DOMAIN}"
+echo "배포 완료: https://\${PRIMARY_DOMAIN} + https://\${IMAGES_DOMAIN}"
 REMOTE

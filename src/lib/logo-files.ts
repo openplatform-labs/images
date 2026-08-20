@@ -1,23 +1,38 @@
 import { inferVariantFromFilename } from "./collection";
 import { buildStaticallyUrl } from "./statically";
-import type { LogoCollection, LogoFile, LogoVariant } from "./types";
+import type { ChannelId, LogoCollection, LogoFile, LogoVariant } from "./types";
+
+function isSvgFilename(filename: string): boolean {
+  return filename.toLowerCase().endsWith(".svg");
+}
 
 /** DB·JSON 메타를 LogoFile 배열로 변환 */
 export function enrichLogoFiles(
   shortname: string,
-  files: { filename: string; variant?: string }[],
+  files: {
+    filename: string;
+    variant?: string;
+    width?: number;
+    height?: number;
+    bytes?: number;
+  }[],
   collection: LogoCollection,
+  channelId: ChannelId = "logos",
 ): LogoFile[] {
   return files.map((file) => {
     const role = (file.variant ??
       inferVariantFromFilename(file.filename, shortname, collection)) as LogoVariant;
+    const svg = isSvgFilename(file.filename);
 
     return {
       filename: file.filename,
-      staticallyUrl: buildStaticallyUrl(file.filename),
+      staticallyUrl: buildStaticallyUrl(file.filename, channelId),
       role,
-      format: "svg" as const,
-      scalable: true,
+      format: svg ? ("svg" as const) : ("raster" as const),
+      scalable: svg,
+      width: file.width ?? null,
+      height: file.height ?? null,
+      bytes: file.bytes ?? null,
     };
   });
 }
@@ -66,7 +81,33 @@ export function pickGalleryPreviewFile(
   shortname: string,
   collection: LogoCollection,
   source?: string | null,
+  previewFilename?: string | null,
 ): LogoFile | null {
+  if (files.length === 0) return null;
+
+  // 관리자가 지정한 기본 이미지가 있으면 최우선
+  if (previewFilename) {
+    const explicit = files.find((file) => file.filename === previewFilename);
+    if (explicit) return explicit;
+  }
+
+  // 이미지(nasa) 채널: medium → large → default 순
+  if (source === "nasa" || files.some((file) => file.format === "raster")) {
+    const rasterPriority: LogoVariant[] = [
+      "medium",
+      "large",
+      "small",
+      "default",
+      "orig",
+      "thumb",
+    ];
+    for (const variant of rasterPriority) {
+      const match = files.find((file) => file.role === variant);
+      if (match) return match;
+    }
+    return files[0];
+  }
+
   if (collection === "themed") {
     // techicons(devicon)는 심볼(default)을 먼저 보여줌
     const previewPriority: LogoVariant[] =

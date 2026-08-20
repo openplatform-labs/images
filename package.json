@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:nasa": "node scripts/seed-nasa-images.mjs",
+    "seed:nasa:resolutions": "node scripts/enrich-nasa-resolutions.mjs",
+    "push:images": "node --env-file=.env.production scripts/push-images-to-github.mjs"
   },
   "dependencies": {
     "@octokit/rest": "^22.0.1",

@@ -8,6 +8,7 @@ interface GalleryToolbarProps {
   page: number;
   totalPages: number;
   sort?: string;
+  itemLabelPlural?: string;
   searchParams: Record<string, string | undefined>;
 }
 
@@ -16,6 +17,7 @@ export function GalleryToolbar({
   page,
   totalPages,
   sort,
+  itemLabelPlural = "logos",
   searchParams,
 }: GalleryToolbarProps) {
   function sortHref(nextSort: string) {
@@ -29,7 +31,7 @@ export function GalleryToolbar({
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
       <p className="text-sm text-muted">
-        {total.toLocaleString()} logos
+        {total.toLocaleString()} {itemLabelPlural}
         {totalPages > 1 && ` · ${page}/${totalPages}`}
       </p>
       <div className="flex flex-wrap items-center gap-4">

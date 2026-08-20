@@ -42,3 +42,17 @@ next-env.d.ts
 # 내장 SQLite DB (프로젝트 로컬 파일)
 /data/*.sqlite
 /data/*.sqlite-*
+
+# 채널 자산·카탈로그는 각 채널 GitHub 레포에 둔다 (이 레포는 images 웹앱)
+/logos/
+/logos.json
+/illust/
+/illust.json
+/icons/
+/icons.json
+/pictograms/
+/pictograms.json
+/avatars/
+/avatars.json
+/chart/
+/chart.json

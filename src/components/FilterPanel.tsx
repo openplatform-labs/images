@@ -8,6 +8,7 @@ interface FilterPanelProps {
   activeTag?: string;
   activeCollection?: LogoCollection;
   query?: string;
+  searchPlaceholder?: string;
 }
 
 export function FilterPanel({
@@ -17,6 +18,7 @@ export function FilterPanel({
   activeTag,
   activeCollection,
   query,
+  searchPlaceholder = "react, vite, docker...",
 }: FilterPanelProps) {
   function buildHref(params: Record<string, string | undefined>) {
     const search = new URLSearchParams();
@@ -44,7 +46,7 @@ export function FilterPanel({
           <input
             name="q"
             defaultValue={query}
-            placeholder="react, vite, docker..."
+            placeholder={searchPlaceholder}
             className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none ring-accent/40 focus:ring-2"
           />
           {activeCategory && (

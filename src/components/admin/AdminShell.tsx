@@ -13,6 +13,7 @@ import {
   validateAdminSession,
 } from "@/lib/admin-client";
 import { describeOktaAuthError } from "@/lib/okta-auth-messages";
+import { getBrowserChannelConfig } from "@/lib/channel";
 
 interface AdminShellProps {
   children: ReactNode;
@@ -23,11 +24,22 @@ interface AdminStatus {
   oktaConfigured: boolean;
 }
 
-const navItems = [
+const navItems: Array<
+  | {
+      href: string;
+      label: string;
+      descriptionKey: "adminNavDescription";
+    }
+  | {
+      href: string;
+      label: string;
+      description: string;
+    }
+> = [
   {
     href: "/admin/contents",
     label: "콘텐츠 관리",
-    description: "로고 · 카테고리 · 태그 · 편집",
+    descriptionKey: "adminNavDescription",
   },
   {
     href: "/admin/site",
@@ -149,6 +161,8 @@ export function AdminShell({ children }: AdminShellProps) {
     );
   }
 
+  const channel = getBrowserChannelConfig();
+
   return (
     <div className="mx-auto flex min-h-[calc(100vh-8rem)] max-w-6xl gap-8 px-4 py-8 md:px-6">
       <aside className="w-full shrink-0 md:w-56">
@@ -161,6 +175,10 @@ export function AdminShell({ children }: AdminShellProps) {
           <nav className="space-y-1">
             {navItems.map((item) => {
               const active = pathname.startsWith(item.href);
+              const description =
+                "descriptionKey" in item
+                  ? channel[item.descriptionKey]
+                  : item.description;
               return (
                 <Link
                   key={item.href}
@@ -172,7 +190,7 @@ export function AdminShell({ children }: AdminShellProps) {
                   }`}
                 >
                   <p className="text-sm font-semibold">{item.label}</p>
-                  <p className="text-xs opacity-70">{item.description}</p>
+                  <p className="text-xs opacity-70">{description}</p>
                 </Link>
               );
             })}

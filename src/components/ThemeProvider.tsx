@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import type { ChannelId } from "@/lib/channel";
 import type { PreviewTheme, SiteTheme } from "@/lib/preview-theme";
 
 interface ThemeContextValue {
@@ -18,31 +19,48 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const PREVIEW_KEY = "os-logos-preview-theme";
-const SITE_KEY = "os-logos-site-theme";
+interface ThemeProviderProps {
+  children: ReactNode;
+  channelId: ChannelId;
+  defaultSiteTheme: SiteTheme;
+}
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+export function ThemeProvider({
+  children,
+  channelId,
+  defaultSiteTheme,
+}: ThemeProviderProps) {
+  const previewKey = `os-${channelId}-preview-theme`;
+  const siteKey = `os-${channelId}-site-theme`;
   const [previewTheme, setPreviewThemeState] = useState<PreviewTheme>("light");
-  const [siteTheme, setSiteThemeState] = useState<SiteTheme>("light");
+  const [siteTheme, setSiteThemeState] = useState<SiteTheme>(defaultSiteTheme);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const storedPreview = localStorage.getItem(PREVIEW_KEY) as PreviewTheme | null;
-    const storedSite = localStorage.getItem(SITE_KEY) as SiteTheme | null;
+    const storedPreview = localStorage.getItem(previewKey) as PreviewTheme | null;
+    const storedSite = localStorage.getItem(siteKey) as SiteTheme | null;
+    const lockDark =
+      channelId === "images" ||
+      channelId === "avatars" ||
+      channelId === "icons" ||
+      channelId === "pictograms";
     if (storedPreview) setPreviewThemeState(storedPreview);
-    if (storedSite) setSiteThemeState(storedSite);
+    if (lockDark) setSiteThemeState(defaultSiteTheme);
+    else if (storedSite) setSiteThemeState(storedSite);
+    else setSiteThemeState(defaultSiteTheme);
     setReady(true);
-  }, []);
+  }, [previewKey, siteKey, defaultSiteTheme, channelId]);
 
   useEffect(() => {
     if (!ready) return;
     document.documentElement.setAttribute("data-site-theme", siteTheme);
-    localStorage.setItem(SITE_KEY, siteTheme);
-  }, [siteTheme, ready]);
+    document.documentElement.setAttribute("data-channel", channelId);
+    localStorage.setItem(siteKey, siteTheme);
+  }, [siteTheme, ready, siteKey, channelId]);
 
   function setPreviewTheme(theme: PreviewTheme) {
     setPreviewThemeState(theme);
-    localStorage.setItem(PREVIEW_KEY, theme);
+    localStorage.setItem(previewKey, theme);
   }
 
   function setSiteTheme(theme: SiteTheme) {

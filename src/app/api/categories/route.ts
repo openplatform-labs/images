@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server";
 import { createCategory, listCategories } from "@/lib/catalog";
+import { resolveChannelFromHost } from "@/lib/channel";
 import { isAuthorizedRequest, unauthorizedResponse } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-export async function GET() {
-  return NextResponse.json(listCategories());
+export async function GET(request: Request) {
+  const channelId = resolveChannelFromHost(request.headers.get("host"));
+  return NextResponse.json(listCategories(channelId));
 }
 
 export async function POST(request: Request) {
   if (!isAuthorizedRequest(request)) return unauthorizedResponse();
 
+  const channelId = resolveChannelFromHost(request.headers.get("host"));
   const body = (await request.json()) as {
     name?: string;
     description?: string;
@@ -24,6 +27,7 @@ export async function POST(request: Request) {
     const category = createCategory({
       name: body.name.trim(),
       description: body.description?.trim(),
+      channel: channelId,
     });
     return NextResponse.json(category, { status: 201 });
   } catch {

@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
   buildAuthorizeUrl,
   createOAuthNonce,
   createOAuthState,
   createPkcePair,
+  getRequestSiteOrigin,
   isOktaConfigured,
 } from "@/lib/okta";
 
@@ -17,7 +18,7 @@ const OAUTH_COOKIE_OPTIONS = {
   path: "/",
 };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   if (!isOktaConfigured()) {
     return NextResponse.json(
       { error: "Okta가 설정되지 않았습니다." },
@@ -25,17 +26,24 @@ export async function GET() {
     );
   }
 
+  const siteOrigin = getRequestSiteOrigin(request);
   const { codeVerifier, codeChallenge } = createPkcePair();
   const state = createOAuthState();
   const nonce = createOAuthNonce();
 
   const response = NextResponse.redirect(
-    buildAuthorizeUrl({ state, nonce, codeChallenge }),
+    buildAuthorizeUrl({
+      state,
+      nonce,
+      codeChallenge,
+      siteOrigin,
+    }),
   );
 
   response.cookies.set("okta_oauth_state", state, OAUTH_COOKIE_OPTIONS);
   response.cookies.set("okta_code_verifier", codeVerifier, OAUTH_COOKIE_OPTIONS);
   response.cookies.set("okta_nonce", nonce, OAUTH_COOKIE_OPTIONS);
+  response.cookies.set("okta_oauth_origin", siteOrigin, OAUTH_COOKIE_OPTIONS);
 
   return response;
 }

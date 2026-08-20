@@ -1,10 +1,17 @@
+import {
+  getChannelCdnBase,
+  getChannelGithub,
+  getChannelGithubUrl,
+  type ChannelId,
+} from "./channel";
+
 export const config = {
   githubOwner: process.env.GITHUB_OWNER ?? "openplatform-labs",
-  githubRepo: process.env.GITHUB_REPO ?? "images",
+  githubRepo: process.env.GITHUB_REPO ?? "logos",
   githubBranch: process.env.GITHUB_BRANCH ?? "main",
   staticallyCdnBase:
     process.env.STATICALLY_CDN_BASE ??
-    "https://cdn.statically.io/gh/openplatform-labs/images@main",
+    "https://cdn.statically.io/gh/openplatform-labs/logos@main",
   logosJsonPath: process.env.LOGOS_JSON_PATH,
   adminEmail: process.env.ADMIN_EMAIL ?? "",
   adminPassword: process.env.ADMIN_PASSWORD ?? "",
@@ -43,13 +50,16 @@ export const config = {
 };
 
 export function getLogosJsonRemoteUrl(): string {
-  const { githubOwner, githubRepo, githubBranch } = config;
-  return `https://raw.githubusercontent.com/${githubOwner}/${githubRepo}/${githubBranch}/logos.json`;
+  const { owner, repo, branch } = getChannelGithub("logos");
+  return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/logos.json`;
 }
 
-export function getGithubRepoUrl(): string {
-  const { githubOwner, githubRepo } = config;
-  return `https://github.com/${githubOwner}/${githubRepo}`;
+export function getGithubRepoUrl(channelId: ChannelId = "logos"): string {
+  return getChannelGithubUrl(channelId);
+}
+
+export function getGithubCdnBase(channelId: ChannelId = "logos"): string {
+  return getChannelCdnBase(channelId);
 }
 
 export function isSmtpConfigured(): boolean {

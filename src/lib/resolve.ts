@@ -2,6 +2,7 @@ import { getDatabase } from "./db";
 import { normalizeSearchQuery, resolveAlias } from "./aliases";
 import { enrichLogoFiles, pickLogoFile } from "./logo-files";
 import { getLogoByShortname } from "./catalog";
+import { getChannelCdnBase } from "./channel";
 import type { LogoCollection, LogoVariant } from "./types";
 
 export interface ResolveCandidate {
@@ -237,8 +238,7 @@ export function buildCatalogDump(fields?: string): {
 } {
   const database = getDatabase();
   const siteBase = getSiteBaseUrl();
-  const cdnBase = process.env.STATICALLY_CDN_BASE ??
-    "https://cdn.statically.io/gh/openplatform-labs/images@main";
+  const cdnBase = getChannelCdnBase("logos");
 
   const rows = database
     .prepare(

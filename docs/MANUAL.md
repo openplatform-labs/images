@@ -5,7 +5,9 @@
 
 **앱 저장소:** https://dev.azure.com/OpenPlatform-labs/open-images/_git/open-images
 
-**프로덕션:** https://logos.opl.io.kr
+**프로덕션:**
+- Logos: https://logos.opl.io.kr
+- Images: https://images.opl.io.kr (동일 앱 · Host 채널 분기)
 
 ---
 
@@ -47,16 +49,16 @@ npm run dev
 | `ADMIN_PASSWORD` | ○ | 최초 관리자 비밀번호 |
 | `GITHUB_TOKEN` | △ | GitHub 업로드용 PAT (`repo` 권한). 업로드 기능 사용 시 필수 |
 | `GITHUB_OWNER` | | 기본 `openplatform-labs` |
-| `GITHUB_REPO` | | 기본 `images` |
+| `GITHUB_REPO_LOGOS` 등 | | (선택) 채널별 자산 레포. 기본값은 채널 이름(`logos`, `images`, …) |
 | `GITHUB_BRANCH` | | 기본 `main` |
-| `STATICALLY_CDN_BASE` | | Statically CDN base URL |
+| `STATICALLY_CDN_BASE_LOGOS` 등 | | (선택) 채널별 CDN base. 미설정 시 Statically URL 자동 생성 |
 | `LOGOS_JSON_PATH` | | (선택) 로컬 `logos.json` 경로. 있으면 원격 대신 사용 |
 | `SITE_BASE_URL` | | 공개 사이트 URL. 기본 `https://logos.opl.io.kr` |
 | `OKTA_CLIENT_ID` | △ | Okta OIDC 앱 Client ID. SSO 사용 시 |
 | `OKTA_CLIENT_SECRET` | △ | Okta OIDC 앱 Client Secret |
 | `OKTA_*_URL` | | (선택) discovery 미지원 시 개별 엔드포인트 override |
 | `OKTA_SCOPES` | | 기본 `openid profile email` |
-| `SMTP_HOST` | △ | Gmail 등 SMTP. OTP·비밀번호 찾기 사용 시 |
+| `SMTP_HOST` | △ | Gmail 등 SMTP. 이메일 OTP 로그인 사용 시 |
 | `SMTP_USER` | △ | SMTP 계정 |
 | `SMTP_PASS` | △ | SMTP 앱 비밀번호 |
 | `SMTP_FROM` | | 발신 주소 |
@@ -112,7 +114,7 @@ GET /api/resolve?q=react&format=minimal
     "confidence": 1,
     "matchReason": "alias:k8s"
   },
-  "url": "https://cdn.statically.io/gh/openplatform-labs/images@main/logos/kubernetes.svg",
+  "url": "https://cdn.statically.io/gh/openplatform-labs/logos@main/logos/kubernetes.svg",
   "format": "svg",
   "scalable": true,
   "file": {
@@ -181,7 +183,7 @@ GET /i/adobe?variant=icon
 | 용도 | 패턴 |
 |------|------|
 | 갤러리 페이지 | `https://logos.opl.io.kr/logo/{shortname}` |
-| CDN 직접 | `https://cdn.statically.io/gh/openplatform-labs/images@main/logos/{filename}.svg` |
+| CDN 직접 | `https://cdn.statically.io/gh/openplatform-labs/logos@main/logos/{filename}.svg` |
 | 단축 | `https://logos.opl.io.kr/i/{shortname}` |
 
 ---
@@ -209,14 +211,14 @@ URL: `/admin` (헤더 버튼 없음, 직접 접속)
 | 경로 | 기능 |
 |------|------|
 | `/admin/contents` | 로고 업로드, 카테고리·태그, `logos.json` 동기화 |
-| `/admin/site` | GitHub/SMTP 연동 상태, 비밀번호 변경, 관리자 계정 |
+| `/admin/site` | GitHub/SMTP 연동 상태, 관리자 계정 |
 
 ### 인증
 
 - **Okta SSO** (`OKTA_CLIENT_ID`·`OKTA_CLIENT_SECRET` 설정 시) — Authorization Code + PKCE
-- 이메일 + 비밀번호
-- 이메일 OTP (SMTP 설정 필요)
-- 비밀번호 찾기: 로그인 화면에서 OTP → 새 비밀번호 설정
+- **이메일 OTP** (SMTP 설정 필요) — 등록된 관리자 이메일로 6자리 코드 발송
+
+비밀번호(ID/PW) 로그인은 지원하지 않습니다.
 
 Okta 로그인은 **사전 등록된 관리자 이메일**과 Okta `email` 클레임이 일치할 때만 허용됩니다.
 
@@ -224,8 +226,8 @@ Okta 앱 설정:
 
 | 항목 | 값 |
 |------|-----|
-| Sign-in redirect URI | `https://logos.opl.io.kr/api/auth/okta/callback` |
-| Sign-out redirect URI | `https://logos.opl.io.kr/admin` (선택) |
+| Sign-in redirect URI | `https://logos.opl.io.kr/api/auth/okta/callback`<br>`https://images.opl.io.kr/api/auth/okta/callback` |
+| Sign-out redirect URI | `https://logos.opl.io.kr/admin`, `https://images.opl.io.kr/admin` (선택) |
 | Grant type | Authorization Code + PKCE |
 
 기본 엔드포인트 (integrator-1653288, `default` authorization server):
@@ -254,7 +256,7 @@ Okta 앱 설정:
 | 프로세스 | `opensphere-logos` (systemd) |
 | 내부 포트 | `3100` |
 | 리버스 프록시 | Caddy → HTTPS |
-| 도메인 | `logos.opl.io.kr` |
+| 도메인 | `logos.opl.io.kr` (로고), `images.opl.io.kr` (이미지) |
 
 ### 재배포
 
@@ -287,11 +289,11 @@ logos.opl.io.kr {
     reverse_proxy localhost:3100
 }
 
-logo.opl.io.kr {
-    redir https://logos.opl.io.kr{uri} permanent
+images.opl.io.kr {
+    reverse_proxy localhost:3100
 }
 
-images.opl.io.kr {
+logo.opl.io.kr {
     redir https://logos.opl.io.kr{uri} permanent
 }
 ```
@@ -301,11 +303,13 @@ images.opl.io.kr {
 ## 아키텍처
 
 ```
-openplatform-labs/images (GitHub 단일 레포)
-├── logos/           ← SVG 원본 (SoT)
-├── logos.json       ← 로고 인덱스
-├── src/             ← Next.js 웹앱
-└── data/            ← SQLite (서버 런타임, gitignore)
+openplatform-labs/{channel}  (채널 이름 자산 레포)
+├── logos/           ← 예: logos.opl.io.kr 원본
+├── logos.json
+…
+
+웹앱 (이 저장소)
+└── src/             ← Next.js 멀티 호스트 갤러리
 
 브라우저 / AI 에이전트
         │
@@ -313,16 +317,16 @@ openplatform-labs/images (GitHub 단일 레포)
   logos.opl.io.kr (Next.js)
         │
         ├── SQLite — 검색·카테고리·태그 캐시
-        ├── GitHub API — 같은 레포에 SVG/logos.json 커밋
+        ├── GitHub API — 채널 레포에 SVG/카탈로그 커밋
         └── CDN URL 응답
                     │
                     ▼
-  cdn.statically.io/gh/openplatform-labs/images@main/logos/
+  cdn.statically.io/gh/openplatform-labs/logos@main/logos/
 ```
 
-- **단일 레포**: 웹앱과 로고 데이터가 `openplatform-labs/images` 하나에 있음
-- **웹서버**: 페이지·API·검색·관리
-- **CDN**: 로고 이미지 트래픽의 대부분
+- **자산 레포**: 사이트 이름과 동일한 GitHub 저장소 (`logos`, `images`, `illust`, `icons`, `pictograms`, `avatars`)
+- **웹앱**: 페이지·API·검색·관리. Host로 채널을 나눔
+- **CDN**: 이미지 트래픽의 대부분
 
 ### 주요 디렉터리
 
@@ -349,5 +353,5 @@ docs/MANUAL.md         # 이 문서
 ## 라이선스·출처
 
 로고 SVG 저작권은 각 브랜드 소유입니다.  
-저장소: https://github.com/openplatform-labs/images  
-초기 로고 컬렉션 출처: [opensphere-platform/logos](https://github.com/opensphere-platform/logos) (fork·이전)
+저장소: https://github.com/openplatform-labs/logos  
+초기 로고 컬렉션 출처: [openplatform-labs/logos](https://github.com/openplatform-labs/logos) (fork·이전)

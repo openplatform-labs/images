@@ -1,8 +1,4 @@
-import {
-  getAdminBySession,
-  verifyAdminPassword,
-} from "./admin-users";
-import { config } from "./config";
+import { getAdminBySession } from "./admin-users";
 
 export interface AuthAdmin {
   id: number;
@@ -24,22 +20,15 @@ export function isAuthorizedRequest(request: Request): boolean {
 
 export function getAuthenticatedAdmin(request: Request): AuthAdmin | null {
   const token = getTokenFromRequest(request);
-  if (token) {
-    const admin = getAdminBySession(token);
-    if (admin) return admin;
-  }
+  if (!token) return null;
 
-  // 레거시: 환경 변수 비밀번호 (마이그레이션 호환)
-  const legacyPassword = request.headers.get("x-admin-password");
-  if (legacyPassword && legacyPassword === config.adminPassword && config.adminEmail) {
-    return { id: 0, email: config.adminEmail, name: "Legacy" };
-  }
+  const admin = getAdminBySession(token);
+  if (!admin) return null;
 
-  return null;
+  return admin;
 }
 
 export function unauthorizedResponse(): Response {
   return Response.json({ error: "관리자 인증이 필요합니다." }, { status: 401 });
 }
 
-export { verifyAdminPassword };

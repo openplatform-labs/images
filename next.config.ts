@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: "cdn.statically.io",
         pathname: "/gh/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.jsdelivr.net",
+        pathname: "/gh/**",
+      },
     ],
   },
   serverExternalPackages: ["better-sqlite3"],

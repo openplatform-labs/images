@@ -1,14 +1,23 @@
 import fs from "fs";
-import { config, getLogosJsonRemoteUrl } from "./config";
+import path from "path";
+import { config } from "./config";
+import {
+  getCatalogRemoteUrl,
+  getChannelConfig,
+  type ChannelId,
+} from "./channel";
 import {
   detectCollection,
   normalizeLogosJsonFiles,
 } from "./collection";
 import { getDatabase } from "./db";
 import { slugify } from "./slug";
-import { enrichLogoFiles } from "./logo-files";
+import { enrichLogoFiles, pickGalleryPreviewFile } from "./logo-files";
+import { pickLargestByPixels } from "./image-resolutions";
 import type {
   Category,
+  IconPackPreview,
+  ImageHeroCandidate,
   LogoCollection,
   LogoEntry,
   LogoListResult,
@@ -16,6 +25,8 @@ import type {
   LogosJsonFileEntry,
   Tag,
 } from "./types";
+import { toAbsoluteCdnUrl } from "./statically";
+import { formatIconPackLabel } from "./icon-pack";
 
 const categoryKeywordMap: Record<string, string[]> = {
   ai: ["ai", "gpt", "llm", "ml", "gemini", "claude", "openai", "hugging", "anthropic", "deepseek", "mistral"],
@@ -29,18 +40,26 @@ const categoryKeywordMap: Record<string, string[]> = {
   tools: ["git", "npm", "yarn", "vscode", "eslint", "prettier", "postman"],
 };
 
-async function loadLogosJson(): Promise<LogosJsonEntry[]> {
-  if (config.logosJsonPath && fs.existsSync(config.logosJsonPath)) {
-    const raw = fs.readFileSync(config.logosJsonPath, "utf-8");
+async function loadCatalogJson(channelId: ChannelId): Promise<LogosJsonEntry[]> {
+  const channel = getChannelConfig(channelId);
+  const localPath =
+    channelId === "logos" && config.logosJsonPath
+      ? config.logosJsonPath
+      : path.join(process.cwd(), channel.catalogFile);
+
+  if (fs.existsSync(localPath)) {
+    const raw = fs.readFileSync(localPath, "utf-8");
+    if (!raw.trim()) return [];
     return JSON.parse(raw) as LogosJsonEntry[];
   }
 
-  const response = await fetch(getLogosJsonRemoteUrl(), {
+  const response = await fetch(getCatalogRemoteUrl(channelId), {
     next: { revalidate: 3600 },
   });
 
+  if (response.status === 404) return [];
   if (!response.ok) {
-    throw new Error(`logos.json 로드 실패: ${response.status}`);
+    throw new Error(`${channel.catalogFile} 로드 실패: ${response.status}`);
   }
 
   return (await response.json()) as LogosJsonEntry[];
@@ -52,6 +71,7 @@ function parseLogosJsonEntry(entry: LogosJsonEntry): {
   url: string;
   collection: LogoCollection;
   source: string | null;
+  previewFilename: string | null;
   files: LogosJsonFileEntry[];
 } {
   const rawFilenames = entry.files.map((file) =>
@@ -61,6 +81,10 @@ function parseLogosJsonEntry(entry: LogosJsonEntry): {
     entry.collection ?? detectCollection(rawFilenames, entry.shortname, entry.source);
   const source =
     entry.source ?? (collection === "themed" ? "thesvg" : "gilbarbara");
+  const previewFilename =
+    entry.previewFilename && rawFilenames.includes(entry.previewFilename)
+      ? entry.previewFilename
+      : null;
 
   return {
     shortname: entry.shortname,
@@ -68,6 +92,7 @@ function parseLogosJsonEntry(entry: LogosJsonEntry): {
     url: entry.url ?? "",
     collection,
     source,
+    previewFilename,
     files: normalizeLogosJsonFiles(entry.files, entry.shortname, collection),
   };
 }
@@ -85,36 +110,39 @@ function guessCategorySlugs(shortname: string): string[] {
   return matched;
 }
 
-/** logos.json → 내장 SQLite 동기화 */
-export async function syncCatalogFromSource(): Promise<{
+/** 카탈로그 JSON → 내장 SQLite 동기화 */
+export async function syncCatalogFromSource(
+  channelId: ChannelId = "logos",
+): Promise<{
   synced: number;
   autoTagged: number;
 }> {
-  const entries = await loadLogosJson();
+  const entries = await loadCatalogJson(channelId);
   const database = getDatabase();
 
   const upsertLogo = database.prepare(`
-    INSERT INTO logos (shortname, name, url, collection, source, updated_at)
-    VALUES (@shortname, @name, @url, @collection, @source, datetime('now'))
-    ON CONFLICT(shortname) DO UPDATE SET
+    INSERT INTO logos (channel, shortname, name, url, collection, source, preview_filename, updated_at)
+    VALUES (@channel, @shortname, @name, @url, @collection, @source, @previewFilename, datetime('now'))
+    ON CONFLICT(channel, shortname) DO UPDATE SET
       name = excluded.name,
       url = excluded.url,
       collection = excluded.collection,
       source = excluded.source,
+      preview_filename = excluded.preview_filename,
       updated_at = datetime('now')
   `);
 
   const deleteFiles = database.prepare(
-    "DELETE FROM logo_files WHERE shortname = ?",
+    "DELETE FROM logo_files WHERE channel = ? AND shortname = ?",
   );
   const insertFile = database.prepare(`
-    INSERT OR REPLACE INTO logo_files (shortname, filename, variant)
-    VALUES (?, ?, ?)
+    INSERT OR REPLACE INTO logo_files (channel, shortname, filename, variant, width, height, bytes)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
 
   const categoryRows = database
-    .prepare("SELECT id, slug FROM categories")
-    .all() as { id: number; slug: string }[];
+    .prepare("SELECT id, slug FROM categories WHERE channel = ?")
+    .all(channelId) as { id: number; slug: string }[];
 
   const insertLogoCategory = database.prepare(`
     INSERT OR IGNORE INTO logo_categories (logo_shortname, category_id)
@@ -128,17 +156,30 @@ export async function syncCatalogFromSource(): Promise<{
       const parsed = parseLogosJsonEntry(entry);
 
       upsertLogo.run({
+        channel: channelId,
         shortname: parsed.shortname,
         name: parsed.name,
         url: parsed.url,
         collection: parsed.collection,
         source: parsed.source,
+        previewFilename: parsed.previewFilename,
       });
 
-      deleteFiles.run(parsed.shortname);
+      deleteFiles.run(channelId, parsed.shortname);
       for (const file of parsed.files) {
-        insertFile.run(parsed.shortname, file.filename, file.variant);
+        insertFile.run(
+          channelId,
+          parsed.shortname,
+          file.filename,
+          file.variant,
+          file.width ?? null,
+          file.height ?? null,
+          file.bytes ?? null,
+        );
       }
+
+      // logos 채널만 키워드 기반 자동 카테고리
+      if (channelId !== "logos") continue;
 
       const guessed = guessCategorySlugs(parsed.shortname);
       const hasCategory = database
@@ -166,29 +207,40 @@ export async function syncCatalogFromSource(): Promise<{
 
 function mapLogoRow(
   row: {
+    channel: ChannelId;
     shortname: string;
     name: string;
     url: string | null;
     collection: LogoCollection;
     source: string | null;
+    preview_filename?: string | null;
   },
   database: ReturnType<typeof getDatabase>,
 ): LogoEntry {
   const files = database
     .prepare(
-      "SELECT filename, variant FROM logo_files WHERE shortname = ? ORDER BY filename",
+      `SELECT filename, variant, width, height, bytes
+       FROM logo_files
+       WHERE channel = ? AND shortname = ?
+       ORDER BY filename`,
     )
-    .all(row.shortname) as { filename: string; variant: string }[];
+    .all(row.channel, row.shortname) as {
+    filename: string;
+    variant: string;
+    width: number | null;
+    height: number | null;
+    bytes: number | null;
+  }[];
 
   const categories = database
     .prepare(
       `SELECT c.id, c.name, c.slug, c.description, c.sort_order as sortOrder
        FROM categories c
        INNER JOIN logo_categories lc ON lc.category_id = c.id
-       WHERE lc.logo_shortname = ?
+       WHERE lc.logo_shortname = ? AND c.channel = ?
        ORDER BY c.sort_order`,
     )
-    .all(row.shortname) as Category[];
+    .all(row.shortname, row.channel) as Category[];
 
   const tags = database
     .prepare(
@@ -204,47 +256,70 @@ function mapLogoRow(
     shortname: row.shortname,
     name: row.name,
     url: row.url,
+    channel: row.channel,
     collection: row.collection,
     source: row.source,
-    files: enrichLogoFiles(row.shortname, files, row.collection),
+    previewFilename: row.preview_filename ?? null,
+    files: enrichLogoFiles(
+      row.shortname,
+      files.map((file) => ({
+        filename: file.filename,
+        variant: file.variant,
+        width: file.width ?? undefined,
+        height: file.height ?? undefined,
+        bytes: file.bytes ?? undefined,
+      })),
+      row.collection,
+      row.channel,
+    ),
     categories,
     tags,
   };
 }
 
 export function listLogos(params: {
+  channel?: ChannelId;
   query?: string;
   categorySlug?: string;
   tagSlug?: string;
   collection?: LogoCollection;
+  source?: string;
   page?: number;
   pageSize?: number;
   sort?: "name" | "recent";
 }): LogoListResult {
   const database = getDatabase();
+  const channelId = params.channel ?? "logos";
   const page = params.page ?? 1;
-  const pageSize = Math.min(params.pageSize ?? 48, 100);
+  const pageSizeCap =
+    channelId === "icons" || channelId === "pictograms" ? 5000 : 100;
+  const pageSize = Math.min(params.pageSize ?? 48, pageSizeCap);
   const offset = (page - 1) * pageSize;
 
-  const conditions: string[] = ["1=1"];
-  const bindings: (string | number)[] = [];
+  const conditions: string[] = ["l.channel = ?"];
+  const bindings: (string | number)[] = [channelId];
 
   if (params.collection) {
     conditions.push("l.collection = ?");
     bindings.push(params.collection);
   }
 
+  if (params.source) {
+    conditions.push("l.source = ?");
+    bindings.push(params.source);
+  }
+
   if (params.query) {
-    conditions.push("(l.name LIKE ? OR l.shortname LIKE ?)");
+    conditions.push("(l.name LIKE ? OR l.shortname LIKE ? OR IFNULL(l.source, '') LIKE ?)");
     const pattern = `%${params.query}%`;
-    bindings.push(pattern, pattern);
+    bindings.push(pattern, pattern, pattern);
   }
 
   if (params.categorySlug) {
     conditions.push(`EXISTS (
       SELECT 1 FROM logo_categories lc
       INNER JOIN categories c ON c.id = lc.category_id
-      WHERE lc.logo_shortname = l.shortname AND c.slug = ?
+      WHERE lc.logo_shortname = l.shortname AND c.slug = ? AND c.channel = l.channel
     )`);
     bindings.push(params.categorySlug);
   }
@@ -259,8 +334,14 @@ export function listLogos(params: {
   }
 
   const whereClause = conditions.join(" AND ");
+  const groupSearch =
+    channelId === "icons" && Boolean(params.query) && !params.source;
   const orderBy =
-    params.sort === "recent" ? "l.updated_at DESC" : "l.name COLLATE NOCASE ASC";
+    params.sort === "recent"
+      ? "l.updated_at DESC"
+      : groupSearch
+        ? "IFNULL(l.source, '') COLLATE NOCASE ASC, l.name COLLATE NOCASE ASC"
+        : "l.name COLLATE NOCASE ASC";
 
   const totalRow = database
     .prepare(
@@ -270,18 +351,20 @@ export function listLogos(params: {
 
   const rows = database
     .prepare(
-      `SELECT DISTINCT l.shortname, l.name, l.url, l.collection, l.source
+      `SELECT DISTINCT l.channel, l.shortname, l.name, l.url, l.collection, l.source, l.preview_filename
        FROM logos l
        WHERE ${whereClause}
        ORDER BY ${orderBy}
        LIMIT ? OFFSET ?`,
     )
     .all(...bindings, pageSize, offset) as {
+    channel: ChannelId;
     shortname: string;
     name: string;
     url: string | null;
     collection: LogoCollection;
     source: string | null;
+    preview_filename: string | null;
   }[];
 
   return {
@@ -292,19 +375,24 @@ export function listLogos(params: {
   };
 }
 
-export function getLogoByShortname(shortname: string): LogoEntry | null {
+export function getLogoByShortname(
+  shortname: string,
+  channelId: ChannelId = "logos",
+): LogoEntry | null {
   const database = getDatabase();
   const row = database
     .prepare(
-      "SELECT shortname, name, url, collection, source FROM logos WHERE shortname = ?",
+      "SELECT channel, shortname, name, url, collection, source, preview_filename FROM logos WHERE channel = ? AND shortname = ?",
     )
-    .get(shortname) as
+    .get(channelId, shortname) as
     | {
+        channel: ChannelId;
         shortname: string;
         name: string;
         url: string | null;
         collection: LogoCollection;
         source: string | null;
+        preview_filename: string | null;
       }
     | undefined;
 
@@ -312,7 +400,7 @@ export function getLogoByShortname(shortname: string): LogoEntry | null {
   return mapLogoRow(row, database);
 }
 
-export function listCategories(): Category[] {
+export function listCategories(channelId: ChannelId = "logos"): Category[] {
   const database = getDatabase();
   return database
     .prepare(
@@ -320,10 +408,12 @@ export function listCategories(): Category[] {
               COUNT(lc.logo_shortname) as logoCount
        FROM categories c
        LEFT JOIN logo_categories lc ON lc.category_id = c.id
+       LEFT JOIN logos l ON l.shortname = lc.logo_shortname AND l.channel = c.channel
+       WHERE c.channel = ?
        GROUP BY c.id
        ORDER BY c.sort_order, c.name`,
     )
-    .all() as Category[];
+    .all(channelId) as Category[];
 }
 
 export function listTags(): Tag[] {
@@ -343,15 +433,17 @@ export function listTags(): Tag[] {
 export function createCategory(input: {
   name: string;
   description?: string;
+  channel?: ChannelId;
 }): Category {
   const database = getDatabase();
+  const channelId = input.channel ?? "logos";
   const slug = slugify(input.name);
   const result = database
     .prepare(
-      `INSERT INTO categories (name, slug, description)
-       VALUES (?, ?, ?)`,
+      `INSERT INTO categories (name, slug, description, channel)
+       VALUES (?, ?, ?, ?)`,
     )
-    .run(input.name, slug, input.description ?? null);
+    .run(input.name, slug, input.description ?? null, channelId);
 
   return database
     .prepare(
@@ -418,73 +510,256 @@ export function updateLogoMetadata(
 /** 로고 기본 정보 SQLite 업데이트 */
 export function updateLogoEntry(
   shortname: string,
-  input: { name: string; url: string; collection?: LogoCollection; source?: string },
+  input: {
+    name: string;
+    url: string;
+    collection?: LogoCollection;
+    source?: string;
+    previewFilename?: string | null;
+  },
+  channelId: ChannelId = "logos",
 ): void {
   const database = getDatabase();
-
-  if (input.collection !== undefined) {
-    database
-      .prepare(
-        `UPDATE logos
-         SET name = ?, url = ?, collection = ?, source = ?, updated_at = datetime('now')
-         WHERE shortname = ?`,
-      )
-      .run(
-        input.name,
-        input.url || null,
-        input.collection,
-        input.source ?? null,
-        shortname,
-      );
-    return;
-  }
+  const existing = database
+    .prepare(
+      "SELECT collection, source, preview_filename FROM logos WHERE channel = ? AND shortname = ?",
+    )
+    .get(channelId, shortname) as
+    | {
+        collection: LogoCollection;
+        source: string | null;
+        preview_filename: string | null;
+      }
+    | undefined;
 
   database
     .prepare(
       `UPDATE logos
-       SET name = ?, url = ?, updated_at = datetime('now')
-       WHERE shortname = ?`,
+       SET name = ?, url = ?, collection = ?, source = ?, preview_filename = ?, updated_at = datetime('now')
+       WHERE channel = ? AND shortname = ?`,
     )
-    .run(input.name, input.url || null, shortname);
+    .run(
+      input.name,
+      input.url || null,
+      input.collection ?? existing?.collection ?? "simple",
+      input.source !== undefined ? input.source : (existing?.source ?? null),
+      input.previewFilename !== undefined
+        ? input.previewFilename
+        : (existing?.preview_filename ?? null),
+      channelId,
+      shortname,
+    );
 }
 
-export function upsertLogoLocally(entry: LogosJsonEntry): void {
+export function upsertLogoLocally(
+  entry: LogosJsonEntry,
+  channelId: ChannelId = "logos",
+): void {
   const database = getDatabase();
   const parsed = parseLogosJsonEntry(entry);
 
   database
     .prepare(
-      `INSERT INTO logos (shortname, name, url, collection, source, updated_at)
-       VALUES (@shortname, @name, @url, @collection, @source, datetime('now'))
-       ON CONFLICT(shortname) DO UPDATE SET
+      `INSERT INTO logos (channel, shortname, name, url, collection, source, preview_filename, updated_at)
+       VALUES (@channel, @shortname, @name, @url, @collection, @source, @previewFilename, datetime('now'))
+       ON CONFLICT(channel, shortname) DO UPDATE SET
          name = excluded.name,
          url = excluded.url,
          collection = excluded.collection,
          source = excluded.source,
+         preview_filename = excluded.preview_filename,
          updated_at = datetime('now')`,
     )
-    .run(parsed);
+    .run({ ...parsed, channel: channelId });
 
   for (const file of parsed.files) {
     database
       .prepare(
-        `INSERT OR REPLACE INTO logo_files (shortname, filename, variant)
-         VALUES (?, ?, ?)`,
+        `INSERT OR REPLACE INTO logo_files (channel, shortname, filename, variant, width, height, bytes)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
       )
-      .run(parsed.shortname, file.filename, file.variant);
+      .run(
+        channelId,
+        parsed.shortname,
+        file.filename,
+        file.variant,
+        file.width ?? null,
+        file.height ?? null,
+        file.bytes ?? null,
+      );
   }
 }
 
-export function getCollectionCounts(): Record<LogoCollection, number> {
+/** 로고 파일 목록을 카탈로그 기준으로 통째로 교체 */
+export function replaceLogoFilesLocally(
+  shortname: string,
+  files: LogosJsonFileEntry[],
+  channelId: ChannelId = "logos",
+): void {
+  const database = getDatabase();
+  const replace = database.transaction(() => {
+    database
+      .prepare("DELETE FROM logo_files WHERE channel = ? AND shortname = ?")
+      .run(channelId, shortname);
+    const insert = database.prepare(
+      `INSERT INTO logo_files (channel, shortname, filename, variant, width, height, bytes)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    );
+    for (const file of files) {
+      insert.run(
+        channelId,
+        shortname,
+        file.filename,
+        file.variant,
+        file.width ?? null,
+        file.height ?? null,
+        file.bytes ?? null,
+      );
+    }
+  });
+  replace();
+}
+
+/** 로고와 연관 파일·카테고리·태그를 SQLite에서 삭제 */
+export function deleteLogoLocally(
+  shortname: string,
+  channelId: ChannelId = "logos",
+): void {
+  const database = getDatabase();
+  const remove = database.transaction(() => {
+    database
+      .prepare("DELETE FROM logo_files WHERE channel = ? AND shortname = ?")
+      .run(channelId, shortname);
+    database
+      .prepare("DELETE FROM logo_categories WHERE logo_shortname = ?")
+      .run(shortname);
+    database.prepare("DELETE FROM logo_tags WHERE logo_shortname = ?").run(shortname);
+    database
+      .prepare("DELETE FROM logos WHERE channel = ? AND shortname = ?")
+      .run(channelId, shortname);
+  });
+  remove();
+}
+
+export function getCollectionCounts(
+  channelId: ChannelId = "logos",
+): Record<LogoCollection, number> {
   const database = getDatabase();
   const rows = database
     .prepare(
-      `SELECT collection, COUNT(*) as count FROM logos GROUP BY collection`,
+      `SELECT collection, COUNT(*) as count FROM logos WHERE channel = ? GROUP BY collection`,
     )
-    .all() as { collection: LogoCollection; count: number }[];
+    .all(channelId) as { collection: LogoCollection; count: number }[];
 
   return {
     simple: rows.find((row) => row.collection === "simple")?.count ?? 0,
     themed: rows.find((row) => row.collection === "themed")?.count ?? 0,
   };
+}
+
+/** 채널별 패키지(source) 카운트 — icons 갤러리 탭용 */
+export function getSourceCounts(
+  channelId: ChannelId,
+): { source: string; count: number }[] {
+  const database = getDatabase();
+  return database
+    .prepare(
+      `SELECT source, COUNT(*) as count
+       FROM logos
+       WHERE channel = ? AND source IS NOT NULL AND TRIM(source) != ''
+       GROUP BY source
+       ORDER BY source COLLATE NOCASE ASC`,
+    )
+    .all(channelId) as { source: string; count: number }[];
+}
+
+/** 아이콘 묶음 카드용 — 개수 + 미리보기 글리프 */
+export function listIconPacks(
+  channelId: ChannelId = "icons",
+  previewCount = 8,
+): IconPackPreview[] {
+  const packs = getSourceCounts(channelId);
+  return packs.map((pack) => {
+    const sample = listLogos({
+      channel: channelId,
+      source: pack.source,
+      page: 1,
+      pageSize: previewCount,
+      sort: "name",
+    });
+    return {
+      slug: pack.source,
+      label: formatIconPackLabel(pack.source),
+      count: pack.count,
+      previews: sample.items.flatMap((item) => {
+        const file = pickGalleryPreviewFile(
+          item.files,
+          item.shortname,
+          item.collection,
+          item.source,
+          item.previewFilename,
+        );
+        if (!file?.staticallyUrl) return [];
+        return [
+          {
+            shortname: item.shortname,
+            name: item.name,
+            imageUrl: toAbsoluteCdnUrl(file.staticallyUrl, channelId),
+          },
+        ];
+      }),
+    };
+  });
+}
+
+export type { ImageHeroCandidate };
+
+/** 히어로 로테이션용 — 보유 이미지의 최대 해상도 URL 목록 */
+export function listImageHeroCandidates(
+  channelId: ChannelId = "images",
+  limit = 500,
+): ImageHeroCandidate[] {
+  const database = getDatabase();
+  const channel = getChannelConfig(channelId);
+  const rows = database
+    .prepare(
+      `SELECT channel, shortname, name, url, collection, source, preview_filename
+       FROM logos
+       WHERE channel = ?
+       ORDER BY name COLLATE NOCASE ASC
+       LIMIT ?`,
+    )
+    .all(channelId, limit) as {
+    channel: ChannelId;
+    shortname: string;
+    name: string;
+    url: string | null;
+    collection: LogoCollection;
+    source: string | null;
+    preview_filename: string | null;
+  }[];
+
+  const candidates: ImageHeroCandidate[] = [];
+  for (const row of rows) {
+    const entry = mapLogoRow(row, database);
+    const largest =
+      pickLargestByPixels(entry.files) ??
+      pickGalleryPreviewFile(
+        entry.files,
+        entry.shortname,
+        entry.collection,
+        entry.source,
+        entry.previewFilename,
+      );
+    if (!largest?.staticallyUrl) continue;
+    candidates.push({
+      shortname: entry.shortname,
+      name: entry.name,
+      href: `${channel.detailPathPrefix}/${entry.shortname}`,
+      imageUrl: toAbsoluteCdnUrl(largest.staticallyUrl, channelId),
+      width: largest.width,
+      height: largest.height,
+    });
+  }
+  return candidates;
 }

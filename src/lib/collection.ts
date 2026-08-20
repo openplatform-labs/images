@@ -10,16 +10,27 @@ export function inferVariantFromFilename(
   collection: LogoCollection,
 ): LogoVariant {
   const lower = filename.toLowerCase();
-  const base = `${shortname}.svg`;
+  const escaped = shortname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  // 이미지 해상도: shortname-orig.jpg 등
+  const resolutionMatch = lower.match(
+    new RegExp(`^${escaped}-(thumb|small|medium|large|orig)\\.(jpe?g|png|webp|gif)$`),
+  );
+  if (resolutionMatch) {
+    return resolutionMatch[1] as LogoVariant;
+  }
+
+  const baseSvg = `${shortname}.svg`;
+  const baseRaster = new RegExp(`^${escaped}\\.(jpe?g|png|webp|gif)$`, "i");
 
   if (collection === "simple") {
-    if (lower === base) return "default";
+    if (lower === baseSvg || baseRaster.test(lower)) return "default";
     if (lower.endsWith("-icon.svg")) return "icon";
     return "default";
   }
 
   // themed (thesvg)
-  if (lower === base) return "default";
+  if (lower === baseSvg || baseRaster.test(lower)) return "default";
   if (lower.endsWith("-color.svg")) return "color";
   if (lower.endsWith("-light.svg")) return "light";
   if (lower.endsWith("-dark.svg")) return "dark";
@@ -35,7 +46,7 @@ export function inferVariantFromFilename(
   return "default";
 }
 
-/** 파일 목록으로 컬렉션 판별 */
+/** source·파일명으로 컬렉션 판별 */
 export function detectCollection(
   filenames: string[],
   shortname: string,
@@ -44,6 +55,7 @@ export function detectCollection(
   if (source === "thesvg") return "themed";
   if (source === "gilbarbara") return "simple";
   if (source === "devicon") return "simple";
+  if (source === "nasa") return "simple";
 
   const hasThemedFile = filenames.some(
     (filename) =>
@@ -71,7 +83,12 @@ export function normalizeLogosJsonFiles(
     }
     return {
       filename: file.filename,
-      variant: file.variant ?? inferVariantFromFilename(file.filename, shortname, collection),
+      variant:
+        file.variant ??
+        inferVariantFromFilename(file.filename, shortname, collection),
+      width: file.width,
+      height: file.height,
+      bytes: file.bytes,
     };
   });
 }
@@ -95,6 +112,11 @@ const allowedVariants: LogoVariant[] = [
   "size32",
   "size64",
   "line",
+  "thumb",
+  "small",
+  "medium",
+  "large",
+  "orig",
 ];
 
 /** URL 쿼리 variant 파싱 */

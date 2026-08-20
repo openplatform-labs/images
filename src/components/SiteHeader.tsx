@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { getGithubRepoUrl } from "@/lib/config";
 import { SiteThemeToggle } from "@/components/SiteThemeToggle";
+import { isGlyphFoundryChannel, type ChannelId } from "@/lib/channel";
 
 function GithubIcon() {
   return (
@@ -17,23 +18,69 @@ function GithubIcon() {
   );
 }
 
-export function SiteHeader() {
+interface SiteHeaderProps {
+  brandName?: string;
+  channelId?: ChannelId;
+}
+
+export function SiteHeader({
+  brandName = "SVG LOGOS",
+  channelId = "logos",
+}: SiteHeaderProps) {
+  const isImages = channelId === "images";
+  const isIllust = channelId === "illust";
+  const isAvatars = channelId === "avatars";
+  const isIcons = isGlyphFoundryChannel(channelId);
+  const hideSiteThemeToggle = isImages || isAvatars || isIcons;
+
+  const brandClass = isImages
+    ? "font-display text-lg font-bold uppercase tracking-[0.22em] text-white md:text-xl"
+    : isIllust
+      ? "font-display text-2xl font-semibold tracking-tight text-[color:var(--illust-ink)]"
+      : isAvatars
+        ? "font-display text-lg font-bold uppercase tracking-[0.28em] text-[color:var(--avatars-ink)] md:text-xl"
+        : isIcons
+          ? "font-display text-lg font-bold uppercase tracking-[0.28em] text-[color:var(--icons-ink)] md:text-xl"
+          : "font-display text-xl font-bold tracking-tight";
+
+  const headerClass = isImages
+    ? "site-header-shell fixed inset-x-0 top-0 z-50 border-transparent bg-gradient-to-b from-black/80 via-black/35 to-transparent"
+    : isAvatars
+      ? "site-header-shell sticky top-0 z-50 border-b border-[color:var(--avatars-line)]"
+      : isIcons
+        ? "site-header-shell sticky top-0 z-50 border-b border-[color:var(--icons-line)]"
+        : isIllust
+          ? "site-header-shell sticky top-0 z-50 border-b"
+          : "site-header-shell sticky top-0 z-50 border-b border-border/80";
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-6">
+    <header className={headerClass}>
+      <div
+        className={`mx-auto flex items-center justify-between gap-4 px-4 py-3 md:px-6 ${
+          isIllust || isAvatars || isIcons ? "max-w-[1500px] md:px-10" : "max-w-7xl"
+        }`}
+      >
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="font-display text-xl font-bold tracking-tight">
-            SVG LOGOS
-          </span>
+          <span className={brandClass}>{brandName}</span>
         </Link>
 
         <nav className="flex items-center gap-2 text-sm">
-          <SiteThemeToggle />
+          {!hideSiteThemeToggle && <SiteThemeToggle />}
           <a
-            href={getGithubRepoUrl()}
+            href={getGithubRepoUrl(channelId)}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-muted transition hover:text-foreground"
+            className={`inline-flex items-center gap-1.5 border px-3 py-2 transition ${
+              isImages
+                ? "rounded-lg border-white/25 text-white/75 hover:border-white/60 hover:text-white"
+                : isIllust
+                  ? "rounded-full border-[color:var(--illust-line)] text-muted hover:border-[color:var(--illust-seal)] hover:text-[color:var(--illust-ink)]"
+                  : isAvatars
+                    ? "rounded-full border-[color:var(--avatars-line)] text-muted hover:border-[color:var(--avatars-lime)] hover:text-[color:var(--avatars-ink)]"
+                    : isIcons
+                      ? "rounded-full border-[color:var(--icons-line)] text-muted hover:border-[color:var(--icons-cyan)] hover:text-[color:var(--icons-ink)]"
+                      : "rounded-lg border-border text-muted hover:border-accent hover:text-foreground"
+            }`}
           >
             <GithubIcon />
             GitHub

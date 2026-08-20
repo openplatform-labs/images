@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { getChannelConfig, resolveChannelFromHost } from "./channel";
 import { config } from "./config";
 
 export interface OktaTokenResponse {
@@ -26,8 +27,36 @@ export function isOktaConfigured(): boolean {
   );
 }
 
-export function getOktaRedirectUri(): string {
-  return `${config.siteBaseUrl}/api/auth/okta/callback`;
+export function normalizeSiteOrigin(origin: string): string {
+  return origin.replace(/\/$/, "");
+}
+
+/** 프록시 뒤에서도 공개 Origin 계산 (Host / X-Forwarded-*) */
+export function getRequestSiteOrigin(request: {
+  headers: Headers;
+  nextUrl: URL;
+}): string {
+  const hostHeader =
+    request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  const host = (hostHeader ?? "").split(",")[0].trim().split(":")[0].toLowerCase();
+
+  if (!host || host === "localhost" || host === "127.0.0.1") {
+    return normalizeSiteOrigin(request.nextUrl.origin);
+  }
+
+  const channelId = resolveChannelFromHost(hostHeader);
+  const channel = getChannelConfig(channelId);
+  if (channel.hosts.includes(host)) {
+    return channel.siteBaseUrl;
+  }
+
+  const proto =
+    request.headers.get("x-forwarded-proto")?.split(",")[0].trim() ?? "https";
+  return `${proto}://${host}`;
+}
+
+export function getOktaRedirectUri(siteOrigin: string): string {
+  return `${normalizeSiteOrigin(siteOrigin)}/api/auth/okta/callback`;
 }
 
 export function createPkcePair(): { codeVerifier: string; codeChallenge: string } {
@@ -52,12 +81,13 @@ export function buildAuthorizeUrl(params: {
   state: string;
   nonce: string;
   codeChallenge: string;
+  siteOrigin: string;
 }): string {
   const search = new URLSearchParams({
     client_id: config.okta.clientId,
     response_type: "code",
     scope: config.okta.scopes,
-    redirect_uri: getOktaRedirectUri(),
+    redirect_uri: getOktaRedirectUri(params.siteOrigin),
     state: params.state,
     nonce: params.nonce,
     code_challenge: params.codeChallenge,
@@ -70,11 +100,12 @@ export function buildAuthorizeUrl(params: {
 export async function exchangeAuthorizationCode(
   code: string,
   codeVerifier: string,
+  siteOrigin: string,
 ): Promise<OktaTokenResponse> {
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     code,
-    redirect_uri: getOktaRedirectUri(),
+    redirect_uri: getOktaRedirectUri(siteOrigin),
     client_id: config.okta.clientId,
     client_secret: config.okta.clientSecret,
     code_verifier: codeVerifier,
@@ -125,11 +156,14 @@ export function resolveUserEmail(userInfo: OktaUserInfo): string | null {
   return null;
 }
 
-export function buildOktaLogoutUrl(idTokenHint?: string): string | null {
+export function buildOktaLogoutUrl(
+  siteOrigin: string,
+  idTokenHint?: string,
+): string | null {
   if (!config.okta.logoutUrl) return null;
 
   const search = new URLSearchParams({
-    post_logout_redirect_uri: `${config.siteBaseUrl}/admin`,
+    post_logout_redirect_uri: `${normalizeSiteOrigin(siteOrigin)}/admin`,
   });
 
   if (idTokenHint) {

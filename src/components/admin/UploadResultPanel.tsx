@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { CopyButton } from "@/components/CopyButton";
+import { getBrowserChannelConfig } from "@/lib/channel";
+import { toAbsoluteCdnUrl } from "@/lib/statically";
 
 interface CdnUrlItem {
   filename: string;
@@ -26,6 +28,8 @@ export function UploadResultPanel({
   message,
   onReset,
 }: UploadResultPanelProps) {
+  const channel = getBrowserChannelConfig();
+
   return (
     <section className="animate-fade-up space-y-4 rounded-xl border border-accent/40 bg-accent/5 p-6">
       <div>
@@ -52,26 +56,27 @@ export function UploadResultPanel({
       </div>
 
       <div className="space-y-3">
-        {cdnUrls.map((item) => (
-          <div
-            key={item.filename}
-            className="rounded-lg border border-border bg-surface p-4"
-          >
-            <p className="mb-1 font-mono text-xs text-muted">{item.filename}</p>
-            <div className="flex flex-wrap items-center gap-2">
-              <code className="break-all text-sm text-accent">
-                {item.staticallyUrl}
-              </code>
-              <CopyButton value={item.staticallyUrl} label="CDN 복사" />
+        {cdnUrls.map((item) => {
+          const absoluteUrl = toAbsoluteCdnUrl(item.staticallyUrl, channel.id);
+          return (
+            <div
+              key={item.filename}
+              className="rounded-lg border border-border bg-surface p-4"
+            >
+              <p className="mb-1 font-mono text-xs text-muted">{item.filename}</p>
+              <div className="flex flex-wrap items-center gap-2">
+                <code className="break-all text-sm text-accent">{absoluteUrl}</code>
+                <CopyButton value={absoluteUrl} label="CDN 절대경로 복사" />
+              </div>
+              <p className="mt-2 text-xs text-muted">GitHub: {item.githubPath}</p>
             </div>
-            <p className="mt-2 text-xs text-muted">GitHub: {item.githubPath}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="flex flex-wrap gap-3">
         <Link
-          href={`/logo/${shortname}`}
+          href={`${channel.detailPathPrefix}/${shortname}`}
           className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-background"
         >
           갤러리에서 보기
@@ -81,7 +86,7 @@ export function UploadResultPanel({
           onClick={onReset}
           className="rounded-lg border border-border px-4 py-2 text-sm"
         >
-          새 로고 업로드
+          {channel.uploadTabLabel}
         </button>
       </div>
     </section>

@@ -1,12 +1,13 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import type { Category, LogoCollection, Tag } from "@/lib/types";
+import type { Category, IconPackPreview, LogoCollection, Tag } from "@/lib/types";
 import { CollectionPicker } from "@/components/admin/CollectionPicker";
 import { ExistingLogoManager } from "@/components/admin/ExistingLogoManager";
 import { LogoDropZone, type DroppedFile } from "@/components/admin/LogoDropZone";
 import { UploadResultPanel } from "@/components/admin/UploadResultPanel";
 import { adminFetch } from "@/lib/admin-client";
+import { getBrowserChannelConfig } from "@/lib/channel";
 
 interface UploadResult {
   shortname: string;
@@ -24,6 +25,7 @@ interface AdminStatus {
 }
 
 export default function ContentsAdminPage() {
+  const channel = getBrowserChannelConfig();
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [status, setStatus] = useState<AdminStatus | null>(null);
@@ -36,6 +38,8 @@ export default function ContentsAdminPage() {
   const [shortname, setShortname] = useState("");
   const [officialUrl, setOfficialUrl] = useState("");
   const [collection, setCollection] = useState<LogoCollection>("simple");
+  const [packageSlug, setPackageSlug] = useState("");
+  const [packs, setPacks] = useState<IconPackPreview[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [uploadResult, setUploadResult] = useState<UploadResult | null>(null);
@@ -45,15 +49,20 @@ export default function ContentsAdminPage() {
   const [activeTab, setActiveTab] = useState<"upload" | "manage">("manage");
 
   const loadMeta = useCallback(async () => {
-    const [categoryResponse, tagResponse, statusResponse] = await Promise.all([
-      fetch("/api/categories"),
-      fetch("/api/tags"),
-      fetch("/api/admin/status"),
-    ]);
+    const [categoryResponse, tagResponse, statusResponse, packResponse] =
+      await Promise.all([
+        fetch("/api/categories"),
+        fetch("/api/tags"),
+        fetch("/api/admin/status"),
+        channel.id === "icons" ? fetch("/api/packs") : Promise.resolve(null),
+      ]);
     setCategories(await categoryResponse.json());
     setTags(await tagResponse.json());
     setStatus(await statusResponse.json());
-  }, []);
+    if (packResponse) {
+      setPacks((await packResponse.json()) as IconPackPreview[]);
+    }
+  }, [channel.id]);
 
   useEffect(() => {
     void loadMeta();
@@ -66,6 +75,7 @@ export default function ContentsAdminPage() {
     setShortname("");
     setOfficialUrl("");
     setCollection("simple");
+    setPackageSlug("");
     setSelectedCategories([]);
     setSelectedTags([]);
     setUploadResult(null);
@@ -82,7 +92,12 @@ export default function ContentsAdminPage() {
     }
 
     if (droppedFiles.length === 0) {
-      setMessage("SVG 파일을 먼저 로드하세요.");
+      setMessage(channel.fileRequiredMessage);
+      return;
+    }
+
+    if (channel.id === "icons" && !packageSlug.trim()) {
+      setMessage("묶음 slug가 필요합니다. 예: carbon (IBM Carbon), lucide");
       return;
     }
 
@@ -95,6 +110,9 @@ export default function ContentsAdminPage() {
     formData.set("shortname", shortname);
     formData.set("url", officialUrl);
     formData.set("collection", collection);
+    if (channel.id === "icons") {
+      formData.set("package", packageSlug.trim());
+    }
     for (const file of droppedFiles) {
       formData.append("files", file.file);
     }
@@ -198,9 +216,7 @@ export default function ContentsAdminPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-3xl font-bold">콘텐츠 관리</h1>
-          <p className="text-sm text-muted">
-            로고 업로드 · 기존 로고 편집 · 카테고리 · 태그
-          </p>
+          <p className="text-sm text-muted">{channel.contentsSubtitle}</p>
         </div>
         <button
           type="button"
@@ -208,13 +224,14 @@ export default function ContentsAdminPage() {
           disabled={loading}
           className="rounded-lg border border-border px-4 py-2 text-sm hover:border-accent"
         >
-          logos.json 동기화
+          {channel.syncButtonLabel}
         </button>
       </div>
 
       {status && !status.githubConfigured && (
         <p className="rounded-lg border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
-          GITHUB_TOKEN 미설정 — 로고 GitHub 배포가 비활성화되어 있습니다.
+          GITHUB_TOKEN 미설정 — {channel.itemLabelKo} GitHub 배포가 비활성화되어
+          있습니다.
         </p>
       )}
 
@@ -228,7 +245,7 @@ export default function ContentsAdminPage() {
               : "text-muted hover:text-foreground"
           }`}
         >
-          기존 로고 관리
+          {channel.manageTabLabel}
         </button>
         <button
           type="button"
@@ -239,7 +256,7 @@ export default function ContentsAdminPage() {
               : "text-muted hover:text-foreground"
           }`}
         >
-          새 로고 업로드
+          {channel.uploadTabLabel}
         </button>
       </div>
 
@@ -255,14 +272,15 @@ export default function ContentsAdminPage() {
       ) : (
         <form onSubmit={handlePublish} className="space-y-6">
           <section className="rounded-xl border border-border bg-surface p-6">
-            <h2 className="font-display text-xl font-semibold">로고 업로드</h2>
-            <p className="mt-1 text-sm text-muted">
-              PC에서 SVG를 로드하면 GitHub + CDN까지 자동 배포됩니다.
-            </p>
+            <h2 className="font-display text-xl font-semibold">
+              {channel.uploadSectionTitle}
+            </h2>
+            <p className="mt-1 text-sm text-muted">{channel.uploadHint}</p>
             <div className="mt-4">
               <LogoDropZone
                 files={droppedFiles}
                 onFilesChange={setDroppedFiles}
+                preferredShortname={shortname}
                 onMetaSuggest={({
                   shortname: suggestedShortname,
                   name: suggestedName,
@@ -281,7 +299,7 @@ export default function ContentsAdminPage() {
               <input
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                placeholder="브랜드명"
+                placeholder={channel.namePlaceholder}
                 className="rounded-lg border border-border bg-surface-elevated px-3 py-2"
               />
               <input
@@ -300,11 +318,50 @@ export default function ContentsAdminPage() {
             </div>
 
             <div className="mt-4">
-              <CollectionPicker
-                value={collection}
-                onChange={setCollection}
-                disabled={loading}
-              />
+              {channel.id === "icons" ? (
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase text-muted">
+                    묶음 (pack)
+                  </label>
+                  {packs.length > 0 && (
+                    <div className="mb-2 flex flex-wrap gap-1.5">
+                      {packs.map((pack) => (
+                        <button
+                          key={pack.slug}
+                          type="button"
+                          onClick={() => setPackageSlug(pack.slug)}
+                          className={`rounded-full px-3 py-1 text-xs ${
+                            packageSlug === pack.slug
+                              ? "bg-accent text-background"
+                              : "border border-border text-muted hover:text-foreground"
+                          }`}
+                        >
+                          {pack.label}
+                          <span className="ml-1 opacity-60">{pack.count}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <input
+                    value={packageSlug}
+                    onChange={(event) => setPackageSlug(event.target.value)}
+                    placeholder="carbon, lucide, heroicons..."
+                    required
+                    disabled={loading}
+                    className="w-full rounded-lg border border-border bg-surface-elevated px-3 py-2 font-mono text-sm"
+                  />
+                  <p className="mt-1 text-xs text-muted">
+                    IBM Carbon은 slug <span className="font-mono">carbon</span>으로
+                    올리면 한 묶음으로 관리됩니다. CDN: icons/&#123;pack&#125;/…
+                  </p>
+                </div>
+              ) : (
+                <CollectionPicker
+                  value={collection}
+                  onChange={setCollection}
+                  disabled={loading}
+                />
+              )}
             </div>
 
             <div className="mt-4">

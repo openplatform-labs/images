@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { listLogos } from "@/lib/catalog";
 import { resolveChannelFromHost } from "@/lib/channel";
 import { parseCollectionParam } from "@/lib/collection";
+import { pickLogoFile } from "@/lib/logo-files";
 import { ensureCatalogSynced } from "@/lib/server-catalog";
 
 export const runtime = "nodejs";
@@ -29,5 +30,20 @@ export async function GET(request: Request) {
     sort: (searchParams.get("sort") as "name" | "recent") ?? "name",
   });
 
-  return NextResponse.json(result);
+  if (channelId !== "icons") {
+    return NextResponse.json(result);
+  }
+
+  return NextResponse.json({
+    ...result,
+    source: searchParams.get("source")?.trim().toLowerCase() || null,
+    items: result.items.map((item) => {
+      const file = pickLogoFile(item.files, item.shortname, item.collection, "default");
+      return {
+        ...item,
+        pack: item.source,
+        cdnUrl: file?.staticallyUrl ?? null,
+      };
+    }),
+  });
 }

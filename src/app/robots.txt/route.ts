@@ -1,14 +1,22 @@
-const siteBase =
-  process.env.SITE_BASE_URL?.replace(/\/$/, "") ?? "https://logos.opl.io.kr";
+import { getChannelConfig, resolveChannelFromHost } from "@/lib/channel";
 
-export async function GET() {
+export const dynamic = "force-dynamic";
+
+export async function GET(request: Request) {
+  const channel = getChannelConfig(
+    resolveChannelFromHost(request.headers.get("host")),
+  );
+
   const body = `User-agent: *
 Allow: /
 Allow: /api/
 Allow: /llms.txt
 Allow: /openapi.json
+Allow: /.well-known/mcp.json
+Allow: /mcp
+Disallow: /admin
 
-Sitemap: ${siteBase}/sitemap.xml
+Sitemap: ${channel.siteBaseUrl}/sitemap.xml
 `;
 
   return new Response(body, {

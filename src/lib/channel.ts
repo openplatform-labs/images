@@ -4,7 +4,9 @@ export type ChannelId =
   | "illust"
   | "icons"
   | "avatars"
-  | "pictograms";
+  | "pictograms"
+  | "datagrid"
+  | "sheet";
 
 /** 갤러리 1차 그룹 방식 */
 export type GalleryGroupBy = "collection" | "source" | "none";
@@ -303,6 +305,80 @@ const avatarsChannel: ChannelConfig = {
   fileAddHint: "기존 shortname에 이미지를 추가하면 GitHub에 병합됩니다.",
 };
 
+const datagridChannel: ChannelConfig = {
+  id: "datagrid",
+  siteBaseUrl: "https://datagrid.opl.io.kr",
+  hosts: ["datagrid.opl.io.kr"],
+  assetDir: "datagrid",
+  catalogFile: "datagrid.json",
+  detailPathPrefix: "/datagrid",
+  brandName: "DATAGRID",
+  metaTitle: "OpenSphere Datagrid — Data Workspace",
+  badgeLabel: "DATAGRID",
+  heroTitle: "DATAGRID",
+  heroDescription:
+    "A data workspace for dense tables, operations, and decision flows.",
+  galleryGroupBy: "none",
+  allowedExtensions: [".svg", ".png", ".jpg", ".jpeg", ".webp", ".gif"],
+  emptyLabel: "No datagrid assets found.",
+  itemLabel: "datagrid",
+  itemLabelPlural: "datagrids",
+  itemLabelKo: "데이터그리드",
+  searchPlaceholder: "table, records, metrics...",
+  namePlaceholder: "데이터그리드명",
+  adminNavDescription: "랜딩 · 데이터 화면 · 자산 준비",
+  contentsSubtitle: "데이터그리드 랜딩 · 이후 자산 채널 확장 예정",
+  manageTabLabel: "랜딩 보기",
+  uploadTabLabel: "자산 준비",
+  uploadSectionTitle: "데이터그리드 자산 준비",
+  uploadHint: "현재는 랜딩 페이지 중심으로 운영합니다.",
+  syncButtonLabel: "datagrid 동기화",
+  existingTitle: "데이터그리드 랜딩",
+  existingHint: "현재 채널은 제품 랜딩 위주로 구성됩니다.",
+  editTitle: "데이터그리드 설정",
+  dropzoneHint: "데이터그리드 자산을 여기에 놓으세요",
+  fileRequiredMessage: "데이터그리드 자산 파일을 먼저 추가하세요.",
+  fileAddTitle: "데이터그리드 자산 추가",
+  fileAddHint: "추후 제품 샷·다이어그램 자산을 연결할 수 있습니다.",
+};
+
+const sheetChannel: ChannelConfig = {
+  id: "sheet",
+  siteBaseUrl: "https://sheet.opl.io.kr",
+  hosts: ["sheet.opl.io.kr"],
+  assetDir: "sheet",
+  catalogFile: "sheet.json",
+  detailPathPrefix: "/sheet",
+  brandName: "SHEET",
+  metaTitle: "OpenSphere Sheet — Decision Pages",
+  badgeLabel: "SHEET",
+  heroTitle: "SHEET",
+  heroDescription:
+    "A decision page for specs, options, pricing rows, and comparison notes.",
+  galleryGroupBy: "none",
+  allowedExtensions: [".svg", ".png", ".jpg", ".jpeg", ".webp", ".gif"],
+  emptyLabel: "No sheet assets found.",
+  itemLabel: "sheet",
+  itemLabelPlural: "sheets",
+  itemLabelKo: "시트",
+  searchPlaceholder: "plan, sku, pricing, specs...",
+  namePlaceholder: "시트명",
+  adminNavDescription: "랜딩 · 가격표 · 비교 시트 준비",
+  contentsSubtitle: "시트 랜딩 · 이후 스펙/비교 자산 확장 예정",
+  manageTabLabel: "랜딩 보기",
+  uploadTabLabel: "자산 준비",
+  uploadSectionTitle: "시트 자산 준비",
+  uploadHint: "현재는 랜딩 페이지 중심으로 운영합니다.",
+  syncButtonLabel: "sheet 동기화",
+  existingTitle: "시트 랜딩",
+  existingHint: "현재 채널은 제품 랜딩 위주로 구성됩니다.",
+  editTitle: "시트 설정",
+  dropzoneHint: "시트 자산을 여기에 놓으세요",
+  fileRequiredMessage: "시트 자산 파일을 먼저 추가하세요.",
+  fileAddTitle: "시트 자산 추가",
+  fileAddHint: "추후 제품표·비교표 자산을 연결할 수 있습니다.",
+};
+
 export const channels: Record<ChannelId, ChannelConfig> = {
   logos: logosChannel,
   images: imagesChannel,
@@ -310,12 +386,58 @@ export const channels: Record<ChannelId, ChannelConfig> = {
   icons: iconsChannel,
   avatars: avatarsChannel,
   pictograms: pictogramsChannel,
+  datagrid: datagridChannel,
+  sheet: sheetChannel,
 };
 
 const channelIdSet = new Set<string>(Object.keys(channels));
 
 export function isChannelId(value: string | null | undefined): value is ChannelId {
   return Boolean(value && channelIdSet.has(value));
+}
+
+export const channelIds = Object.keys(channels) as ChannelId[];
+
+/** API 검색 범위 (현재 채널 또는 전체) */
+export type ChannelScope = ChannelId | "all";
+
+// 상세 페이지 라우트(/logo, /icon 등)가 실제로 있는 채널
+const channelsWithDetailPages: ReadonlySet<ChannelId> = new Set<ChannelId>([
+  "logos",
+  "images",
+  "illust",
+  "icons",
+  "avatars",
+  "pictograms",
+]);
+
+export function channelHasDetailPages(channelId: ChannelId): boolean {
+  return channelsWithDetailPages.has(channelId);
+}
+
+/** 항목 상세 페이지 절대 URL (상세 라우트가 없으면 채널 홈) */
+export function getChannelItemPageUrl(channelId: ChannelId, shortname: string): string {
+  const channel = channels[channelId];
+  if (!channelHasDetailPages(channelId)) return channel.siteBaseUrl;
+  return `${channel.siteBaseUrl}${channel.detailPathPrefix}/${encodeURIComponent(shortname)}`;
+}
+
+/** 메타 title에서 서비스 이름만 추출 (예: OpenSphere Icons) */
+export function getChannelServiceName(channelId: ChannelId): string {
+  return channels[channelId].metaTitle.split(" — ")[0];
+}
+
+/** 메타 title에서 서비스 설명만 추출 (예: Icon Pack CDN) */
+export function getChannelTagline(channelId: ChannelId): string {
+  const parts = channels[channelId].metaTitle.split(" — ");
+  return parts[1] ?? parts[0];
+}
+
+/** 요청 Host와 scope 쿼리로 API 검색 범위 결정 */
+export function resolveChannelScope(request: Request): ChannelScope {
+  const scope = new URL(request.url).searchParams.get("scope");
+  if (scope === "all") return "all";
+  return resolveChannelFromHost(request.headers.get("host"));
 }
 
 /** 아이콘·픽토그램 파운드리 채널 */

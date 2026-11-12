@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { resolveChannelScope } from "@/lib/channel";
 import { buildCatalogDump } from "@/lib/resolve";
-import { ensureCatalogSynced } from "@/lib/server-catalog";
+import { ensureScopeSynced } from "@/lib/server-catalog";
 
 export const runtime = "nodejs";
 
@@ -15,13 +16,21 @@ export async function OPTIONS() {
 }
 
 export async function GET(request: Request) {
-  await ensureCatalogSynced();
+  const scope = resolveChannelScope(request);
+  await ensureScopeSynced(scope);
 
   const { searchParams } = new URL(request.url);
   const fields = searchParams.get("fields") ?? undefined;
-  const payload = buildCatalogDump(fields);
+  const payload = buildCatalogDump(fields, scope);
+  const body =
+    scope === "icons"
+      ? {
+          ...payload,
+          note: "Indexing dump for the icons channel. Use /api/resolve?source={pack} or /api/logos/{shortname} for lookups.",
+        }
+      : payload;
 
-  return NextResponse.json(payload, {
+  return NextResponse.json(body, {
     headers: {
       ...corsHeaders,
       "Cache-Control": "public, max-age=3600",

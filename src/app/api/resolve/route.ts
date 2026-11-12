@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { resolveLogoQuery } from "@/lib/resolve";
+import { resolveChannelScope } from "@/lib/channel";
 import { parseCollectionParam, parseVariantParam } from "@/lib/collection";
-import { ensureCatalogSynced } from "@/lib/server-catalog";
+import { ensureScopeSynced } from "@/lib/server-catalog";
 
 export const runtime = "nodejs";
 
@@ -16,30 +17,33 @@ export async function OPTIONS() {
 }
 
 export async function GET(request: Request) {
-  await ensureCatalogSynced();
+  const scope = resolveChannelScope(request);
+  await ensureScopeSynced(scope);
 
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q") ?? searchParams.get("query") ?? "";
   const variant = parseVariantParam(searchParams.get("variant"));
   const collection = parseCollectionParam(searchParams.get("collection"));
   const format = searchParams.get("format") ?? "json";
+  const source = scope === "icons" ? (searchParams.get("source") ?? undefined) : undefined;
 
   if (!query.trim()) {
     return NextResponse.json(
       {
         error: "Missing query parameter: q",
-        example: "/api/resolve?q=react&variant=default&collection=simple&format=json",
+        scope,
+        example: "/api/resolve?q=react&variant=default&format=json",
       },
       { status: 400, headers: corsHeaders },
     );
   }
 
-  const result = resolveLogoQuery(query, variant, collection);
+  const result = resolveLogoQuery(query, variant, collection, scope, source);
 
   if (format === "minimal") {
     if (!result.url) {
       return NextResponse.json(
-        { error: "No match", candidates: result.candidates },
+        { error: "No match", scope, note: result.note, candidates: result.candidates },
         { status: 404, headers: corsHeaders },
       );
     }

@@ -2,7 +2,13 @@ import type { ChannelId } from "./channel";
 import type { SiteTheme } from "./preview-theme";
 
 /** 채널별 갤러리 레이아웃 */
-export type GalleryLayout = "toolkit" | "cinema" | "studio" | "glyph" | "roster";
+export type GalleryLayout =
+  | "toolkit"
+  | "cinema"
+  | "studio"
+  | "glyph"
+  | "roster"
+  | "datagrid";
 
 export interface ChannelThemeMeta {
   /** 기본 사이트 테마 */
@@ -51,6 +57,18 @@ export const channelThemes: Record<ChannelId, ChannelThemeMeta> = {
     galleryLayout: "roster",
     heroEyebrow: "Identity roster",
     heroTagline: "얼굴을 고르고, 원형 크롭 CDN URL로 바로 쓰세요.",
+  },
+  datagrid: {
+    defaultSiteTheme: "dark",
+    galleryLayout: "datagrid",
+    heroEyebrow: "Data workspace",
+    heroTagline: "복잡한 표를 운영 가능한 화면으로 정리합니다.",
+  },
+  sheet: {
+    defaultSiteTheme: "light",
+    galleryLayout: "datagrid",
+    heroEyebrow: "Decision sheet",
+    heroTagline: "사양, 옵션, 가격 행을 한 장에서 읽게 만듭니다.",
   },
 };
 

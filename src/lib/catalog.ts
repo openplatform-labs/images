@@ -47,22 +47,46 @@ async function loadCatalogJson(channelId: ChannelId): Promise<LogosJsonEntry[]> 
       ? config.logosJsonPath
       : path.join(process.cwd(), channel.catalogFile);
 
+  // 동기화는 GitHub 원본을 우선 (로컬 캐시가 있으면 덮어쓰지 않도록)
+  try {
+    const response = await fetch(getCatalogRemoteUrl(channelId), {
+      cache: "no-store",
+      headers: config.githubToken
+        ? { Authorization: `Bearer ${config.githubToken}` }
+        : undefined,
+    });
+
+    if (response.ok) {
+      const remote = (await response.json()) as LogosJsonEntry[];
+      // 성공한 원격 카탈로그는 로컬 캐시에도 반영
+      try {
+        fs.writeFileSync(localPath, JSON.stringify(remote, null, 2) + "\n");
+      } catch {
+        // 로컬 쓰기 실패는 동기화를 막지 않음
+      }
+      return remote;
+    }
+
+    if (response.status !== 404) {
+      throw new Error(`${channel.catalogFile} 로드 실패: ${response.status}`);
+    }
+  } catch (error) {
+    if (fs.existsSync(localPath)) {
+      const raw = fs.readFileSync(localPath, "utf-8");
+      if (raw.trim()) {
+        return JSON.parse(raw) as LogosJsonEntry[];
+      }
+    }
+    throw error;
+  }
+
   if (fs.existsSync(localPath)) {
     const raw = fs.readFileSync(localPath, "utf-8");
     if (!raw.trim()) return [];
     return JSON.parse(raw) as LogosJsonEntry[];
   }
 
-  const response = await fetch(getCatalogRemoteUrl(channelId), {
-    next: { revalidate: 3600 },
-  });
-
-  if (response.status === 404) return [];
-  if (!response.ok) {
-    throw new Error(`${channel.catalogFile} 로드 실패: ${response.status}`);
-  }
-
-  return (await response.json()) as LogosJsonEntry[];
+  return [];
 }
 
 function parseLogosJsonEntry(entry: LogosJsonEntry): {
@@ -618,6 +642,26 @@ export function replaceLogoFilesLocally(
     }
   });
   replace();
+}
+
+/** 항목의 파일 하나를 SQLite에서 삭제 (기본 이미지였으면 해제) */
+export function removeLogoFileLocally(
+  shortname: string,
+  filename: string,
+  channelId: ChannelId = "logos",
+): void {
+  const database = getDatabase();
+  const remove = database.transaction(() => {
+    database
+      .prepare("DELETE FROM logo_files WHERE channel = ? AND shortname = ? AND filename = ?")
+      .run(channelId, shortname, filename);
+    database
+      .prepare(
+        "UPDATE logos SET preview_filename = NULL, updated_at = datetime('now') WHERE channel = ? AND shortname = ? AND preview_filename = ?",
+      )
+      .run(channelId, shortname, filename);
+  });
+  remove();
 }
 
 /** 로고와 연관 파일·카테고리·태그를 SQLite에서 삭제 */

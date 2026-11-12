@@ -4,7 +4,9 @@ export type ChannelId =
   | "illust"
   | "icons"
   | "avatars"
-  | "pictograms";
+  | "pictograms"
+  | "datagrid"
+  | "sheet";
 
 export type LogoCollection = "simple" | "themed";
 

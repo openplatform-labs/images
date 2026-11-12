@@ -38,6 +38,8 @@ curl "https://logos.opl.io.kr/api/resolve?q=react&format=minimal"
 # → https://cdn.statically.io/gh/openplatform-labs/logos@main/logos/react.svg
 ```
 
+각 채널 도메인(icons, pictograms 등)에서 같은 API를 쓰면 해당 채널 자산만 검색합니다. 전체 채널을 검색하려면 `scope=all`을 붙이세요. 채널별 안내는 각 도메인의 `/llms.txt`에 있습니다.
+
 ## 더 알아보기
 
 | 항목 | 링크 |

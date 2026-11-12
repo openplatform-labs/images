@@ -63,6 +63,12 @@ function channelFontClass(channelId: ChannelId): string {
   if (channelId === "images") {
     return `${sora.variable} ${sourceSans.variable}`;
   }
+  if (channelId === "datagrid") {
+    return `${sora.variable} ${sourceSans.variable}`;
+  }
+  if (channelId === "sheet") {
+    return `${fraunces.variable} ${figtree.variable}`;
+  }
   if (channelId === "illust") {
     return `${fraunces.variable} ${figtree.variable}`;
   }
@@ -81,6 +87,18 @@ function channelFontStyle(channelId: ChannelId): CSSProperties {
     return {
       ["--font-display" as string]: "var(--font-sora)",
       ["--font-body" as string]: "var(--font-source-sans)",
+    };
+  }
+  if (channelId === "datagrid") {
+    return {
+      ["--font-display" as string]: "var(--font-sora)",
+      ["--font-body" as string]: "var(--font-source-sans)",
+    };
+  }
+  if (channelId === "sheet") {
+    return {
+      ["--font-display" as string]: "var(--font-fraunces)",
+      ["--font-body" as string]: "var(--font-figtree)",
     };
   }
   if (channelId === "illust") {
@@ -153,15 +171,37 @@ export default async function RootLayout({
               >
                 {getChannelGithub(channel.id).owner}/{getChannelGithub(channel.id).repo}
               </a>
-              {" · "}
-              <a
-                href="https://statically.io"
-                className="hover:text-accent"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Statically CDN
-              </a>
+              {(channel.id === "datagrid" || channel.id === "sheet") &&
+                " · Product landing"}
+              {channel.id !== "datagrid" && channel.id !== "sheet" && (
+                <>
+                  {" · "}
+                  <a
+                    href="https://statically.io"
+                    className="hover:text-accent"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Statically CDN
+                  </a>
+                </>
+              )}
+              {channel.id === "icons" && (
+                <>
+                  {" · "}
+                  <a href="/llms.txt" className="hover:text-accent">
+                    llms.txt
+                  </a>
+                  {" · "}
+                  <a href="/openapi.json" className="hover:text-accent">
+                    openapi.json
+                  </a>
+                  {" · "}
+                  <a href="/.well-known/mcp.json" className="hover:text-accent">
+                    mcp.json
+                  </a>
+                </>
+              )}
               {" · "}
               {channel.siteBaseUrl.replace(/^https?:\/\//, "")}
             </p>

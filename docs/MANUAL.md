@@ -73,16 +73,23 @@ LOGOS_JSON_PATH=./logos.json
 
 ## AI·에이전트 API
 
-AI·자동화 도구가 HTML 스크래핑 없이 로고 URL을 얻도록 설계된 엔드포인트입니다.
+AI·자동화 도구가 HTML 스크래핑 없이 자산 URL을 얻도록 설계된 엔드포인트입니다.
+
+### 채널 범위
+
+모든 채널 도메인(logos, images, illust, icons, avatars, pictograms, datagrid, sheet)이 같은 경로를 제공하며, 응답은 **요청 도메인(Host)의 채널로 한정**됩니다.
+
+- `https://icons.opl.io.kr/api/resolve?q=add` → 아이콘만 검색
+- `scope=all`을 붙이면 `/api/resolve`, `/api/catalog`가 전체 채널을 검색하고, 각 결과에 `channel` 필드가 붙습니다.
 
 ### 발견(Discovery) 문서
 
 | 경로 | 설명 |
 |------|------|
-| `/llms.txt` | 에이전트용 요약 가이드 |
-| `/openapi.json` | OpenAPI 3.1 스펙 |
-| `/robots.txt` | `/api/*` 크롤 허용 |
-| `/sitemap.xml` | 로고 상세 페이지 목록 |
+| `/llms.txt` | 채널 전용 에이전트 가이드 (항목 수, 예시 검색어, 채널 전용 API, 다른 채널 목록) |
+| `/openapi.json` | 채널 전용 OpenAPI 3.1 스펙 (서버 주소 = 해당 도메인) |
+| `/robots.txt` | `/api/*` 크롤 허용, 해당 도메인 sitemap 안내 |
+| `/sitemap.xml` | 해당 채널 홈과 상세 페이지 목록 (datagrid는 grid-core·grid-addons 페이지) |
 
 ### 핵심: 로고 URL 해석 — `GET /api/resolve`
 
@@ -101,14 +108,17 @@ GET /api/resolve?q=react&format=minimal
 | `q` | 로고 이름, shortname, 별칭 (예: `react`, `k8s`) |
 | `variant` | `default` \| `icon` \| `wordmark` (기본: `default`) |
 | `format` | `json` (기본) \| `minimal` — `minimal`은 CDN URL만 plain text |
+| `scope` | 생략 시 현재 채널만, `all`이면 전체 채널 |
 
 **응답 예 (`format=json`)**
 
 ```json
 {
   "query": "k8s",
+  "scope": "logos",
   "variant": "default",
   "match": {
+    "channel": "logos",
     "shortname": "kubernetes",
     "name": "Kubernetes",
     "confidence": 1,
@@ -162,11 +172,12 @@ curl "https://logos.opl.io.kr/api/resolve?q=adobe&variant=icon"
 
 ### 전체 카탈로그 — `GET /api/catalog`
 
-인덱싱·RAG·오프라인 검색용 전체 덤프입니다.
+인덱싱·RAG·오프라인 검색용 덤프입니다. 목록은 `items` 배열에 담기며, 기본은 현재 채널만 포함합니다.
 
 ```http
 GET /api/catalog
 GET /api/catalog?fields=shortname,name,url,iconUrl
+GET /api/catalog?scope=all&fields=channel,shortname,url
 ```
 
 ### 단축 URL — `GET /i/{shortname}`
